@@ -21,13 +21,30 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+
+  // Če manjkajo podatki
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email in geslo sta obvezna' });
+  }
+
+  // Če je v body več podatkov, kot pričakujemo
+  const extraFields = Object.keys(req.body).filter(
+    key => !['email', 'password'].includes(key)
+  );
+  if (extraFields.length > 0) {
+    return res.status(400).json({ message: `Nepričakovana polja: ${extraFields.join(', ')}` });
+  }
+
   const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ message: 'Uporabnik ne obstaja' });
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ message: 'Napačno geslo' });
 
-  res.json({ message: 'Prijava uspešna', user: { name: user.name, email: user.email } });
+  res.json({
+    message: 'Prijava uspešna',
+    user: { name: user.name, email: user.email },
+  });
 });
 
 export default router;
