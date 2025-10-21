@@ -1,12 +1,15 @@
 import express from "express";
 import Pet from "../models/Pet.js";
+import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // Dodaj novega ljubljenčka
-router.post("/", async (req, res) => {
-  const { owner, name, species, age } = req.body;
-  if (!owner || !name || !species || !age)
+router.post("/", protect, async (req, res) => {
+  const { name, species, age } = req.body;
+  const owner = req.user.id;
+
+  if (!name || !species || !age)
     return res.status(400).json({ message: "Vsa polja so obvezna" });
 
   try {
