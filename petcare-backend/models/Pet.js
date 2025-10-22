@@ -7,18 +7,22 @@ const petSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    name: {
+    ime: {
       type: String,
       required: true,
     },
-    species: {
-      type: String, // npr. pes, mačka
+    pasma: {
+      type: String, 
       required: true,
     },
-    age: {
-      type: Number,
+    datum_rojstva: {
+      type: Date,
       required: true,
     },
+    spol: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );
