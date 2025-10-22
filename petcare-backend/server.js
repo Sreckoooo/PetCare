@@ -4,6 +4,11 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import petRoutes from "./routes/petRoutes.js";
+import zdraviloRoutes from './routes/zdraviloRoutes.js';
+import obrokRoutes from './routes/obrokRoutes.js';
+import aktivnostRoutes from './routes/aktivnostRoutes.js';
+import pregledRoutes from './routes/pregledRoutes.js';
+import opomnikRoutes from './routes/opomnikRoutes.js';
 
 
 dotenv.config();
@@ -13,10 +18,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// User in Pet route-i
 app.use('/api/users', userRoutes);
-
 app.use("/api/pets", petRoutes);
 
+// Ostale entitete
+app.use('/api/zdravila', zdraviloRoutes);
+app.use('/api/obroki', obrokRoutes);
+app.use('/api/aktivnosti', aktivnostRoutes);
+app.use('/api/pregledi', pregledRoutes);
+app.use('/api/opomniki', opomnikRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

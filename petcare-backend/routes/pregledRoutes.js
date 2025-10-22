@@ -1,0 +1,31 @@
+import express from 'express';
+import Pregled from '../models/Pregled.js';
+import protect from '../middleware/auth.js';
+
+const router = express.Router();
+
+// Dodaj pregled
+router.post('/', protect, async (req, res) => {
+  const { datum, veterinar, naziv, datoteka, pet } = req.body;
+  if (!datum || !veterinar || !naziv || !pet)
+    return res.status(400).json({ message: 'Vsa obvezna polja niso izpolnjena' });
+
+  try {
+    const pregled = await Pregled.create({ datum, veterinar, naziv, datoteka, pet });
+    res.status(201).json(pregled);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Pridobi vse preglede
+router.get('/', async (req, res) => {
+  try {
+    const pregledi = await Pregled.find().populate('pet', 'ime pasma -_id');
+    res.json(pregledi);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+export default router;
