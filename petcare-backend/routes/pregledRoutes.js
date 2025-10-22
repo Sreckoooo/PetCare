@@ -18,10 +18,11 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// Pridobi vse preglede
-router.get('/', async (req, res) => {
+// GET vsi pregledi (s JWT)
+router.get("/", protect, async (req, res) => {
   try {
-    const pregledi = await Pregled.find().populate('pet', 'ime pasma -_id');
+    const pregledi = await Pregled.find({ user: req.user })
+      .populate("pet", "ime pasma -_id");
     res.json(pregledi);
   } catch (error) {
     res.status(500).json({ message: error.message });

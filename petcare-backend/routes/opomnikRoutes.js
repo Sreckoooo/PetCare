@@ -18,10 +18,10 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// Pridobi vse opomnike
-router.get('/', async (req, res) => {
+// GET vsi opomniki (s JWT)
+router.get("/", protect, async (req, res) => {
   try {
-    const opomniki = await Opomnik.find().populate('pet', 'ime pasma -_id');
+    const opomniki = await Opomnik.find({ user: req.user }).populate("pet", "ime pasma -_id");
     res.json(opomniki);
   } catch (error) {
     res.status(500).json({ message: error.message });

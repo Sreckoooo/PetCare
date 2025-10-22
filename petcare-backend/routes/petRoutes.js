@@ -20,8 +20,8 @@ router.post("/", protect, async (req, res) => {
   }
 });
 
-// Pridobi vse živali
-router.get("/", async (req, res) => {
+// GET vse živali (s JWT)
+router.get("/", protect, async (req, res) => {
   try {
     const pets = await Pet.find().populate("owner", "ime priimek email -_id");
     res.json(pets);

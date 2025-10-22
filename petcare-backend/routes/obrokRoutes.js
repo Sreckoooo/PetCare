@@ -18,10 +18,10 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// Pridobi vse obroke
-router.get('/', async (req, res) => {
+// GET vsi obroki (s JWT)
+router.get("/", protect, async (req, res) => {
   try {
-    const obroki = await Obrok.find().populate('pet', 'ime pasma -_id');
+    const obroki = await Obrok.find({ user: req.user }).populate("pet", "ime pasma -_id");
     res.json(obroki);
   } catch (error) {
     res.status(500).json({ message: error.message });

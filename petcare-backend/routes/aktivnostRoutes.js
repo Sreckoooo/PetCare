@@ -18,10 +18,10 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// Pridobi vse aktivnosti
-router.get('/', async (req, res) => {
+// GET vse aktivnosti (s JWT)
+router.get("/", protect, async (req, res) => {
   try {
-    const aktivnosti = await Aktivnost.find().populate('pet', 'ime pasma -_id');
+    const aktivnosti = await Aktivnost.find({ user: req.user }).populate("pet", "ime pasma -_id");
     res.json(aktivnosti);
   } catch (error) {
     res.status(500).json({ message: error.message });

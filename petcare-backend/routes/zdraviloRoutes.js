@@ -18,10 +18,10 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// Pridobi vsa zdravila
-router.get('/', async (req, res) => {
+// GET vsa zdravila (s JWT)
+router.get("/", protect, async (req, res) => {
   try {
-    const zdravila = await Zdravilo.find().populate('pet', 'ime pasma -_id');
+    const zdravila = await Zdravilo.find({ user: req.user }).populate("pet", "ime pasma -_id");
     res.json(zdravila);
   } catch (error) {
     res.status(500).json({ message: error.message });
