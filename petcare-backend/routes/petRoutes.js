@@ -7,7 +7,7 @@ const router = express.Router();
 // Dodaj novo žival
 router.post("/", protect, async (req, res) => {
   const { ime, pasma, datum_rojstva, spol } = req.body;
-  const owner = req.user.id;
+  const owner = req.user;
 
   if (!ime || !pasma || !datum_rojstva || !spol)
     return res.status(400).json({ message: "Vsa polja so obvezna" });
