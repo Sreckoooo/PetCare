@@ -7,6 +7,7 @@ const aktivnostSchema = new mongoose.Schema(
     datum: { type: Date, required: true },
     ura: { type: String, required: true },
     pet: { type: mongoose.Schema.Types.ObjectId, ref: "Pet", required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );

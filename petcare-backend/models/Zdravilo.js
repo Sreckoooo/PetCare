@@ -8,6 +8,7 @@ const zdraviloSchema = new mongoose.Schema(
     datum_zacetka: { type: Date, required: true },
     datum_konca: { type: Date },
     pet: { type: mongoose.Schema.Types.ObjectId, ref: "Pet", required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
   },
   { timestamps: true }
 );

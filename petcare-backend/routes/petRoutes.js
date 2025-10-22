@@ -20,10 +20,10 @@ router.post("/", protect, async (req, res) => {
   }
 });
 
-// GET vse živali (s JWT)
+// GET vse živali prijavljenega uporabnika
 router.get("/", protect, async (req, res) => {
   try {
-    const pets = await Pet.find().populate("owner", "ime priimek email -_id");
+    const pets = await Pet.find({ owner: req.user }).populate("owner", "ime priimek email -_id");
     res.json(pets);
   } catch (error) {
     res.status(500).json({ message: error.message });

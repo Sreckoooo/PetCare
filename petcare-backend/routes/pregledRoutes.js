@@ -11,7 +11,8 @@ router.post('/', protect, async (req, res) => {
     return res.status(400).json({ message: 'Vsa obvezna polja niso izpolnjena' });
 
   try {
-    const pregled = await Pregled.create({ datum, veterinar, naziv, datoteka, pet, user: req.user });
+    const user = req.user; // ID uporabnika iz JWT
+    const pregled = await Pregled.create({ datum, veterinar, naziv, datoteka, pet, user });
     res.status(201).json(pregled);
   } catch (error) {
     res.status(500).json({ message: error.message });
