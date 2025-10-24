@@ -29,4 +29,35 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
+// Posodobi aktivnost po ID-ju
+router.put("/:id", protect, async (req, res) => {
+  try {
+    const aktivnost = await Aktivnost.findOne({ _id: req.params.id, user: req.user });
+    if (!aktivnost) return res.status(404).json({ message: "Aktivnost ni najdena" });
+
+    const { naziv, trajanje, datum, ura, pet } = req.body;
+    aktivnost.naziv = naziv || aktivnost.naziv;
+    aktivnost.trajanje = trajanje || aktivnost.trajanje;
+    aktivnost.datum = datum || aktivnost.datum;
+    aktivnost.ura = ura || aktivnost.ura;
+    aktivnost.pet = pet || aktivnost.pet;
+
+    const updatedAktivnost = await aktivnost.save();
+    res.json(updatedAktivnost);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Izbriši aktivnost po ID-ju
+router.delete("/:id", protect, async (req, res) => {
+  try {
+    const aktivnost = await Aktivnost.findOneAndDelete({ _id: req.params.id, user: req.user });
+    if (!aktivnost) return res.status(404).json({ message: "Aktivnost ni najdena" });
+    res.json({ message: "Aktivnost uspešno izbrisana" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;

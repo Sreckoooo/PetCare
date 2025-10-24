@@ -30,4 +30,35 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
+// Posodobi pregled po ID-ju
+router.put("/:id", protect, async (req, res) => {
+  try {
+    const pregled = await Pregled.findOne({ _id: req.params.id, user: req.user });
+    if (!pregled) return res.status(404).json({ message: "Pregled ni najden" });
+
+    const { datum, veterinar, naziv, datoteka, pet } = req.body;
+    pregled.datum = datum || pregled.datum;
+    pregled.veterinar = veterinar || pregled.veterinar;
+    pregled.naziv = naziv || pregled.naziv;
+    pregled.datoteka = datoteka || pregled.datoteka;
+    pregled.pet = pet || pregled.pet;
+
+    const updatedPregled = await pregled.save();
+    res.json(updatedPregled);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Izbriši pregled po ID-ju
+router.delete("/:id", protect, async (req, res) => {
+  try {
+    const pregled = await Pregled.findOneAndDelete({ _id: req.params.id, user: req.user });
+    if (!pregled) return res.status(404).json({ message: "Pregled ni najden" });
+    res.json({ message: "Pregled uspešno izbrisan" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;

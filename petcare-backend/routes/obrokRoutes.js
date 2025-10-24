@@ -29,4 +29,34 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
+// Posodobi obrok po ID-ju
+router.put("/:id", protect, async (req, res) => {
+  try {
+    const obrok = await Obrok.findOne({ _id: req.params.id, user: req.user });
+    if (!obrok) return res.status(404).json({ message: "Obrok ni najden" });
+
+    const { ime, datum, ura, pet } = req.body;
+    obrok.ime = ime || obrok.ime;
+    obrok.datum = datum || obrok.datum;
+    obrok.ura = ura || obrok.ura;
+    obrok.pet = pet || obrok.pet;
+
+    const updatedObrok = await obrok.save();
+    res.json(updatedObrok);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Izbriši obrok po ID-ju
+router.delete("/:id", protect, async (req, res) => {
+  try {
+    const obrok = await Obrok.findOneAndDelete({ _id: req.params.id, user: req.user });
+    if (!obrok) return res.status(404).json({ message: "Obrok ni najden" });
+    res.json({ message: "Obrok uspešno izbrisan" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;

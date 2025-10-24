@@ -29,4 +29,35 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
+// Posodobi opomnik po ID-ju
+router.put("/:id", protect, async (req, res) => {
+  try {
+    const opomnik = await Opomnik.findOne({ _id: req.params.id, user: req.user });
+    if (!opomnik) return res.status(404).json({ message: "Opomnik ni najden" });
+
+    const { datum, ura, naziv, status, pet } = req.body;
+    opomnik.datum = datum || opomnik.datum;
+    opomnik.ura = ura || opomnik.ura;
+    opomnik.naziv = naziv || opomnik.naziv;
+    opomnik.status = status || opomnik.status;
+    opomnik.pet = pet || opomnik.pet;
+
+    const updatedOpomnik = await opomnik.save();
+    res.json(updatedOpomnik);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Izbriši opomnik po ID-ju
+router.delete("/:id", protect, async (req, res) => {
+  try {
+    const opomnik = await Opomnik.findOneAndDelete({ _id: req.params.id, user: req.user });
+    if (!opomnik) return res.status(404).json({ message: "Opomnik ni najden" });
+    res.json({ message: "Opomnik uspešno izbrisan" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;
