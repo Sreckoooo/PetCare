@@ -20,7 +20,7 @@ const Login = () => {
     try {
       const res = await axios.post(`${API_URL}/users/login`, {
         email: form.email,
-        password: form.password
+        geslo: form.password
       });
       login(res.data); // shrani token in uporabnika v AuthContext
       navigate('/main'); // preusmeri na glavno stran
