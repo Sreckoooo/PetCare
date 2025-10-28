@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MainApp.css';
+import Weather from '../../components/Weather';
 
 const MainApp = () => {
     const navigate = useNavigate();
@@ -29,13 +30,13 @@ const MainApp = () => {
     };
 
     const handleMyPets = () => {
-        navigate('/mypets'); 
+        navigate('/mypets');
     };
     const handleViewMyPets = () => {
-        navigate('/mypets'); 
+        navigate('/mypets');
     };
-     const handleHealth = () => {
-        navigate('/health'); 
+    const handleHealth = () => {
+        navigate('/health');
     };
 
     // Calendar functions
@@ -61,7 +62,7 @@ const MainApp = () => {
         const firstDay = getFirstDayOfMonth(selectedDate);
         const days = [];
         const today = new Date();
-        
+
         // Empty cells for days before month starts
         for (let i = 0; i < firstDay; i++) {
             days.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
@@ -69,14 +70,14 @@ const MainApp = () => {
 
         // Days of the month
         for (let day = 1; day <= daysInMonth; day++) {
-            const isToday = day === today.getDate() && 
-                           selectedDate.getMonth() === today.getMonth() && 
-                           selectedDate.getFullYear() === today.getFullYear();
+            const isToday = day === today.getDate() &&
+                selectedDate.getMonth() === today.getMonth() &&
+                selectedDate.getFullYear() === today.getFullYear();
             const hasApt = hasAppointment(day);
 
             days.push(
-                <div 
-                    key={day} 
+                <div
+                    key={day}
                     className={`calendar-day ${isToday ? 'today' : ''} ${hasApt ? 'has-appointment' : ''}`}
                 >
                     {day}
@@ -138,7 +139,7 @@ const MainApp = () => {
                         <span>Settings</span>
                     </div>
                 </nav>
-
+                <Weather />
                 <div className="sidebar-footer">
                     <div className="nav-item" onClick={handleLogout}>
                         <span className="nav-icon">🚪</span>
@@ -157,7 +158,7 @@ const MainApp = () => {
                             <div className="card-icon">🐾</div>
                             <h3>My Pets</h3>
                         </div>
-                        
+
                         <div className="pet-item">
                             <div className="pet-avatar"></div>
                             <div className="pet-info">

@@ -1,0 +1,40 @@
+/* Weather komponenta v sidebarju */
+.sidebar-weather {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* razmak med mestom in ikono/temperaturo */
+    padding: 18px 28px;
+    border-top: 1px solid #E8E8E8; /* samo zgornja črta */
+    margin-bottom: 0;
+    background-color: transparent; /* odstranjen background */
+    border-radius: 0; /* odstranjen border radius */
+}
+
+.weather-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.weather-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.weather-icon {
+    width: 42px;
+    height: 42px;
+}
+
+.weather-temp {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.weather-city {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--secondary);
+}

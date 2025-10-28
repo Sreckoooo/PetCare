@@ -9,6 +9,7 @@ import obrokRoutes from './routes/obrokRoutes.js';
 import aktivnostRoutes from './routes/aktivnostRoutes.js';
 import pregledRoutes from './routes/pregledRoutes.js';
 import opomnikRoutes from './routes/opomnikRoutes.js';
+import weatherRoutes from './routes/weatherRoutes.js';
 
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.use('/api/obroki', obrokRoutes);
 app.use('/api/aktivnosti', aktivnostRoutes);
 app.use('/api/pregledi', pregledRoutes);
 app.use('/api/opomniki', opomnikRoutes);
+app.use('/api/weather', weatherRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
