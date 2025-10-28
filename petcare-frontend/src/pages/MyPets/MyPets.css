@@ -1,0 +1,390 @@
+/* MyPets.css - Minimalistični dizajn kot MainApp */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #2D3142;
+    --secondary: #4F5D75;
+    --accent: #EF8354;
+    --background: #FFFFFF;
+}
+
+.mypets-page {
+    min-height: 100vh;
+    background: #FAFAFA;
+    padding: 32px;
+    position: relative;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Back Arrow */
+.back-arrow {
+    position: fixed;
+    top: 32px;
+    left: 32px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #E8E8E8;
+    background: var(--background);
+    color: var(--primary);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.back-arrow:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: translateX(-3px);
+}
+
+/* Header */
+.mypets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-left: 60px;
+}
+
+.mypets-header h1 {
+    color: var(--primary);
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.add-pet-btn {
+    padding: 12px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.add-pet-btn:hover {
+    background: #E6744A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 131, 84, 0.3);
+}
+
+/* Pets Container */
+.pets-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Pet Card */
+.pet-card {
+    background: var(--background);
+    border-radius: 12px;
+    border: 1px solid #E8E8E8;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.pet-card:hover {
+    border-color: var(--secondary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+
+/* Pet Image Container */
+.pet-image-container {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.pet-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pet-avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #FF9F6B);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(239, 131, 84, 0.3);
+}
+
+.change-pet-photo-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--background);
+    border: 1px solid #E8E8E8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.change-pet-photo-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.1);
+}
+
+/* Pet Info Section */
+.pet-info-section {
+    padding: 28px;
+}
+
+.pet-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.pet-card-header h2 {
+    color: var(--primary);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.pet-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-pet-btn {
+    padding: 8px 16px;
+    background: #FAFAFA;
+    color: var(--primary);
+    border: 1px solid #E8E8E8;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.edit-pet-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.delete-pet-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #E8E8E8;
+    background: #FAFAFA;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-pet-btn:hover {
+    background: #fee;
+    border-color: #fcc;
+    transform: scale(1.05);
+}
+
+/* Pet Details */
+.pet-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #FAFAFA;
+    border-radius: 8px;
+    border: 1px solid #E8E8E8;
+    transition: all 0.2s ease;
+}
+
+.detail-row:hover {
+    background: #F5F5F5;
+}
+
+.detail-row label {
+    color: var(--secondary);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-row span {
+    color: var(--primary);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* Edit Inputs */
+.edit-input-name {
+    width: 100%;
+    padding: 8px 12px;
+    background: #FAFAFA;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    color: var(--primary);
+    font-size: 24px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.edit-input-name:focus {
+    outline: none;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(239, 131, 84, 0.1);
+}
+
+.edit-input {
+    padding: 6px 10px;
+    background: white;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    color: var(--primary);
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    min-width: 150px;
+    text-align: right;
+}
+
+.edit-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(239, 131, 84, 0.1);
+}
+
+.edit-select {
+    padding: 6px 10px;
+    background: white;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    color: var(--primary);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 150px;
+}
+
+.edit-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(239, 131, 84, 0.1);
+}
+
+/* Decoration circles - odstranimo jih */
+.decoration-circle {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .pets-container {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+}
+
+@media (max-width: 968px) {
+    .mypets-page {
+        padding: 24px;
+    }
+
+    .back-arrow {
+        top: 24px;
+        left: 24px;
+    }
+
+    .mypets-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding-left: 0;
+    }
+
+    .mypets-header h1 {
+        font-size: 28px;
+    }
+
+    .pets-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .mypets-page {
+        padding: 16px;
+    }
+
+    .back-arrow {
+        top: 16px;
+        left: 16px;
+    }
+
+    .mypets-header h1 {
+        font-size: 24px;
+    }
+
+    .pet-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .pet-actions {
+        width: 100%;
+    }
+
+    .edit-pet-btn {
+        flex: 1;
+    }
+}
