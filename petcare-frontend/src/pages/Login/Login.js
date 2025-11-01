@@ -22,8 +22,8 @@ const Login = () => {
         email: form.email,
         geslo: form.password
       });
-      login(res.data); // shrani token in uporabnika v AuthContext
-      navigate('/main'); // preusmeri na glavno stran
+      login(res.data);
+      navigate('/main'); 
     } catch (err) {
       console.error(err);
       setError('Napaka pri prijavi. Preveri email in geslo.');

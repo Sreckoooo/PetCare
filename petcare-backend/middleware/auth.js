@@ -11,7 +11,7 @@ const protect = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.id; // v req.user bo zdaj ID uporabnika iz tokena
+    req.user = decoded.id; 
     next();
   } catch (error) {
     res.status(401).json({ message: "Neveljaven ali potekel token" });

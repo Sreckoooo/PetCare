@@ -3,7 +3,7 @@ import axios from 'axios';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    const API_KEY = 'REMOVED_OPENWEATHER_API_KEY'; // tvoj OpenWeatherMap ključ
+    const API_KEY = 'REMOVED_OPENWEATHER_API_KEY'; 
     const lat = 46.4192;
     const lon = 15.8701;
 

@@ -5,7 +5,7 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
-// Registracija
+
 router.post('/register', async (req, res) => {
   const { ime, priimek, email, geslo } = req.body;
   if (!ime || !priimek || !email || !geslo)
@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
   res.status(201).json({ message: 'Registracija uspešna', user: userWithoutPassword });
 });
 
-// Prijava (z JWT)
+
 router.post('/login', async (req, res) => {
   const { email, geslo } = req.body;
 
@@ -40,7 +40,7 @@ router.post('/login', async (req, res) => {
   const isMatch = await bcrypt.compare(geslo, user.geslo);
   if (!isMatch) return res.status(401).json({ message: 'Napačno geslo' });
 
-  // 🔐 Ustvari JWT token
+
   const token = jwt.sign(
     { id: user._id, email: user.email },
     process.env.JWT_SECRET,
@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
   });
 });
 
-// GET /api/users (brez gesel)
+
 router.get('/', async (req, res) => {
   try {
     const users = await User.find({}, '-geslo');

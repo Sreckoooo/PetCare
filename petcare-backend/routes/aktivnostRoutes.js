@@ -4,14 +4,14 @@ import protect from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Dodaj aktivnost
+
 router.post('/', protect, async (req, res) => {
   const { naziv, trajanje, datum, ura, pet } = req.body;
   if (!naziv || !trajanje || !datum || !ura || !pet)
     return res.status(400).json({ message: 'Vsa obvezna polja niso izpolnjena' });
 
   try {
-    const user = req.user; // ID uporabnika iz JWT
+    const user = req.user; 
     const aktivnost = await Aktivnost.create({ naziv, trajanje, datum, ura, pet, user });
     res.status(201).json(aktivnost);
   } catch (error) {
@@ -19,7 +19,7 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// GET vse aktivnosti (s JWT)
+
 router.get("/", protect, async (req, res) => {
   try {
     const aktivnosti = await Aktivnost.find({ user: req.user }).populate("pet", "ime pasma -_id");
@@ -29,7 +29,7 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-// Posodobi aktivnost po ID-ju
+
 router.put("/:id", protect, async (req, res) => {
   try {
     const aktivnost = await Aktivnost.findOne({ _id: req.params.id, user: req.user });
@@ -49,7 +49,7 @@ router.put("/:id", protect, async (req, res) => {
   }
 });
 
-// Izbriši aktivnost po ID-ju
+
 router.delete("/:id", protect, async (req, res) => {
   try {
     const aktivnost = await Aktivnost.findOneAndDelete({ _id: req.params.id, user: req.user });

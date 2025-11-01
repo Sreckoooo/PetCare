@@ -4,14 +4,14 @@ import protect from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Dodaj pregled
+
 router.post('/', protect, async (req, res) => {
   const { datum, veterinar, naziv, datoteka, pet } = req.body;
   if (!datum || !veterinar || !naziv || !pet)
     return res.status(400).json({ message: 'Vsa obvezna polja niso izpolnjena' });
 
   try {
-    const user = req.user; // ID uporabnika iz JWT
+    const user = req.user; 
     const pregled = await Pregled.create({ datum, veterinar, naziv, datoteka, pet, user });
     res.status(201).json(pregled);
   } catch (error) {
@@ -19,7 +19,7 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// GET vsi pregledi (s JWT)
+
 router.get("/", protect, async (req, res) => {
   try {
     const pregledi = await Pregled.find({ user: req.user })
@@ -30,7 +30,7 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-// Posodobi pregled po ID-ju
+
 router.put("/:id", protect, async (req, res) => {
   try {
     const pregled = await Pregled.findOne({ _id: req.params.id, user: req.user });
@@ -50,7 +50,7 @@ router.put("/:id", protect, async (req, res) => {
   }
 });
 
-// Izbriši pregled po ID-ju
+
 router.delete("/:id", protect, async (req, res) => {
   try {
     const pregled = await Pregled.findOneAndDelete({ _id: req.params.id, user: req.user });

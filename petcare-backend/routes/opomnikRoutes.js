@@ -4,14 +4,14 @@ import protect from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Dodaj opomnik
+
 router.post('/', protect, async (req, res) => {
   const { datum, ura, naziv, status, pet } = req.body;
   if (!datum || !ura || !naziv || !status || !pet)
     return res.status(400).json({ message: 'Vsa obvezna polja niso izpolnjena' });
 
   try {
-    const user = req.user; // ID uporabnika iz JWT
+    const user = req.user; 
     const opomnik = await Opomnik.create({ datum, ura, naziv, status, pet, user });
     res.status(201).json(opomnik);
   } catch (error) {
@@ -19,7 +19,7 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// GET vsi opomniki (s JWT)
+
 router.get("/", protect, async (req, res) => {
   try {
     const opomniki = await Opomnik.find({ user: req.user }).populate("pet", "ime pasma -_id");
@@ -29,7 +29,7 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-// Posodobi opomnik po ID-ju
+
 router.put("/:id", protect, async (req, res) => {
   try {
     const opomnik = await Opomnik.findOne({ _id: req.params.id, user: req.user });
@@ -49,7 +49,7 @@ router.put("/:id", protect, async (req, res) => {
   }
 });
 
-// Izbriši opomnik po ID-ju
+
 router.delete("/:id", protect, async (req, res) => {
   try {
     const opomnik = await Opomnik.findOneAndDelete({ _id: req.params.id, user: req.user });

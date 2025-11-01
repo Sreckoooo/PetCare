@@ -40,8 +40,8 @@ const SignupPage = () => {
         email: formData.email,
         geslo: formData.geslo
       });
-      login(res.data); // shrani token in uporabnika v AuthContext
-      navigate('/main'); // preusmeri na glavno stran
+      login(res.data); 
+      navigate('/main'); 
     } catch (err) {
       console.error(err);
       setError('Napaka pri registraciji. Email je morda že uporabljen.');

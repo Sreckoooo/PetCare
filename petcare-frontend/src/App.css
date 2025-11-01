@@ -23,7 +23,7 @@ code {
     monospace;
 }
 
-/* Scrollbar styling */
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -42,17 +42,17 @@ code {
   background: #ff7e39;
 }
 
-/* Global button reset */
+
 button {
   font-family: inherit;
 }
 
-/* Input styling */
+
 input, select, textarea {
   font-family: inherit;
 }
 
-/* Remove focus outline and add custom */
+
 button:focus,
 input:focus,
 select:focus,
@@ -60,7 +60,7 @@ textarea:focus {
   outline: none;
 }
 
-/* Smooth scrolling */
+
 html {
   scroll-behavior: smooth;
 }

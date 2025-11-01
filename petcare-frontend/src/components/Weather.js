@@ -6,12 +6,12 @@ const Weather = () => {
     const [temp, setTemp] = useState('--');
     const [icon, setIcon] = useState('01d');
     const [loading, setLoading] = useState(true);
-    const city = 'PTUJ'; // vedno prikazano ime mesta
+    const city = 'PTUJ'; 
 
     useEffect(() => {
         const fetchWeather = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/weather'); // ali Render URL
+                const res = await axios.get('http://localhost:5001/api/weather');
                 setTemp(Math.round(res.data.main.temp));
                 setIcon(res.data.weather[0].icon);
             } catch (err) {

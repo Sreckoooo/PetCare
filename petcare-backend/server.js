@@ -19,11 +19,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// User in Pet route-i
+
 app.use('/api/users', userRoutes);
 app.use("/api/pets", petRoutes);
-
-// Ostale entitete
 app.use('/api/zdravila', zdraviloRoutes);
 app.use('/api/obroki', obrokRoutes);
 app.use('/api/aktivnosti', aktivnostRoutes);

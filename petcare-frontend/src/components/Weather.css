@@ -1,13 +1,12 @@
-/* Weather komponenta v sidebarju */
 .sidebar-weather {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* razmak med mestom in ikono/temperaturo */
+    justify-content: space-between; 
     padding: 18px 28px;
-    border-top: 1px solid #E8E8E8; /* samo zgornja črta */
+    border-top: 1px solid #E8E8E8; 
     margin-bottom: 0;
-    background-color: transparent; /* odstranjen background */
-    border-radius: 0; /* odstranjen border radius */
+    background-color: transparent; 
+    border-radius: 0; 
 }
 
 .weather-left {

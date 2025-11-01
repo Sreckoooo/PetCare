@@ -4,14 +4,14 @@ import protect from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Dodaj zdravilo
+
 router.post('/', protect, async (req, res) => {
   const { ime, odmerek, pogostost, datum_zacetka, datum_konca, pet } = req.body;
   if (!ime || !odmerek || !pogostost || !datum_zacetka || !pet)
     return res.status(400).json({ message: 'Vsa obvezna polja niso izpolnjena' });
 
   try {
-    const user = req.user; // ID uporabnika iz JWT
+    const user = req.user; 
     const zdravilo = await Zdravilo.create({ ime, odmerek, pogostost, datum_zacetka, datum_konca, pet, user });
     res.status(201).json(zdravilo);
   } catch (error) {
@@ -19,7 +19,7 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// GET vsa zdravila (s JWT)
+
 router.get("/", protect, async (req, res) => {
   try {
     const zdravila = await Zdravilo.find({ user: req.user }).populate("pet", "ime pasma -_id");
@@ -29,7 +29,7 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-// Posodobi zdravilo po ID-ju
+
 router.put("/:id", protect, async (req, res) => {
   try {
     const zdravilo = await Zdravilo.findOne({ _id: req.params.id, user: req.user });
@@ -50,7 +50,7 @@ router.put("/:id", protect, async (req, res) => {
   }
 });
 
-// Izbriši zdravilo po ID-ju
+
 router.delete("/:id", protect, async (req, res) => {
   try {
     const zdravilo = await Zdravilo.findOneAndDelete({ _id: req.params.id, user: req.user });

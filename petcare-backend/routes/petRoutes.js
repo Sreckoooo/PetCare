@@ -4,7 +4,7 @@ import protect from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Dodaj novo žival
+
 router.post("/", protect, async (req, res) => {
   const { ime, pasma, datum_rojstva, spol } = req.body;
   const owner = req.user;
@@ -20,7 +20,7 @@ router.post("/", protect, async (req, res) => {
   }
 });
 
-// GET vse živali prijavljenega uporabnika
+
 
 router.get("/", protect, async (req, res) => {
   try {
@@ -31,7 +31,7 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-// Posodobi žival po ID-ju
+
 router.put("/:id", protect, async (req, res) => {
   try {
     const pet = await Pet.findOne({ _id: req.params.id, owner: req.user });
@@ -50,7 +50,7 @@ router.put("/:id", protect, async (req, res) => {
   }
 });
 
-// Izbriši žival po ID-ju
+
 router.delete("/:id", protect, async (req, res) => {
   try {
     const pet = await Pet.findOneAndDelete({ _id: req.params.id, owner: req.user });
