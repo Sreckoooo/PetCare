@@ -11,7 +11,8 @@ const Weather = () => {
     useEffect(() => {
         const fetchWeather = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/weather');
+                const BASE_URL = process.env.REACT_APP_API_URL_WEATHER || 'http://localhost:5001/api/weather';
+                const res = await axios.get(BASE_URL);
                 setTemp(Math.round(res.data.main.temp));
                 setIcon(res.data.weather[0].icon);
             } catch (err) {
