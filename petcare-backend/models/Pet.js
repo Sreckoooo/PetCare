@@ -12,7 +12,11 @@ const petSchema = new mongoose.Schema(
       required: true,
     },
     pasma: {
-      type: String, 
+      type: String,
+      required: true,
+    },
+    vrsta: {
+      type: String,
       required: true,
     },
     datum_rojstva: {
@@ -22,6 +26,10 @@ const petSchema = new mongoose.Schema(
     spol: {
       type: String,
       required: true,
+    },
+    image: {
+      data: Buffer,
+      contentType: String
     }
   },
   { timestamps: true }

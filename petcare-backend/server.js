@@ -11,14 +11,18 @@ import pregledRoutes from './routes/pregledRoutes.js';
 import opomnikRoutes from './routes/opomnikRoutes.js';
 import weatherRoutes from './routes/weatherRoutes.js';
 
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 connectDB();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-
 
 app.use('/api/users', userRoutes);
 app.use("/api/pets", petRoutes);
@@ -28,6 +32,7 @@ app.use('/api/aktivnosti', aktivnostRoutes);
 app.use('/api/pregledi', pregledRoutes);
 app.use('/api/opomniki', opomnikRoutes);
 app.use('/api/weather', weatherRoutes);
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

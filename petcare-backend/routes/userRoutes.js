@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import protect from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -55,12 +56,36 @@ router.post('/login', async (req, res) => {
 });
 
 
-router.get('/', async (req, res) => {
+router.get('/me', protect, async (req, res) => {
+  res.json(req.user);
+});
+
+// PUT /me – urejanje lastnih podatkov
+router.put('/me', protect, async (req, res) => {
   try {
-    const users = await User.find({}, '-geslo');
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'Uporabnik ni najden' });
+
+    const { ime, priimek, geslo } = req.body;
+
+    if (ime) user.ime = ime;
+    if (priimek) user.priimek = priimek;
+    if (geslo) {
+      const isSamePassword = await bcrypt.compare(geslo, user.geslo);
+      if (isSamePassword) {
+        return res.status(400).json({ message: 'Novo geslo ne sme biti enako trenutnemu' });
+      }
+      // Hash gesla pred shranjevanjem
+      const hashedPassword = await bcrypt.hash(geslo, 10);
+      user.geslo = hashedPassword;
+    }
+
+    const updatedUser = await user.save();
+    const { geslo: pw, ...userWithoutPassword } = updatedUser._doc;
+
+    res.json(userWithoutPassword);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
