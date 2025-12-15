@@ -70,7 +70,7 @@ const isPastDate = (dateStr) => {
   if (!dateStr) return false;
   const selected = new Date(dateStr);
   const today = new Date();
-  today.setHours(0,0,0,0);
+  today.setHours(0, 0, 0, 0);
   return selected < today;
 };
 
@@ -441,7 +441,7 @@ const Reminders = () => {
     setItems(prev =>
       prev.map(i =>
         i.id === item.id ? { ...i, status: newStatus } : i
-      ) 
+      )
     );
   };
 
@@ -503,268 +503,267 @@ const Reminders = () => {
   });
 
   return (
-  <div className="app-layout">
-    <Sidebar active="reminders" />
+    <div className="app-layout">
+      <Sidebar active="reminders" />
 
-    <div className="page-content reminders-page">
-      <h1>Opomniki</h1>
+      <div className="page-content reminders-page">
+        <h1>Opomniki</h1>
 
-      {/* 🔹 ISTA VRSTICA: izberi ljubljenčka + dodaj */}
-      <div className="reminders-actions">
-        <select
-          value={selectedPet}
-          onChange={(e) => setSelectedPet(e.target.value)}
-        >
-          <option value="">Izberi ljubljenčka</option>
-          {pets.map((p) => (
-            <option key={p._id} value={p._id}>
-              {p.ime}
-            </option>
-          ))}
-        </select>
+        {/* 🔹 ISTA VRSTICA: izberi ljubljenčka + dodaj */}
+        <div className="reminders-actions">
+          <select
+            value={selectedPet}
+            onChange={(e) => setSelectedPet(e.target.value)}
+          >
+            <option value="">Izberi ljubljenčka</option>
+            {pets.map((p) => (
+              <option key={p._id} value={p._id}>
+                {p.ime}
+              </option>
+            ))}
+          </select>
 
-        {selectedPet && (
-          <button className="add-btn" onClick={() => setShowForm(true)}>
-            + Dodaj opomnik
+          {selectedPet && (
+            <button className="add-btn" onClick={() => setShowForm(true)}>
+              + Dodaj opomnik
+            </button>
+          )}
+        </div>
+
+        {/* TABS */}
+        <div className="reminder-tabs">
+          <button
+            className={view === "vse" ? "active" : ""}
+            onClick={() => setView("vse")}
+          >
+            Vse
           </button>
-        )}
-      </div>
+          <button
+            className={view === "danes" ? "active" : ""}
+            onClick={() => setView("danes")}
+          >
+            Danes
+          </button>
+          <button
+            className={view === "jutri" ? "active" : ""}
+            onClick={() => setView("jutri")}
+          >
+            Jutri
+          </button>
+          <button
+            className={view === "prihodnje" ? "active" : ""}
+            onClick={() => setView("prihodnje")}
+          >
+            Prihodnje
+          </button>
+          <button
+            className={view === "pretekle" ? "active" : ""}
+            onClick={() => setView("pretekle")}
+          >
+            Pretekle
+          </button>
+          <button
+            className={hideDone ? "active" : ""}
+            onClick={() => setHideDone(!hideDone)}
+          >
+            {hideDone ? "Prikaži opravljene" : "Skrij opravljene"}
+          </button>
+        </div>
 
-      {/* TABS */}
-      <div className="reminder-tabs">
-        <button
-          className={view === "vse" ? "active" : ""}
-          onClick={() => setView("vse")}
-        >
-          Vse
-        </button>
-        <button
-          className={view === "danes" ? "active" : ""}
-          onClick={() => setView("danes")}
-        >
-          Danes
-        </button>
-        <button
-          className={view === "jutri" ? "active" : ""}
-          onClick={() => setView("jutri")}
-        >
-          Jutri
-        </button>
-        <button
-          className={view === "prihodnje" ? "active" : ""}
-          onClick={() => setView("prihodnje")}
-        >
-          Prihodnje
-        </button>
-        <button
-          className={view === "pretekle" ? "active" : ""}
-          onClick={() => setView("pretekle")}
-        >
-          Pretekle
-        </button>
-        <button
-          className={hideDone ? "active" : ""}
-          onClick={() => setHideDone(!hideDone)}
-        >
-          {hideDone ? "Prikaži opravljene" : "Skrij opravljene"}
-        </button>
-      </div>
+        {/* FORM */}
+        {showForm && (
+          <div className="add-pet-form-overlay">
+            <form className="add-pet-form" onSubmit={submitReminder}>
+              <h3>Dodaj opomnik</h3>
 
-      {/* FORM */}
-      {showForm && (
-        <div className="add-pet-form-overlay">
-          <form className="add-pet-form" onSubmit={submitReminder}>
-            <h3>Dodaj opomnik</h3>
-
-            <input
-              type="text"
-              placeholder="Naziv"
-              value={formData.naziv}
-              onChange={(e) =>
-                setFormData({ ...formData, naziv: e.target.value })
-              }
-              required
-            />
-
-            <select
-              value={formData.tip}
-              onChange={(e) =>
-                setFormData({ ...formData, tip: e.target.value })
-              }
-            >
-              <option value="splošni">Splošni</option>
-              <option value="zdravilo">Zdravilo</option>
-              <option value="aktivnost">Aktivnost</option>
-              <option value="obrok">Obrok</option>
-            </select>
-
-            <input
-              type="date"
-              value={formData.datum}
-              onChange={(e) =>
-                setFormData({ ...formData, datum: e.target.value })
-              }
-              required
-            />
-
-            <input
-              type="time"
-              value={formData.ura}
-              onChange={(e) =>
-                setFormData({ ...formData, ura: e.target.value })
-              }
-              required
-            />
-
-            {formData.tip === "aktivnost" && (
               <input
-                type="number"
-                placeholder="Trajanje (v minutah)"
-                value={formData.trajanje}
+                type="text"
+                placeholder="Naziv"
+                value={formData.naziv}
                 onChange={(e) =>
-                  setFormData({ ...formData, trajanje: e.target.value })
+                  setFormData({ ...formData, naziv: e.target.value })
                 }
                 required
               />
-            )}
 
-            {formData.tip === "zdravilo" && (
-              <>
+              <select
+                value={formData.tip}
+                onChange={(e) =>
+                  setFormData({ ...formData, tip: e.target.value })
+                }
+              >
+                <option value="splošni">Splošni</option>
+                <option value="zdravilo">Zdravilo</option>
+                <option value="aktivnost">Aktivnost</option>
+                <option value="obrok">Obrok</option>
+              </select>
+
+              <input
+                type="date"
+                value={formData.datum}
+                onChange={(e) =>
+                  setFormData({ ...formData, datum: e.target.value })
+                }
+                required
+              />
+
+              <input
+                type="time"
+                value={formData.ura}
+                onChange={(e) =>
+                  setFormData({ ...formData, ura: e.target.value })
+                }
+                required
+              />
+
+              {formData.tip === "aktivnost" && (
                 <input
-                  type="date"
-                  value={formData.datum_konca}
+                  type="number"
+                  placeholder="Trajanje (v minutah)"
+                  value={formData.trajanje}
                   onChange={(e) =>
-                    setFormData({ ...formData, datum_konca: e.target.value })
+                    setFormData({ ...formData, trajanje: e.target.value })
                   }
                   required
                 />
+              )}
 
-                <select
-                  value={formData.zdraviloId}
-                  onChange={(e) =>
-                    setFormData({ ...formData, zdraviloId: e.target.value })
-                  }
-                  required
+              {formData.tip === "zdravilo" && (
+                <>
+                  <input
+                    type="date"
+                    value={formData.datum_konca}
+                    onChange={(e) =>
+                      setFormData({ ...formData, datum_konca: e.target.value })
+                    }
+                    required
+                  />
+
+                  <select
+                    value={formData.zdraviloId}
+                    onChange={(e) =>
+                      setFormData({ ...formData, zdraviloId: e.target.value })
+                    }
+                    required
+                  >
+                    <option value="">Izberi zdravilo</option>
+                    {zdravila.map((z) => (
+                      <option key={z._id} value={z._id}>
+                        {z.ime} ({z.vrsta_odmerka})
+                      </option>
+                    ))}
+                  </select>
+
+                  <input
+                    type="text"
+                    placeholder="Odmerek"
+                    value={formData.odmerek}
+                    onChange={(e) =>
+                      setFormData({ ...formData, odmerek: e.target.value })
+                    }
+                    required
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Pogostost"
+                    value={formData.pogostost}
+                    onChange={(e) =>
+                      setFormData({ ...formData, pogostost: e.target.value })
+                    }
+                    required
+                  />
+                </>
+              )}
+
+              <div className="form-buttons">
+                <button type="submit">Shrani</button>
+                <button type="button" onClick={() => setShowForm(false)}>
+                  Prekliči
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* LISTA */}
+        {Object.entries(grouped).map(([day, list]) => (
+          <div key={day}>
+            <h2>{formatDateLabel(day)}</h2>
+
+            {list.map((i) => (
+              <div
+                key={i.id}
+                className={`card reminder-${i.tip} ${i.status === "done" ? "done" : ""
+                  }`}
+              >
+                {/* LEVI DEL – VSEBINA */}
+                <div className="reminder-main">
+                  <div className="reminder-header">
+                    <h3>
+                      {i.naziv}
+                      <span className={`reminder-type tag-${i.tip}`}>
+                        {i.tip === "splošni" && "Splošni"}
+                        {i.tip === "zdravilo" && "Zdravilo"}
+                        {i.tip === "aktivnost" && "Aktivnost"}
+                        {i.tip === "obrok" && "Obrok"}
+                      </span>
+                    </h3>
+                  </div>
+
+                  <div className="reminder-details">
+                    {/* DATUM + URA */}
+                    <div>
+                      Datum:{" "}
+                      {new Date(i.datum).toLocaleDateString("sl-SI")}
+                      {i.ura && ` ob ${formatTime(i.ura)}`}
+                    </div>
+
+                    {/* ZDRAVLJENJE */}
+                    {i.tip === "zdravilo" && (
+                      <>
+                        {i.odmerek && <div>Odmerek: {i.odmerek}</div>}
+                        {i.pogostost && <div>Pogostost: {i.pogostost}</div>}
+                      </>
+                    )}
+
+                    {/* AKTIVNOST */}
+                    {i.tip === "aktivnost" && i.trajanje && (
+                      <div>Trajanje: {i.trajanje} min</div>
+                    )}
+                  </div>
+
+                  {i.rawDate >= startOfToday && (
+                    <div className="reminder-actions">
+                      <label className="reminder-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={i.status === "done"}
+                          onChange={() => toggleStatus(i)}
+                        />
+                        <span>Opravljeno</span>
+                      </label>
+                    </div>
+                  )}
+                </div>
+
+                {/* DESNI DEL – DELETE (ZDAJ BO NA SREDINI) */}
+                <button
+                  className="reminder-delete"
+                  onClick={() => removeReminder(i)}
+                  title="Izbriši opomnik"
                 >
-                  <option value="">Izberi zdravilo</option>
-                  {zdravila.map((z) => (
-                    <option key={z._id} value={z._id}>
-                      {z.ime} ({z.vrsta_odmerka})
-                    </option>
-                  ))}
-                </select>
+                  🗑️
+                </button>
+              </div>
 
-                <input
-                  type="text"
-                  placeholder="Odmerek"
-                  value={formData.odmerek}
-                  onChange={(e) =>
-                    setFormData({ ...formData, odmerek: e.target.value })
-                  }
-                  required
-                />
 
-                <input
-                  type="text"
-                  placeholder="Pogostost"
-                  value={formData.pogostost}
-                  onChange={(e) =>
-                    setFormData({ ...formData, pogostost: e.target.value })
-                  }
-                  required
-                />
-              </>
-            )}
-
-            <div className="form-buttons">
-              <button type="submit">Shrani</button>
-              <button type="button" onClick={() => setShowForm(false)}>
-                Prekliči
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* LISTA */}
-      {Object.entries(grouped).map(([day, list]) => (
-        <div key={day}>
-          <h2>{formatDateLabel(day)}</h2>
-
-          {list.map((i) => (
-            <div
-  key={i.id}
-  className={`card reminder-${i.tip} ${
-    i.status === "done" ? "done" : ""
-  }`}
->
-  {/* LEVI DEL – VSEBINA */}
-  <div className="reminder-main">
-    <div className="reminder-header">
-      <h3>
-        {i.naziv}
-        <span className={`reminder-type tag-${i.tip}`}>
-          {i.tip === "splošni" && "Splošni"}
-          {i.tip === "zdravilo" && "Zdravilo"}
-          {i.tip === "aktivnost" && "Aktivnost"}
-          {i.tip === "obrok" && "Obrok"}
-        </span>
-      </h3>
-    </div>
-
-    <div className="reminder-details">
-      {/* DATUM + URA */}
-      <div>
-        Datum:{" "}
-        {new Date(i.datum).toLocaleDateString("sl-SI")}
-        {i.ura && ` ob ${formatTime(i.ura)}`}
+            ))}
+          </div>
+        ))}
       </div>
-
-      {/* ZDRAVLJENJE */}
-      {i.tip === "zdravilo" && (
-        <>
-          {i.odmerek && <div>Odmerek: {i.odmerek}</div>}
-          {i.pogostost && <div>Pogostost: {i.pogostost}</div>}
-        </>
-      )}
-
-      {/* AKTIVNOST */}
-      {i.tip === "aktivnost" && i.trajanje && (
-        <div>Trajanje: {i.trajanje} min</div>
-      )}
     </div>
-
-    {i.rawDate >= startOfToday && (
-      <div className="reminder-actions">
-        <label className="reminder-checkbox">
-          <input
-            type="checkbox"
-            checked={i.status === "done"}
-            onChange={() => toggleStatus(i)}
-          />
-          <span>Opravljeno</span>
-        </label>
-      </div>
-    )}
-  </div>
-
-  {/* DESNI DEL – DELETE (ZDAJ BO NA SREDINI) */}
-  <button
-    className="reminder-delete"
-    onClick={() => removeReminder(i)}
-    title="Izbriši opomnik"
-  >
-    🗑️
-  </button>
-</div>
-
-             
-          ))}
-        </div>
-      ))}
-    </div>
-  </div>
-);
+  );
 };
 
 export default Reminders;
