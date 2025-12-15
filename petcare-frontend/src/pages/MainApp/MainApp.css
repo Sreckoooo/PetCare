@@ -37,6 +37,7 @@
 
 .card {
   padding: 18px;
+  flex-direction: column;
   border-radius: 14px;
   font-size: 18px;
   font-weight: 600;

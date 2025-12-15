@@ -1,21 +1,34 @@
 import axios from "axios";
 
-// ================== BASE URL ==================
+/**
+ * Osnovni URL za backend API
+ */
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001/api";
 
-// ================== AUTH HEADER ==================
+/**
+ * Generira Authorization header z JWT žetonom
+ */
 const authHeader = (token) => ({
   headers: {
     Authorization: `Bearer ${token}`,
   },
 });
 
-// ================== PETS ==================
+/* =====================================================
+   PETS (LJUBLJENČKI)
+===================================================== */
+
+/**
+ * Pridobi vse ljubljenčke uporabnika
+ */
 export const getPets = async (token) => {
   const res = await axios.get(`${API_URL}/pets`, authHeader(token));
   return res.data;
 };
 
+/**
+ * Ustvari novega ljubljenčka (multipart/form-data)
+ */
 export const createPet = async (formData, token) => {
   const res = await axios.post(`${API_URL}/pets`, formData, {
     headers: {
@@ -26,6 +39,9 @@ export const createPet = async (formData, token) => {
   return res.data;
 };
 
+/**
+ * Posodobi obstoječega ljubljenčka
+ */
 export const updatePet = async (id, formData, token) => {
   const res = await axios.put(`${API_URL}/pets/${id}`, formData, {
     headers: {
@@ -36,38 +52,63 @@ export const updatePet = async (id, formData, token) => {
   return res.data;
 };
 
+/**
+ * Izbriše ljubljenčka
+ */
 export const deletePet = async (id, token) => {
   const res = await axios.delete(`${API_URL}/pets/${id}`, authHeader(token));
   return res.data;
 };
 
-// ================== ZDRAVILA ==================
+/* =====================================================
+   ZDRAVILA
+===================================================== */
+
+/**
+ * Pridobi vsa zdravila uporabnika
+ */
 export const getZdravila = async (token) => {
   const res = await axios.get(`${API_URL}/zdravila`, authHeader(token));
   return res.data;
 };
 
+/**
+ * Ustvari novo zdravilo
+ */
 export const createZdravilo = async (data, token) => {
-  // data: { ime, vrsta_odmereka }
   const res = await axios.post(`${API_URL}/zdravila`, data, authHeader(token));
   return res.data;
 };
 
+/**
+ * Posodobi zdravilo
+ */
 export const updateZdravilo = async (id, data, token) => {
-  const res = await axios.put(`${API_URL}/zdravila/${id}`, data, authHeader(token));
+  const res = await axios.put(
+    `${API_URL}/zdravila/${id}`,
+    data,
+    authHeader(token)
+  );
   return res.data;
 };
-
-export const deleteZdravilo = async (id, token) => {
-  const res = await axios.delete(`${API_URL}/zdravila/${id}`, authHeader(token));
-  return res.data;
-};
-
-// ================== PET-ZDRAVILA (ZDRAVLJENJA) ==================
 
 /**
- * Vsa zdravljenja za določenega ljubljenčka
- * GET /api/pet-zdravila/pet/:petId
+ * Izbriše zdravilo
+ */
+export const deleteZdravilo = async (id, token) => {
+  const res = await axios.delete(
+    `${API_URL}/zdravila/${id}`,
+    authHeader(token)
+  );
+  return res.data;
+};
+
+/* =====================================================
+   ZDRAVLJENJA (PET–ZDRAVILA)
+===================================================== */
+
+/**
+ * Pridobi vsa zdravljenja za določenega ljubljenčka
  */
 export const getPetZdravilaByPet = async (petId, token) => {
   const res = await axios.get(
@@ -78,10 +119,7 @@ export const getPetZdravilaByPet = async (petId, token) => {
 };
 
 /**
- * Normalizacija payload-a
- * frontend lahko pošlje:
- *  - petId / zdraviloId
- *  - ali pet / zdravilo
+ * Normalizira payload (petId/zdraviloId → pet/zdravilo)
  */
 const normalizePetZdraviloPayload = (data) => {
   if (!data || typeof data !== "object") return data;
@@ -102,8 +140,7 @@ const normalizePetZdraviloPayload = (data) => {
 };
 
 /**
- * Dodaj zdravljenje
- * POST /api/pet-zdravila
+ * Ustvari novo zdravljenje
  */
 export const createPetZdravilo = async (data, token) => {
   const payload = normalizePetZdraviloPayload(data);
@@ -117,8 +154,7 @@ export const createPetZdravilo = async (data, token) => {
 };
 
 /**
- * Uredi zdravljenje
- * PUT /api/pet-zdravila/:id
+ * Posodobi zdravljenje
  */
 export const updatePetZdravilo = async (id, data, token) => {
   const payload = normalizePetZdraviloPayload(data);
@@ -132,8 +168,7 @@ export const updatePetZdravilo = async (id, data, token) => {
 };
 
 /**
- * Izbriši zdravljenje
- * DELETE /api/pet-zdravila/:id
+ * Izbriše zdravljenje
  */
 export const deletePetZdravilo = async (id, token) => {
   const res = await axios.delete(
@@ -142,11 +177,13 @@ export const deletePetZdravilo = async (id, token) => {
   );
   return res.data;
 };
-// ================== PREGLEDI (EXAMS) ==================
+
+/* =====================================================
+   PREGLEDI (EXAMS)
+===================================================== */
 
 /**
- * Pregledi za določenega ljubljenčka
- * GET /api/pregledi/pet/:petId
+ * Pridobi vse preglede za določenega ljubljenčka
  */
 export const getPreglediByPet = async (petId, token) => {
   const res = await axios.get(
@@ -157,28 +194,20 @@ export const getPreglediByPet = async (petId, token) => {
 };
 
 /**
- * Uredi pregled
- * PUT /api/pregledi/:id
- * data: FormData (lahko tudi brez nove datoteke)
+ * Posodobi pregled (multipart/form-data)
  */
 export const updatePregled = async (id, data, token) => {
-  const res = await axios.put(
-    `${API_URL}/pregledi/${id}`,
-    data,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  const res = await axios.put(`${API_URL}/pregledi/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return res.data;
 };
 
 /**
- * Dodaj pregled
- * POST /api/pregledi
- * data: { pet, datum, veterinar, naziv }
+ * Ustvari nov pregled
  */
 export const createPregled = async (data, token) => {
   const res = await axios.post(
@@ -190,8 +219,7 @@ export const createPregled = async (data, token) => {
 };
 
 /**
- * Izbriši pregled
- * DELETE /api/pregledi/:id
+ * Izbriše pregled
  */
 export const deletePregled = async (id, token) => {
   const res = await axios.delete(
@@ -200,11 +228,13 @@ export const deletePregled = async (id, token) => {
   );
   return res.data;
 };
-// ================== OBROKI (MEALS) ==================
+
+/* =====================================================
+   OBROKI (MEALS)
+===================================================== */
 
 /**
  * Pridobi vse obroke uporabnika
- * GET /api/obroki
  */
 export const getObroki = async (token) => {
   const res = await axios.get(`${API_URL}/obroki`, authHeader(token));
@@ -212,8 +242,7 @@ export const getObroki = async (token) => {
 };
 
 /**
- * Vsi obroki za določenega ljubljenčka
- * GET /api/obroki/pet/:petId
+ * Pridobi obroke za določenega ljubljenčka
  */
 export const getObrokiByPet = async (petId, token) => {
   const res = await axios.get(
@@ -224,9 +253,7 @@ export const getObrokiByPet = async (petId, token) => {
 };
 
 /**
- * Dodaj nov obrok
- * POST /api/obroki
- * data: { ime, datum, ura, pet }
+ * Ustvari nov obrok
  */
 export const createObrok = async (data, token) => {
   const res = await axios.post(`${API_URL}/obroki`, data, authHeader(token));
@@ -235,26 +262,33 @@ export const createObrok = async (data, token) => {
 
 /**
  * Posodobi obrok
- * PUT /api/obroki/:id
  */
 export const updateObrok = async (id, data, token) => {
-  const res = await axios.put(`${API_URL}/obroki/${id}`, data, authHeader(token));
+  const res = await axios.put(
+    `${API_URL}/obroki/${id}`,
+    data,
+    authHeader(token)
+  );
   return res.data;
 };
 
 /**
- * Izbriši obrok
- * DELETE /api/obroki/:id
+ * Izbriše obrok
  */
 export const deleteObrok = async (id, token) => {
-  const res = await axios.delete(`${API_URL}/obroki/${id}`, authHeader(token));
+  const res = await axios.delete(
+    `${API_URL}/obroki/${id}`,
+    authHeader(token)
+  );
   return res.data;
 };
-// ================== AKTIVNOSTI (ACTIVITIES) ==================
+
+/* =====================================================
+   AKTIVNOSTI
+===================================================== */
 
 /**
  * Pridobi vse aktivnosti uporabnika
- * GET /api/aktivnosti
  */
 export const getAktivnosti = async (token) => {
   const res = await axios.get(`${API_URL}/aktivnosti`, authHeader(token));
@@ -262,8 +296,7 @@ export const getAktivnosti = async (token) => {
 };
 
 /**
- * Aktivnosti za določenega ljubljenčka
- * GET /api/aktivnosti/pet/:petId
+ * Pridobi aktivnosti za določenega ljubljenčka
  */
 export const getAktivnostiByPet = async (petId, token) => {
   const res = await axios.get(
@@ -274,18 +307,19 @@ export const getAktivnostiByPet = async (petId, token) => {
 };
 
 /**
- * Dodaj aktivnost
- * POST /api/aktivnosti
- * data: { ime, datum, ura, pet }
+ * Ustvari novo aktivnost
  */
 export const createAktivnost = async (data, token) => {
-  const res = await axios.post(`${API_URL}/aktivnosti`, data, authHeader(token));
+  const res = await axios.post(
+    `${API_URL}/aktivnosti`,
+    data,
+    authHeader(token)
+  );
   return res.data;
 };
 
 /**
  * Posodobi aktivnost
- * PUT /api/aktivnosti/:id
  */
 export const updateAktivnost = async (id, data, token) => {
   const res = await axios.put(
@@ -297,8 +331,7 @@ export const updateAktivnost = async (id, data, token) => {
 };
 
 /**
- * Izbriši aktivnost
- * DELETE /api/aktivnosti/:id
+ * Izbriše aktivnost
  */
 export const deleteAktivnost = async (id, token) => {
   const res = await axios.delete(
@@ -308,11 +341,12 @@ export const deleteAktivnost = async (id, token) => {
   return res.data;
 };
 
-// ================== OPOMNIKI (REMINDERS) ==================
+/* =====================================================
+   OPOMNIKI (REMINDERS)
+===================================================== */
 
 /**
  * Pridobi vse opomnike uporabnika
- * GET /api/opomniki
  */
 export const getOpomniki = async (token) => {
   const res = await axios.get(`${API_URL}/opomniki`, authHeader(token));
@@ -320,8 +354,7 @@ export const getOpomniki = async (token) => {
 };
 
 /**
- * Opomniki za določenega ljubljenčka
- * GET /api/opomniki/pet/:petId
+ * Pridobi opomnike za določenega ljubljenčka
  */
 export const getOpomnikiByPet = async (petId, token) => {
   const res = await axios.get(
@@ -332,8 +365,7 @@ export const getOpomnikiByPet = async (petId, token) => {
 };
 
 /**
- * Opomniki po tipu
- * GET /api/opomniki?tip=zdravilo|obrok|aktivnost
+ * Pridobi opomnike po tipu
  */
 export const getOpomnikiByTip = async (tip, token) => {
   const res = await axios.get(
@@ -344,16 +376,7 @@ export const getOpomnikiByTip = async (tip, token) => {
 };
 
 /**
- * Dodaj opomnik
- * POST /api/opomniki
- * data: {
- *   naziv,
- *   datum,
- *   ura,
- *   tip,
- *   pet,
- *   zdravilo?, aktivnost?, obrok?
- * }
+ * Ustvari nov opomnik
  */
 export const createOpomnik = async (data, token) => {
   const res = await axios.post(
@@ -366,7 +389,6 @@ export const createOpomnik = async (data, token) => {
 
 /**
  * Posodobi opomnik
- * PUT /api/opomniki/:id
  */
 export const updateOpomnik = async (id, data, token) => {
   const res = await axios.put(
@@ -378,8 +400,7 @@ export const updateOpomnik = async (id, data, token) => {
 };
 
 /**
- * Izbriši opomnik
- * DELETE /api/opomniki/:id
+ * Izbriše opomnik
  */
 export const deleteOpomnik = async (id, token) => {
   const res = await axios.delete(
@@ -389,17 +410,14 @@ export const deleteOpomnik = async (id, token) => {
   return res.data;
 };
 
-
-// ================== OPOMNIKI – STATUS ==================
+/**
+ * Posodobi status opomnika (pending / done)
+ */
 export const updateOpomnikStatus = async (id, status, token) => {
   const res = await axios.put(
     `${API_URL}/opomniki/${id}/status`,
-    { status }, // ⬅️ pošiljamo SAMO status
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
+    { status },
+    authHeader(token)
   );
   return res.data;
 };

@@ -9,7 +9,9 @@ import {
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./Activities.css";
 
-// 🔹 helper za prikaz ure v AM/PM
+/**
+ * Pretvori uro iz 24-urnega v AM/PM format
+ */
 const formatTimeAMPM = (time24) => {
   if (!time24) return "";
   const [h, m] = time24.split(":");
@@ -19,22 +21,34 @@ const formatTimeAMPM = (time24) => {
   return `${hour}:${m} ${ampm}`;
 };
 
-// 🔹 helper za slovenski format datuma
+/**
+ * Pretvori datum v slovenski zapis
+ */
 const formatDateSI = (dateStr) => {
   if (!dateStr) return "";
   return new Date(dateStr).toLocaleDateString("sl-SI");
 };
 
 const Activities = () => {
+  // JWT žeton
   const token = localStorage.getItem("token");
 
+  // Seznam ljubljenčkov
   const [pets, setPets] = useState([]);
+
+  // Izbran ljubljenček
   const [selectedPet, setSelectedPet] = useState("");
+
+  // Aktivnosti za izbranega ljubljenčka
   const [aktivnosti, setAktivnosti] = useState([]);
 
+  // Prikaz modalnega obrazca
   const [showForm, setShowForm] = useState(false);
+
+  // Aktivnost v urejanju
   const [editingActivity, setEditingActivity] = useState(null);
 
+  // Podatki obrazca
   const [formData, setFormData] = useState({
     naziv: "",
     trajanje: "",
@@ -42,7 +56,7 @@ const Activities = () => {
     ura: "",
   });
 
-  /* ================= LOAD PETS ================= */
+  /* ================= NALAGANJE LJUBLJENČKOV ================= */
 
   useEffect(() => {
     const loadPets = async () => {
@@ -56,7 +70,7 @@ const Activities = () => {
     loadPets();
   }, [token]);
 
-  /* ================= LOAD ACTIVITIES ================= */
+  /* ================= NALAGANJE AKTIVNOSTI ================= */
 
   useEffect(() => {
     if (!selectedPet) {
@@ -76,14 +90,14 @@ const Activities = () => {
     loadAktivnosti();
   }, [selectedPet, token]);
 
-  /* ================= SUBMIT (ADD / EDIT) ================= */
+  /* ================= DODAJANJE / UREJANJE ================= */
 
   const submitActivity = async (e) => {
     e.preventDefault();
 
     try {
       if (editingActivity) {
-        // ✏️ EDIT
+        // Urejanje obstoječe aktivnosti
         await updateAktivnost(
           editingActivity._id,
           {
@@ -96,7 +110,7 @@ const Activities = () => {
           token
         );
       } else {
-        // ➕ ADD
+        // Dodajanje nove aktivnosti
         await createAktivnost(
           {
             pet: selectedPet,
@@ -109,12 +123,12 @@ const Activities = () => {
         );
       }
 
-      // reset
+      // Ponastavitev obrazca
       setFormData({ naziv: "", trajanje: "", datum: "", ura: "" });
       setEditingActivity(null);
       setShowForm(false);
 
-      // refetch
+      // Ponovno naloži aktivnosti
       const data = await getAktivnostiByPet(selectedPet, token);
       setAktivnosti(data);
     } catch (err) {
@@ -122,7 +136,7 @@ const Activities = () => {
     }
   };
 
-  /* ================= DELETE ================= */
+  /* ================= BRISANJE ================= */
 
   const removeActivity = async (id) => {
     try {
@@ -138,12 +152,12 @@ const Activities = () => {
       <Sidebar active="activities" />
 
       <div className="page-content activities-page">
-        {/* HEADER */}
+        {/* Naslov strani */}
         <div className="page-header">
           <h1>Aktivnosti</h1>
         </div>
 
-        {/* FILTER + ADD */}
+        {/* Izbira ljubljenčka in dodajanje */}
         <div className="page-filter">
           <select
             className="pet-select"
@@ -177,14 +191,14 @@ const Activities = () => {
           )}
         </div>
 
-        {/* EMPTY */}
+        {/* Prazno stanje */}
         {selectedPet && aktivnosti.length === 0 && (
           <p className="empty-text">
             Za tega ljubljenčka še ni aktivnosti.
           </p>
         )}
 
-        {/* LIST */}
+        {/* Seznam aktivnosti */}
         <div className="activities-list">
           {aktivnosti.map((a) => (
             <div key={a._id} className="activity-card">
@@ -232,7 +246,7 @@ const Activities = () => {
           ))}
         </div>
 
-        {/* MODAL FORM – ISTO KOT MYPETS */}
+        {/* Modalni obrazec */}
         {showForm && (
           <div className="add-pet-form-overlay">
             <form className="add-pet-form" onSubmit={submitActivity}>

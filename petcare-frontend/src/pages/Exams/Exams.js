@@ -10,15 +10,25 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import "./Exams.css";
 
 const Exams = () => {
+  // JWT žeton
   const token = localStorage.getItem("token");
 
+  // Seznam ljubljenčkov
   const [pets, setPets] = useState([]);
+
+  // Izbran ljubljenček
   const [selectedPet, setSelectedPet] = useState("");
+
+  // Pregledi izbranega ljubljenčka
   const [pregledi, setPregledi] = useState([]);
 
+  // Prikaz obrazca
   const [showForm, setShowForm] = useState(false);
+
+  // Pregled v urejanju
   const [editingExam, setEditingExam] = useState(null);
 
+  // Podatki obrazca
   const [formData, setFormData] = useState({
     datum: "",
     veterinar: "",
@@ -26,7 +36,7 @@ const Exams = () => {
     datoteka: null,
   });
 
-  /* ================= LJUBLJENČKI ================= */
+  /* ================= NALAGANJE LJUBLJENČKOV ================= */
 
   useEffect(() => {
     const loadPets = async () => {
@@ -40,7 +50,7 @@ const Exams = () => {
     loadPets();
   }, [token]);
 
-  /* ================= PREGLEDI ================= */
+  /* ================= NALAGANJE PREGLEDOV ================= */
 
   useEffect(() => {
     if (!selectedPet) {
@@ -60,7 +70,7 @@ const Exams = () => {
     loadPregledi();
   }, [selectedPet, token]);
 
-  /* ================= SUBMIT (ADD / EDIT) ================= */
+  /* ================= SHRANJEVANJE (DODAJ / UREDI) ================= */
 
   const submitExam = async (e) => {
     e.preventDefault();
@@ -77,11 +87,14 @@ const Exams = () => {
       }
 
       if (editingExam) {
+        // Urejanje obstoječega pregleda
         await updatePregled(editingExam._id, fd, token);
       } else {
+        // Dodajanje novega pregleda
         await createPregled(fd, token);
       }
 
+      // Ponastavitev obrazca
       setShowForm(false);
       setEditingExam(null);
       setFormData({
@@ -91,6 +104,7 @@ const Exams = () => {
         datoteka: null,
       });
 
+      // Ponovno naloži preglede
       const data = await getPreglediByPet(selectedPet, token);
       setPregledi(data);
     } catch (err) {
@@ -98,7 +112,7 @@ const Exams = () => {
     }
   };
 
-  /* ================= DELETE ================= */
+  /* ================= BRISANJE ================= */
 
   const removeExam = async (id) => {
     try {
@@ -109,7 +123,7 @@ const Exams = () => {
     }
   };
 
-  /* ================= FILE DOWNLOAD ================= */
+  /* ================= PRENOS DATOTEKE ================= */
 
   const downloadFile = async (examId) => {
     try {
@@ -148,7 +162,7 @@ const Exams = () => {
       <div className="page-content exams-page">
         <h1>Pregledi</h1>
 
-        {/* IZBIRA + GUMB */}
+        {/* Izbira ljubljenčka in dodajanje */}
         <div className="exams-header">
           <select
             className="pet-select"
@@ -182,78 +196,76 @@ const Exams = () => {
           )}
         </div>
 
-        {/* FORMA */}
+        {/* Obrazec */}
         {showForm && (
-  <div className="add-pet-form-overlay">
-    <form className="add-pet-form" onSubmit={submitExam}>
+          <div className="add-pet-form-overlay">
+            <form className="add-pet-form" onSubmit={submitExam}>
+              <h3>{editingExam ? "Uredi pregled" : "Dodaj pregled"}</h3>
 
-      <h3>
-        {editingExam ? "Uredi pregled" : "Dodaj pregled"}
-      </h3>
+              <input
+                type="date"
+                required
+                value={formData.datum}
+                onChange={(e) =>
+                  setFormData({ ...formData, datum: e.target.value })
+                }
+              />
 
-      <input
-        type="date"
-        required
-        value={formData.datum}
-        onChange={(e) =>
-          setFormData({ ...formData, datum: e.target.value })
-        }
-      />
+              <input
+                type="text"
+                placeholder="Veterinar"
+                required
+                value={formData.veterinar}
+                onChange={(e) =>
+                  setFormData({ ...formData, veterinar: e.target.value })
+                }
+              />
 
-      <input
-        type="text"
-        placeholder="Veterinar"
-        required
-        value={formData.veterinar}
-        onChange={(e) =>
-          setFormData({ ...formData, veterinar: e.target.value })
-        }
-      />
+              <input
+                type="text"
+                placeholder="Naziv pregleda"
+                required
+                value={formData.naziv}
+                onChange={(e) =>
+                  setFormData({ ...formData, naziv: e.target.value })
+                }
+              />
 
-      <input
-        type="text"
-        placeholder="Naziv pregleda"
-        required
-        value={formData.naziv}
-        onChange={(e) =>
-          setFormData({ ...formData, naziv: e.target.value })
-        }
-      />
+              <input
+                type="file"
+                accept=".pdf,image/*"
+                onChange={(e) =>
+                  setFormData({ ...formData, datoteka: e.target.files[0] })
+                }
+              />
 
-      <input
-        type="file"
-        accept=".pdf,image/*"
-        onChange={(e) =>
-          setFormData({ ...formData, datoteka: e.target.files[0] })
-        }
-      />
+              <div className="form-buttons">
+                <button type="submit">
+                  {editingExam ? "Shrani spremembe" : "Shrani"}
+                </button>
 
-      <div className="form-buttons">
-        <button type="submit">
-          {editingExam ? "Shrani spremembe" : "Shrani"}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            setShowForm(false);
-            setEditingExam(null);
-          }}
-        >
-          Prekliči
-        </button>
-      </div>
-
-    </form>
-  </div>
-)}
-
-        {/* PRAZNO */}
-        {selectedPet && pregledi.length === 0 && (
-          <p className="empty-text">Za izbranega ljubljenčka ni pregledov.</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForm(false);
+                    setEditingExam(null);
+                  }}
+                >
+                  Prekliči
+                </button>
+              </div>
+            </form>
+          </div>
         )}
 
-        {/* SEZNAM */}
+        {/* Prazno stanje */}
+        {selectedPet && pregledi.length === 0 && (
+          <p className="empty-text">
+            Za izbranega ljubljenčka ni pregledov.
+          </p>
+        )}
+
+        {/* Seznam pregledov */}
         <div className="exams-list">
           {pregledi.map((p) => (
             <div key={p._id} className="exam-card">
@@ -277,7 +289,7 @@ const Exams = () => {
                       className="file-preview-btn"
                       onClick={() => downloadFile(p._id)}
                     >
-                      📎 Ogled priložene datoteke
+                      Ogled priložene datoteke
                     </button>
                   )}
                 </div>

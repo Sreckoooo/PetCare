@@ -1,39 +1,55 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useAuth } from '../../context/AuthContext';
-import './SignUp.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import "./SignUp.css";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+/**
+ * Registracijska stran
+ * Omogoča ustvarjanje novega uporabniškega računa
+ */
 const SignupPage = () => {
+  // Navigacija
   const navigate = useNavigate();
+
+  // Prijava uporabnika po registraciji
   const { login } = useAuth();
 
+  // Podatki obrazca
   const [formData, setFormData] = useState({
-    ime: '',
-    priimek: '',
-    email: '',
-    geslo: '',
-    agreeToTerms: false
+    ime: "",
+    priimek: "",
+    email: "",
+    geslo: "",
+    agreeToTerms: false,
   });
 
-  const [error, setError] = useState('');
+  // Sporočilo o napaki
+  const [error, setError] = useState("");
 
+  /**
+   * Posodobi stanje obrazca (input / checkbox)
+   */
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
+  /**
+   * Pošlje registracijske podatke na backend
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
+    // Preverjanje sprejetja pogojev
     if (!formData.agreeToTerms) {
-      setError('Prosimo, sprejmite pogoje uporabe.');
+      setError("Prosimo, sprejmite pogoje uporabe.");
       return;
     }
 
@@ -42,48 +58,56 @@ const SignupPage = () => {
         ime: formData.ime,
         priimek: formData.priimek,
         email: formData.email,
-        geslo: formData.geslo
+        geslo: formData.geslo,
       });
 
+      // Shrani uporabnika in preusmeri na prijavo
       login(res.data);
-      navigate('/main');
+      navigate("/login");
     } catch (err) {
       console.error(err);
-      setError('Napaka pri registraciji. Email je morda že uporabljen.');
+      setError("Napaka pri registraciji. Email je morda že uporabljen.");
     }
   };
 
-  const goToLogin = () => navigate('/login');
+  /**
+   * Preusmeritev na prijavo
+   */
+  const goToLogin = () => navigate("/login");
 
-  // generiranje datotek za pogoje / politiko
+  /**
+   * Odpre datoteko s pogoji uporabe ali politiko zasebnosti
+   */
   const openPolicyFile = (kind) => {
-    const isTerms = kind === 'terms';
-    const title = isTerms ? 'Pogoji uporabe' : 'Politika zasebnosti';
-    const filename = isTerms ? 'pogoji-uporabe.txt' : 'politika-zasebnosti.txt';
+    const isTerms = kind === "terms";
+    const title = isTerms ? "Pogoji uporabe" : "Politika zasebnosti";
+    const filename = isTerms
+      ? "pogoji-uporabe.txt"
+      : "politika-zasebnosti.txt";
 
     const rules = isTerms
       ? [
-          '1. Z uporabo aplikacije PetCare se strinjate, da boste podatke vnašali resnično in odgovorno.',
-          '2. Aplikacija je namenjena organizaciji skrbi za ljubljenčke in ne nadomešča veterinarskega nasveta.',
-          '3. Uporabnik je odgovoren za varovanje svojega gesla in vse aktivnosti v svojem računu.',
-          '4. Prepovedana je zloraba aplikacije (spam, poskusi vdora, škodljiva vsebina).',
-          '5. PetCare si pridržuje pravico do sprememb ali ukinitve računa ob kršitvah.'
+          "1. Z uporabo aplikacije PetCare se strinjate, da boste podatke vnašali resnično in odgovorno.",
+          "2. Aplikacija je namenjena organizaciji skrbi za ljubljenčke in ne nadomešča veterinarskega nasveta.",
+          "3. Uporabnik je odgovoren za varovanje svojega gesla in vse aktivnosti v svojem računu.",
+          "4. Prepovedana je zloraba aplikacije (spam, poskusi vdora, škodljiva vsebina).",
+          "5. PetCare si pridržuje pravico do sprememb ali ukinitve računa ob kršitvah.",
         ]
       : [
-          '1. Zbiramo le podatke, potrebne za delovanje aplikacije.',
-          '2. Vaših podatkov ne prodajamo tretjim osebam.',
-          '3. Podatke hranimo le toliko časa, kolikor je potrebno za namen uporabe.',
-          '4. Uporabljamo osnovne varnostne ukrepe za zaščito podatkov.',
-          '5. Za vprašanja glede zasebnosti se lahko obrnete na podporo PetCare.'
+          "1. Zbiramo le podatke, potrebne za delovanje aplikacije.",
+          "2. Vaših podatkov ne prodajamo tretjim osebam.",
+          "3. Podatke hranimo le toliko časa, kolikor je potrebno za namen uporabe.",
+          "4. Uporabljamo osnovne varnostne ukrepe za zaščito podatkov.",
+          "5. Za vprašanja glede zasebnosti se lahko obrnete na podporo PetCare.",
         ];
 
-    const content = `${title}\n\n${rules.join('\n')}\n`;
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const content = `${title}\n\n${rules.join("\n")}\n`;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
 
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url, "_blank", "noopener,noreferrer");
 
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -96,6 +120,7 @@ const SignupPage = () => {
   return (
     <div className="login-page">
       <div className="login-card">
+        {/* Glava registracijske kartice */}
         <header className="login-header">
           <h1>Ustvari račun</h1>
           <p className="subtitle">
@@ -104,6 +129,7 @@ const SignupPage = () => {
           </p>
         </header>
 
+        {/* Registracijski obrazec */}
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <input
@@ -149,6 +175,7 @@ const SignupPage = () => {
             />
           </div>
 
+          {/* Potrditev pogojev */}
           <div className="terms-checkbox">
             <input
               type="checkbox"
@@ -158,30 +185,32 @@ const SignupPage = () => {
               onChange={handleChange}
             />
             <label htmlFor="terms">
-              Strinjam se s{' '}
+              Strinjam se s{" "}
               <button
                 type="button"
                 className="link"
-                onClick={() => openPolicyFile('terms')}
+                onClick={() => openPolicyFile("terms")}
               >
                 pogoji uporabe
-              </button>{' '}
-              in{' '}
+              </button>{" "}
+              in{" "}
               <button
                 type="button"
                 className="link"
-                onClick={() => openPolicyFile('privacy')}
+                onClick={() => openPolicyFile("privacy")}
               >
                 politiko zasebnosti
               </button>
             </label>
           </div>
 
+          {/* Prikaz napake */}
           {error && <p className="error-text">{error}</p>}
 
+          {/* Povezava do prijave */}
           <div className="bottom-row">
             <span className="small-text">
-              Že imate račun?{' '}
+              Že imate račun?{" "}
               <button type="button" className="link" onClick={goToLogin}>
                 Prijavite se
               </button>
@@ -194,7 +223,7 @@ const SignupPage = () => {
         </form>
       </div>
 
-      {/* isti dekorji kot Login */}
+      {/* Dekorativni elementi */}
       <div className="decor decor-1"></div>
       <div className="decor decor-2"></div>
     </div>

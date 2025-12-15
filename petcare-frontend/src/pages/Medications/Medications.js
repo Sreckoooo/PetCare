@@ -8,20 +8,31 @@ import {
 } from "../../api/api";
 import "./Medications.css";
 
+/* ================= KOMPONENTA ================= */
+
 const Medications = () => {
+  // Seznam zdravil
   const [medications, setMedications] = useState([]);
+
+  // Stanje nalaganja
   const [loading, setLoading] = useState(true);
+
+  // Prikaz obrazca
   const [showForm, setShowForm] = useState(false);
+
+  // Zdravilo v urejanju
   const [editingMedication, setEditingMedication] = useState(null);
 
+  // Podatki obrazca
   const [formData, setFormData] = useState({
     ime: "",
     vrsta_odmerka: "",
   });
 
+  // JWT žeton
   const token = localStorage.getItem("token");
 
-  /* ================= FETCH ================= */
+  /* ================= NALAGANJE ZDRAVIL ================= */
 
   useEffect(() => {
     fetchMedications();
@@ -38,14 +49,14 @@ const Medications = () => {
     setLoading(false);
   };
 
-  /* ================= SUBMIT (ADD + EDIT) ================= */
+  /* ================= SHRANJEVANJE (DODAJ / UREDI) ================= */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       if (editingMedication) {
-        // ✏️ EDIT
+        // Urejanje obstoječega zdravila
         const updated = await updateZdravilo(
           editingMedication._id,
           formData,
@@ -58,7 +69,7 @@ const Medications = () => {
           )
         );
       } else {
-        // ➕ ADD
+        // Dodajanje novega zdravila
         const created = await createZdravilo(formData, token);
         setMedications((prev) => [...prev, created]);
       }
@@ -69,7 +80,7 @@ const Medications = () => {
     }
   };
 
-  /* ================= DELETE ================= */
+  /* ================= BRISANJE ================= */
 
   const handleDelete = async (id) => {
     try {
@@ -80,7 +91,7 @@ const Medications = () => {
     }
   };
 
-  /* ================= EDIT UI ================= */
+  /* ================= UREJANJE OBRAZCA ================= */
 
   const openEditForm = (zdravilo) => {
     setEditingMedication(zdravilo);
@@ -97,7 +108,7 @@ const Medications = () => {
     setFormData({ ime: "", vrsta_odmerka: "" });
   };
 
-  /* ================= LOADING ================= */
+  /* ================= NALAGANJE ================= */
 
   if (loading) {
     return (
@@ -114,6 +125,7 @@ const Medications = () => {
       <Sidebar />
 
       <div className="page-content medications-page">
+        {/* Glava strani */}
         <div className="medications-header">
           <h1>Zdravila</h1>
 
@@ -122,6 +134,7 @@ const Medications = () => {
           </button>
         </div>
 
+        {/* Obrazec */}
         {showForm && (
           <div className="medication-form-overlay">
             <form className="medication-form" onSubmit={handleSubmit}>
@@ -164,6 +177,7 @@ const Medications = () => {
           </div>
         )}
 
+        {/* Prazno stanje */}
         {medications.length === 0 ? (
           <p className="empty-text">Ni dodanih zdravil.</p>
         ) : (

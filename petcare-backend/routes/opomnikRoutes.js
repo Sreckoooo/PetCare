@@ -5,7 +5,10 @@ import protect from "../middleware/auth.js";
 
 const router = express.Router();
 
-// ================= CREATE =================
+/**
+ * POST /
+ * Ustvari nov opomnik (splošni ali povezan z obrokom, aktivnostjo ali zdravilom)
+ */
 router.post("/", protect, async (req, res) => {
   try {
     const { datum, ura, naziv, tip, pet, zdravilo, aktivnost, obrok } = req.body;
@@ -14,11 +17,13 @@ router.post("/", protect, async (req, res) => {
       return res.status(400).json({ message: "Manjkajo obvezna polja." });
     }
 
+    // Preveri, ali ljubljenček pripada uporabniku
     const petCheck = await Pet.findOne({ _id: pet, owner: req.user._id });
     if (!petCheck) {
       return res.status(403).json({ message: "Nimaš dostopa do tega ljubljenčka." });
     }
 
+    // Opomnik je lahko povezan samo z eno entiteto
     const povezave = [zdravilo, aktivnost, obrok].filter(Boolean);
     if (povezave.length > 1) {
       return res.status(400).json({
@@ -44,11 +49,15 @@ router.post("/", protect, async (req, res) => {
   }
 });
 
-// ================= GET ALL =================
+/**
+ * GET /
+ * Pridobi vse opomnike prijavljenega uporabnika
+ */
 router.get("/", protect, async (req, res) => {
   try {
     const filter = { user: req.user._id };
 
+    // Po želji vrne samo prihodnje opomnike
     if (req.query.onlyFuture === "true") {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -68,7 +77,10 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-// ================= GET BY PET =================
+/**
+ * GET /pet/:petId
+ * Pridobi vse opomnike za določenega ljubljenčka
+ */
 router.get("/pet/:petId", protect, async (req, res) => {
   try {
     const pet = await Pet.findOne({
@@ -85,6 +97,7 @@ router.get("/pet/:petId", protect, async (req, res) => {
       user: req.user._id,
     };
 
+    // Po želji vrne samo prihodnje opomnike
     if (req.query.onlyFuture === "true") {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -104,7 +117,10 @@ router.get("/pet/:petId", protect, async (req, res) => {
   }
 });
 
-// ================= UPDATE STATUS =================
+/**
+ * PUT /:id/status
+ * Posodobi status opomnika (pending / done)
+ */
 router.put("/:id/status", protect, async (req, res) => {
   try {
     const { status } = req.body;
@@ -131,7 +147,10 @@ router.put("/:id/status", protect, async (req, res) => {
   }
 });
 
-// ================= UPDATE =================
+/**
+ * PUT /:id
+ * Posodobi obstoječ opomnik
+ */
 router.put("/:id", protect, async (req, res) => {
   try {
     const opomnik = await Opomnik.findOne({
@@ -146,6 +165,7 @@ router.put("/:id", protect, async (req, res) => {
     const { datum, ura, naziv, status, tip, pet, zdravilo, aktivnost, obrok } =
       req.body;
 
+    // Opomnik je lahko povezan samo z eno entiteto
     const povezave = [zdravilo, aktivnost, obrok].filter(Boolean);
     if (povezave.length > 1) {
       return res
@@ -174,7 +194,10 @@ router.put("/:id", protect, async (req, res) => {
   }
 });
 
-// ================= DELETE =================
+/**
+ * DELETE /:id
+ * Izbriše opomnik
+ */
 router.delete("/:id", protect, async (req, res) => {
   try {
     const opomnik = await Opomnik.findOneAndDelete({

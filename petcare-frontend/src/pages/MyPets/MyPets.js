@@ -5,12 +5,22 @@ import "./MyPets.css";
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5001/api";
 
+/* ================= KOMPONENTA ================= */
+
 const MyPets = () => {
+  // Seznam ljubljenčkov
   const [pets, setPets] = useState([]);
+
+  // Stanje nalaganja
   const [loading, setLoading] = useState(true);
+
+  // Prikaz obrazca za dodajanje / urejanje
   const [showAddForm, setShowAddForm] = useState(false);
+
+  // Trenutno urejan ljubljenček
   const [editingPet, setEditingPet] = useState(null);
 
+  // Podatki obrazca
   const [newPetData, setNewPetData] = useState({
     ime: "",
     vrsta: "",
@@ -20,9 +30,10 @@ const MyPets = () => {
     image: null,
   });
 
+  // JWT žeton
   const token = localStorage.getItem("token");
 
-  /* ================= FETCH ================= */
+  /* ================= NALAGANJE LJUBLJENČKOV ================= */
 
   useEffect(() => {
     fetchPets();
@@ -35,6 +46,7 @@ const MyPets = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      // Pretvorba slik v base64 zapis za prikaz
       const petsWithImages = res.data.map((p) => {
         if (!p.image) return { ...p, image: null };
         if (typeof p.image === "string") return p;
@@ -56,7 +68,7 @@ const MyPets = () => {
     setLoading(false);
   };
 
-  /* ================= ADD ================= */
+  /* ================= DODAJANJE ================= */
 
   const submitNewPet = async (e) => {
     e.preventDefault();
@@ -77,7 +89,7 @@ const MyPets = () => {
     closeForm();
   };
 
-  /* ================= EDIT ================= */
+  /* ================= UREJANJE ================= */
 
   const submitEditPet = async (e) => {
     e.preventDefault();
@@ -98,7 +110,7 @@ const MyPets = () => {
     fetchPets();
   };
 
-  /* ================= DELETE ================= */
+  /* ================= BRISANJE ================= */
 
   const deletePet = async (id) => {
     await axios.delete(`${API_BASE}/pets/${id}`, {
@@ -108,7 +120,7 @@ const MyPets = () => {
     setPets(pets.filter((p) => p._id !== id));
   };
 
-  /* ================= HELPERS ================= */
+  /* ================= POMOŽNE FUNKCIJE ================= */
 
   const openEditForm = (pet) => {
     setEditingPet(pet);
@@ -136,7 +148,7 @@ const MyPets = () => {
     });
   };
 
-  /* ================= LOADING ================= */
+  /* ================= STANJE NALAGANJA ================= */
 
   if (loading) {
     return (
@@ -161,13 +173,18 @@ const MyPets = () => {
           </button>
         </div>
 
+        {/* Obrazec za dodajanje / urejanje */}
         {showAddForm && (
           <div className="add-pet-form-overlay">
             <form
               className="add-pet-form"
               onSubmit={editingPet ? submitEditPet : submitNewPet}
             >
-              <h3>{editingPet ? "Uredi ljubljenčka" : "Dodaj novega ljubljenčka"}</h3>
+              <h3>
+                {editingPet
+                  ? "Uredi ljubljenčka"
+                  : "Dodaj novega ljubljenčka"}
+              </h3>
 
               <input
                 placeholder="Ime"
@@ -241,6 +258,7 @@ const MyPets = () => {
           </div>
         )}
 
+        {/* Seznam ljubljenčkov */}
         <div className="pets-container">
           {pets.map((pet) => (
             <div key={pet._id} className="pet-card">
@@ -295,7 +313,9 @@ const MyPets = () => {
                     <label>Datum rojstva</label>
                     <span>
                       {pet.datum_rojstva
-                        ? new Date(pet.datum_rojstva).toLocaleDateString("sl-SI")
+                        ? new Date(pet.datum_rojstva).toLocaleDateString(
+                            "sl-SI"
+                          )
                         : "-"}
                     </span>
                   </div>

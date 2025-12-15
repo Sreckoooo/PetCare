@@ -10,8 +10,11 @@ import {
   getPetZdravilaByPet,
 } from "../../api/api";
 
-/* ================= HELPERS ================= */
+/* ================= POMOŽNE FUNKCIJE ================= */
 
+/**
+ * Oblikuje datum v slovenski zapis
+ */
 const formatDateSI = (date) =>
   date.toLocaleDateString("sl-SI", {
     weekday: "long",
@@ -20,6 +23,9 @@ const formatDateSI = (date) =>
     year: "numeric",
   });
 
+/**
+ * Pretvori uro v AM/PM zapis
+ */
 const formatTimeAMPM = (time) => {
   if (!time) return "";
   const [h, m] = time.split(":");
@@ -29,25 +35,36 @@ const formatTimeAMPM = (time) => {
   return `${hour}:${m} ${ampm}`;
 };
 
+/**
+ * Preveri ali sta datuma isti dan
+ */
 const isSameDay = (a, b) =>
   a.getFullYear() === b.getFullYear() &&
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
 
-/* 🔑 NORMALIZACIJA DATUMA */
+/**
+ * Normalizira datum (nastavi čas na 00:00)
+ */
 const normalizeDate = (date) => {
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);
   return d;
 };
 
-/* ================= COMPONENT ================= */
+/* ================= KOMPONENTA ================= */
 
 const MainApp = () => {
+  // JWT žeton
   const token = localStorage.getItem("token");
 
+  // Dnevi za koledar
   const [calendarDays, setCalendarDays] = useState([]);
+
+  // Izbran tip kartice (obrok, aktivnost, zdravljenje, opomnik)
   const [selectedType, setSelectedType] = useState(null);
+
+  /* ================= NALAGANJE PODATKOV ================= */
 
   useEffect(() => {
     if (!token) return;
@@ -90,13 +107,13 @@ const MainApp = () => {
 
           /* ===== OPOMNIKI (SAMO SPLOŠNI) ===== */
           opomniki.forEach((o) => {
-            // ❗ izloči vse opomnike, ki so vezani na obroke / aktivnosti / zdravljenja
+            // Izloči opomnike vezane na druge module
             if (
               o.tip === "obrok" ||
               o.tip === "aktivnost" ||
               o.tip === "zdravljenje" ||
-              o.zdravilo ||          // vezano na zdravljenje
-              o.zdravljenjeId        // fallback za stare zapise
+              o.zdravilo ||
+              o.zdravljenjeId
             ) {
               return;
             }
@@ -161,14 +178,15 @@ const MainApp = () => {
 
         setCalendarDays(calendar);
       } catch (err) {
-        console.error("Napaka pri nalaganju MainApp", err);
+        console.error("Napaka pri nalaganju nadzorne plošče", err);
       }
     };
 
     loadDashboard();
   }, [token]);
 
-  /* ===== DANES ===== */
+  /* ================= DOGODKI ZA DANES ================= */
+
   const today = calendarDays.find((d) =>
     isSameDay(d.date, new Date())
   );
@@ -182,23 +200,24 @@ const MainApp = () => {
     opomnik: todayEvents.filter((e) => e.type === "opomnik"),
   };
 
+  /* ================= RENDER ================= */
+
   return (
     <div className="app-layout">
       <Sidebar active="home" />
 
       <div className="page-content main-app-page">
-        <h1>Nadzorna plošča 🐾</h1>
-        <p className="dashboard-subtitle">
-          Pregled za danes
-        </p>
+        <h1>Nadzorna plošča</h1>
+        <p className="dashboard-subtitle">Pregled za danes</p>
 
-        {/* ===== KARTICE ===== */}
+        {/* Kartice za današnje dogodke */}
         <div className="dashboard-cards">
           {["obrok", "aktivnost", "zdravljenje", "opomnik"].map((type) => (
             <div
               key={type}
-              className={`card ${type} ${selectedType === type ? "active" : ""
-                }`}
+              className={`card ${type} ${
+                selectedType === type ? "active" : ""
+              }`}
               onClick={() =>
                 setSelectedType((p) => (p === type ? null : type))
               }
@@ -237,7 +256,7 @@ const MainApp = () => {
           ))}
         </div>
 
-        {/* ===== KOLEDAR ===== */}
+        {/* Koledarski pregled */}
         <div className="calendar-grid">
           {calendarDays.map((day) => (
             <div key={day.date.toISOString()} className="calendar-day">

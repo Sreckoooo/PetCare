@@ -6,10 +6,16 @@ import "../../styles/layout.css";
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5001/api";
 
+/* ================= KOMPONENTA ================= */
+
 const Profile = () => {
+  // JWT žeton
   const token = localStorage.getItem("token");
 
+  // Prijavljen uporabnik
   const [user, setUser] = useState(null);
+
+  // Podatki obrazca
   const [formData, setFormData] = useState({
     ime: "",
     priimek: "",
@@ -17,6 +23,8 @@ const Profile = () => {
     trenutnoGeslo: "",
     novoGeslo: "",
   });
+
+  /* ================= NALAGANJE UPORABNIKA ================= */
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,27 +49,31 @@ const Profile = () => {
     fetchUser();
   }, [token]);
 
+  /* ================= SPREMEMBA VNOSA ================= */
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  /* ================= SHRANJEVANJE PROFILA ================= */
+
   const handleSave = async (e) => {
     e.preventDefault();
 
-    // frontend validacija za geslo
+    // Validacija spremembe gesla
     if (formData.novoGeslo && !formData.trenutnoGeslo) {
       alert("Za spremembo gesla morate vnesti trenutno geslo.");
       return;
     }
 
     try {
-      // payload brez emaila
+      // Payload brez emaila
       const payload = {
         ime: formData.ime,
         priimek: formData.priimek,
       };
 
-      // geslo pošljemo samo, če ga želi spremeniti
+      // Geslo pošljemo samo ob spremembi
       if (formData.novoGeslo) {
         payload.trenutnoGeslo = formData.trenutnoGeslo;
         payload.novoGeslo = formData.novoGeslo;
@@ -73,6 +85,7 @@ const Profile = () => {
 
       alert("Profil uspešno posodobljen");
 
+      // Počisti polja za geslo
       setFormData({
         ...formData,
         trenutnoGeslo: "",
@@ -83,6 +96,8 @@ const Profile = () => {
     }
   };
 
+  /* ================= STANJE NALAGANJA ================= */
+
   if (!user) {
     return (
       <div className="main-app">
@@ -92,72 +107,75 @@ const Profile = () => {
     );
   }
 
+  /* ================= RENDER ================= */
+
   return (
-  <div className="main-app">
-    <Sidebar active="profile" />
+    <div className="main-app">
+      <Sidebar active="profile" />
 
-    <div className="page-content">
-      <div className="profile-page">
-        {/* dekorativni elementi */}
-        <div className="profile-decor profile-decor-1"></div>
-        <div className="profile-decor profile-decor-2"></div>
-        <div className="profile-decor profile-decor-3"></div>
+      <div className="page-content">
+        <div className="profile-page">
+          {/* Dekorativni elementi */}
+          <div className="profile-decor profile-decor-1"></div>
+          <div className="profile-decor profile-decor-2"></div>
+          <div className="profile-decor profile-decor-3"></div>
 
-        <div className="profile-card">
-          <div className="profile-header">
-            <h1>Moj profil</h1>
+          <div className="profile-card">
+            <div className="profile-header">
+              <h1>Moj profil</h1>
+            </div>
+
+            {/* Obrazec za urejanje profila */}
+            <form onSubmit={handleSave} className="profile-form">
+              <input
+                type="text"
+                name="ime"
+                placeholder="Ime"
+                value={formData.ime}
+                onChange={handleChange}
+                required
+              />
+
+              <input
+                type="text"
+                name="priimek"
+                placeholder="Priimek"
+                value={formData.priimek}
+                onChange={handleChange}
+                required
+              />
+
+              {/* Email je zaklenjen */}
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                disabled
+              />
+
+              <input
+                type="password"
+                name="trenutnoGeslo"
+                placeholder="Trenutno geslo"
+                value={formData.trenutnoGeslo}
+                onChange={handleChange}
+              />
+
+              <input
+                type="password"
+                name="novoGeslo"
+                placeholder="Novo geslo"
+                value={formData.novoGeslo}
+                onChange={handleChange}
+              />
+
+              <button type="submit">Shrani spremembe</button>
+            </form>
           </div>
-
-          <form onSubmit={handleSave} className="profile-form">
-            <input
-              type="text"
-              name="ime"
-              placeholder="Ime"
-              value={formData.ime}
-              onChange={handleChange}
-              required
-            />
-
-            <input
-              type="text"
-              name="priimek"
-              placeholder="Priimek"
-              value={formData.priimek}
-              onChange={handleChange}
-              required
-            />
-
-            {/* EMAIL – zaklenjen */}
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              disabled
-            />
-
-            <input
-              type="password"
-              name="trenutnoGeslo"
-              placeholder="Trenutno geslo"
-              value={formData.trenutnoGeslo}
-              onChange={handleChange}
-            />
-
-            <input
-              type="password"
-              name="novoGeslo"
-              placeholder="Novo geslo"
-              value={formData.novoGeslo}
-              onChange={handleChange}
-            />
-
-            <button type="submit">Shrani spremembe</button>
-          </form>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default Profile;

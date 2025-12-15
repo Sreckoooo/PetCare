@@ -6,12 +6,17 @@ import protect from "../middleware/auth.js";
 
 const router = express.Router();
 
-// ✅ multer za Buffer (datoteka v DB)
+/**
+ * Nastavitev multerja za shranjevanje datotek v pomnilnik (Buffer)
+ */
 const upload = multer({
   storage: multer.memoryStorage(),
 });
 
-// ✔ GET – vsi pregledi za določenega ljubljenčka
+/**
+ * GET /pet/:petId
+ * Pridobi vse preglede za določenega ljubljenčka
+ */
 router.get("/pet/:petId", protect, async (req, res) => {
   try {
     const pet = await Pet.findOne({
@@ -34,7 +39,10 @@ router.get("/pet/:petId", protect, async (req, res) => {
   }
 });
 
-// ✔ POST – dodaj pregled (z datoteko)
+/**
+ * POST /
+ * Dodaj nov pregled (z opcijsko datoteko)
+ */
 router.post("/", protect, upload.single("datoteka"), async (req, res) => {
   try {
     const { datum, veterinar, naziv, pet } = req.body;
@@ -43,14 +51,15 @@ router.post("/", protect, upload.single("datoteka"), async (req, res) => {
       return res.status(400).json({ message: "Manjkajo obvezna polja." });
     }
 
-    // preveri lastništvo ljubljenčka
     const petCheck = await Pet.findOne({
       _id: pet,
       owner: req.user._id,
     });
 
     if (!petCheck) {
-      return res.status(403).json({ message: "Nimaš dostopa do tega ljubljenčka." });
+      return res
+        .status(403)
+        .json({ message: "Nimaš dostopa do tega ljubljenčka." });
     }
 
     const pregled = await Pregled.create({
@@ -58,18 +67,52 @@ router.post("/", protect, upload.single("datoteka"), async (req, res) => {
       veterinar,
       naziv,
       pet,
-      user: req.user._id,           // ⭐ KLJUČNO
+      user: req.user._id,
       datoteka: req.file ? req.file.buffer : null,
     });
 
     res.status(201).json(pregled);
   } catch (error) {
-    console.error("NAPAKA PREGLED:", error);
     res.status(500).json({ message: "Napaka pri dodajanju pregleda." });
   }
 });
 
-// ✔ DELETE – izbriši pregled
+/**
+ * PUT /:id
+ * Posodobi obstoječ pregled (opcijsko z novo datoteko)
+ */
+router.put("/:id", protect, upload.single("datoteka"), async (req, res) => {
+  try {
+    const { datum, veterinar, naziv } = req.body;
+
+    const pregled = await Pregled.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    });
+
+    if (!pregled) {
+      return res.status(404).json({ message: "Pregled ni najden." });
+    }
+
+    pregled.datum = datum ?? pregled.datum;
+    pregled.veterinar = veterinar ?? pregled.veterinar;
+    pregled.naziv = naziv ?? pregled.naziv;
+
+    if (req.file) {
+      pregled.datoteka = req.file.buffer;
+    }
+
+    const updated = await pregled.save();
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ message: "Napaka pri urejanju pregleda." });
+  }
+});
+
+/**
+ * DELETE /:id
+ * Izbriše pregled
+ */
 router.delete("/:id", protect, async (req, res) => {
   try {
     const pregled = await Pregled.findOne({
@@ -88,7 +131,10 @@ router.delete("/:id", protect, async (req, res) => {
   }
 });
 
-// 📥 PRENOS DATOTEKE
+/**
+ * GET /:id/datoteka
+ * Prenos datoteke pregleda
+ */
 router.get("/:id/datoteka", protect, async (req, res) => {
   try {
     const pregled = await Pregled.findOne({
@@ -108,38 +154,6 @@ router.get("/:id/datoteka", protect, async (req, res) => {
     res.send(pregled.datoteka);
   } catch (error) {
     res.status(500).json({ message: "Napaka pri prenosu datoteke." });
-  }
-});
-
-// ✔ PUT – uredi pregled (opcijsko z novo datoteko)
-router.put("/:id", protect, upload.single("datoteka"), async (req, res) => {
-  try {
-    const { datum, veterinar, naziv } = req.body;
-
-    const pregled = await Pregled.findOne({
-      _id: req.params.id,
-      user: req.user._id,
-    });
-
-    if (!pregled) {
-      return res.status(404).json({ message: "Pregled ni najden." });
-    }
-
-    // posodobi polja (če so poslana)
-    pregled.datum = datum ?? pregled.datum;
-    pregled.veterinar = veterinar ?? pregled.veterinar;
-    pregled.naziv = naziv ?? pregled.naziv;
-
-    // če je poslana nova datoteka → zamenjaj
-    if (req.file) {
-      pregled.datoteka = req.file.buffer;
-    }
-
-    const updated = await pregled.save();
-    res.json(updated);
-  } catch (error) {
-    console.error("NAPAKA PRI UREJANJU PREGLEDA:", error);
-    res.status(500).json({ message: "Napaka pri urejanju pregleda." });
   }
 });
 

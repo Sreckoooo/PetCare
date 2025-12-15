@@ -1,95 +1,137 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import protect from '../middleware/auth.js';
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import protect from "../middleware/auth.js";
 
 const router = express.Router();
 
-
-router.post('/register', async (req, res) => {
+/**
+ * POST /register
+ * Registracija novega uporabnika
+ */
+router.post("/register", async (req, res) => {
   const { ime, priimek, email, geslo } = req.body;
-  if (!ime || !priimek || !email || !geslo)
-    return res.status(400).json({ message: 'Vsa polja so obvezna' });
+
+  if (!ime || !priimek || !email || !geslo) {
+    return res.status(400).json({ message: "Vsa polja so obvezna" });
+  }
 
   const userExists = await User.findOne({ email });
-  if (userExists) return res.status(400).json({ message: 'Uporabnik že obstaja' });
+  if (userExists) {
+    return res.status(400).json({ message: "Uporabnik že obstaja" });
+  }
 
   const hashedPassword = await bcrypt.hash(geslo, 10);
-  const user = await User.create({ ime, priimek, email, geslo: hashedPassword });
+  const user = await User.create({
+    ime,
+    priimek,
+    email,
+    geslo: hashedPassword,
+  });
+
   const { geslo: pw, ...userWithoutPassword } = user._doc;
 
-  res.status(201).json({ message: 'Registracija uspešna', user: userWithoutPassword });
+  res
+    .status(201)
+    .json({ message: "Registracija uspešna", user: userWithoutPassword });
 });
 
-
-router.post('/login', async (req, res) => {
+/**
+ * POST /login
+ * Prijava uporabnika in generiranje JWT žetona
+ */
+router.post("/login", async (req, res) => {
   const { email, geslo } = req.body;
 
-  if (!email || !geslo)
-    return res.status(400).json({ message: 'Email in geslo sta obvezna' });
+  if (!email || !geslo) {
+    return res
+      .status(400)
+      .json({ message: "Email in geslo sta obvezna" });
+  }
 
+  // Dovoli samo pričakovana polja
   const extraFields = Object.keys(req.body).filter(
-    key => !['email', 'geslo'].includes(key)
+    (key) => !["email", "geslo"].includes(key)
   );
-  if (extraFields.length > 0)
-    return res.status(400).json({ message: `Nepričakovana polja: ${extraFields.join(', ')}` });
+  if (extraFields.length > 0) {
+    return res.status(400).json({
+      message: `Nepričakovana polja: ${extraFields.join(", ")}`,
+    });
+  }
 
   const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ message: 'Uporabnik ne obstaja' });
+  if (!user) {
+    return res.status(404).json({ message: "Uporabnik ne obstaja" });
+  }
 
   const isMatch = await bcrypt.compare(geslo, user.geslo);
-  if (!isMatch) return res.status(401).json({ message: 'Napačno geslo' });
-
+  if (!isMatch) {
+    return res.status(401).json({ message: "Napačno geslo" });
+  }
 
   const token = jwt.sign(
     { id: user._id, email: user.email },
     process.env.JWT_SECRET,
-    { expiresIn: '1h' }
+    { expiresIn: "1h" }
   );
 
   res.json({
-    message: 'Prijava uspešna',
-    user: { ime: user.ime, priimek: user.priimek, email: user.email },
+    message: "Prijava uspešna",
+    user: {
+      ime: user.ime,
+      priimek: user.priimek,
+      email: user.email,
+    },
     token,
   });
 });
 
-
-router.get('/me', protect, async (req, res) => {
+/**
+ * GET /me
+ * Pridobi podatke prijavljenega uporabnika
+ */
+router.get("/me", protect, async (req, res) => {
   res.json(req.user);
 });
 
-// PUT /me – urejanje lastnih podatkov + menjava gesla
-router.put('/me', protect, async (req, res) => {
+/**
+ * PUT /me
+ * Urejanje profila in menjava gesla
+ */
+router.put("/me", protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json({ message: 'Uporabnik ni najden' });
+    if (!user) {
+      return res.status(404).json({ message: "Uporabnik ni najden" });
+    }
 
     const { ime, priimek, trenutnoGeslo, novoGeslo } = req.body;
 
-    // osnovni podatki
+    // Posodobitev osnovnih podatkov
     if (ime) user.ime = ime;
     if (priimek) user.priimek = priimek;
 
-    // menjava gesla
+    // Menjava gesla
     if (novoGeslo) {
       if (!trenutnoGeslo) {
-        return res
-          .status(400)
-          .json({ message: 'Za spremembo gesla morate vnesti trenutno geslo' });
+        return res.status(400).json({
+          message: "Za spremembo gesla morate vnesti trenutno geslo",
+        });
       }
 
       const isMatch = await bcrypt.compare(trenutnoGeslo, user.geslo);
       if (!isMatch) {
-        return res.status(401).json({ message: 'Trenutno geslo ni pravilno' });
+        return res
+          .status(401)
+          .json({ message: "Trenutno geslo ni pravilno" });
       }
 
       const isSamePassword = await bcrypt.compare(novoGeslo, user.geslo);
       if (isSamePassword) {
-        return res
-          .status(400)
-          .json({ message: 'Novo geslo ne sme biti enako trenutnemu' });
+        return res.status(400).json({
+          message: "Novo geslo ne sme biti enako trenutnemu",
+        });
       }
 
       user.geslo = await bcrypt.hash(novoGeslo, 10);

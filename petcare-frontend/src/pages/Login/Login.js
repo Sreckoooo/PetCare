@@ -1,40 +1,67 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useAuth } from '../../context/AuthContext';
-import './Login.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import "./Login.css";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+/**
+ * Login stran
+ * Omogoča prijavo obstoječega uporabnika
+ */
 const Login = () => {
+  // Navigacija po aplikaciji
   const navigate = useNavigate();
+
+  // Funkcija za prijavo iz AuthContext-a
   const { login } = useAuth();
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  // Podatki obrazca
+  const [form, setForm] = useState({ email: "", password: "" });
 
+  // Sporočilo o napaki
+  const [error, setError] = useState("");
+
+  /**
+   * Posodobi stanje obrazca
+   */
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  /**
+   * Pošlje prijavne podatke na backend
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
+
     try {
       const res = await axios.post(`${API_URL}/users/login`, {
         email: form.email,
-        geslo: form.password
+        geslo: form.password,
       });
+
+      // Shrani uporabnika in žeton
       login(res.data);
-      navigate('/main');
+
+      // Preusmeritev na nadzorno ploščo
+      navigate("/main");
     } catch (err) {
       console.error(err);
-      setError('Napaka pri prijavi. Preveri email in geslo.');
+      setError("Napaka pri prijavi. Preveri email in geslo.");
     }
   };
 
-  const goToSignup = () => navigate('/signup');
+  /**
+   * Preusmeritev na registracijo
+   */
+  const goToSignup = () => navigate("/signup");
 
   return (
     <div className="login-page">
       <div className="login-card">
+        {/* Glava prijavne kartice */}
         <header className="login-header">
           <h1>Dobrodošli nazaj!</h1>
           <p className="subtitle">
@@ -43,6 +70,7 @@ const Login = () => {
           </p>
         </header>
 
+        {/* Prijavni obrazec */}
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <input
@@ -66,8 +94,10 @@ const Login = () => {
             />
           </div>
 
+          {/* Prikaz napake */}
           {error && <p className="error-text">{error}</p>}
 
+          {/* Povezava do registracije */}
           <div className="bottom-row">
             <span className="small-text">
               Nimate računa?{" "}
@@ -83,6 +113,7 @@ const Login = () => {
         </form>
       </div>
 
+      {/* Dekorativni elementi */}
       <div className="decor decor-1"></div>
       <div className="decor decor-2"></div>
     </div>

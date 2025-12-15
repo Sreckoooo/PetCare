@@ -4,7 +4,10 @@ import protect from "../middleware/auth.js";
 
 const router = express.Router();
 
-// ✔ PRIDOBI VSA UPORABNIKOVA ZDRAVILA
+/**
+ * GET /
+ * Pridobi vsa zdravila prijavljenega uporabnika
+ */
 router.get("/", protect, async (req, res) => {
   try {
     const list = await Zdravilo.find({ owner: req.user._id });
@@ -14,19 +17,24 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-// ✔ DODAJ NOVO ZDRAVILO
+/**
+ * POST /
+ * Dodaj novo zdravilo
+ */
 router.post("/", protect, async (req, res) => {
   try {
     const { ime, vrsta_odmerka } = req.body;
 
     if (!ime || !vrsta_odmerka) {
-      return res.status(400).json({ message: "Vnesi ime in vrsto odmerka." });
+      return res
+        .status(400)
+        .json({ message: "Vnesi ime in vrsto odmerka." });
     }
 
     const newZdravilo = await Zdravilo.create({
       ime,
       vrsta_odmerka,
-      owner: req.user._id,    // ⭐ Zelo pomembno!
+      owner: req.user._id,
     });
 
     res.status(201).json(newZdravilo);
@@ -35,19 +43,22 @@ router.post("/", protect, async (req, res) => {
   }
 });
 
-// ✔ POSODOBI UPORABNIKOVO ZDRAVILO
+/**
+ * PUT /:id
+ * Posodobi obstoječe zdravilo
+ */
 router.put("/:id", protect, async (req, res) => {
   try {
     const { ime, vrsta_odmerka } = req.body;
 
-    // Najdi zdravilo, ki pripada uporabniku
     const zdravilo = await Zdravilo.findOne({
       _id: req.params.id,
       owner: req.user._id,
     });
 
-    if (!zdravilo)
+    if (!zdravilo) {
       return res.status(404).json({ message: "Zdravilo ni najdeno" });
+    }
 
     zdravilo.ime = ime || zdravilo.ime;
     zdravilo.vrsta_odmerka = vrsta_odmerka || zdravilo.vrsta_odmerka;
@@ -59,7 +70,10 @@ router.put("/:id", protect, async (req, res) => {
   }
 });
 
-// ✔ IZBRIŠI UPORABNIKOVO ZDRAVILO
+/**
+ * DELETE /:id
+ * Izbriše zdravilo
+ */
 router.delete("/:id", protect, async (req, res) => {
   try {
     const zdravilo = await Zdravilo.findOneAndDelete({
@@ -67,8 +81,9 @@ router.delete("/:id", protect, async (req, res) => {
       owner: req.user._id,
     });
 
-    if (!zdravilo)
+    if (!zdravilo) {
       return res.status(404).json({ message: "Zdravilo ni najdeno" });
+    }
 
     res.json({ message: "Zdravilo uspešno izbrisano" });
   } catch (error) {

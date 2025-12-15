@@ -8,7 +8,8 @@ import Opomnik from "../models/Opomnik.js";
 const router = express.Router();
 
 /**
- * ✔ GET – vrne vsa zdravila za določenega uporabnika
+ * GET /
+ * Pridobi vsa zdravljenja za prijavljenega uporabnika
  */
 router.get("/", protect, async (req, res) => {
   try {
@@ -21,12 +22,13 @@ router.get("/", protect, async (req, res) => {
 
     res.json(povezave);
   } catch (error) {
-    res.status(500).json({ message: "Napaka pri pridobivanju zdravil" });
+    res.status(500).json({ message: "Napaka pri pridobivanju zdravljenj." });
   }
 });
 
 /**
- * ✔ GET – vsa zdravljenja za določenega ljubljenčka
+ * GET /pet/:petId
+ * Pridobi vsa zdravljenja za določenega ljubljenčka
  */
 router.get("/pet/:petId", protect, async (req, res) => {
   try {
@@ -39,8 +41,10 @@ router.get("/pet/:petId", protect, async (req, res) => {
       return res.status(404).json({ message: "Ljubljenček ni najden." });
     }
 
-    const zdravljenja = await PetZdravilo.find({ pet: pet._id })
-      .populate("zdravilo", "ime vrsta_odmerka");
+    const zdravljenja = await PetZdravilo.find({ pet: pet._id }).populate(
+      "zdravilo",
+      "ime vrsta_odmerka"
+    );
 
     res.json(zdravljenja);
   } catch (error) {
@@ -49,7 +53,8 @@ router.get("/pet/:petId", protect, async (req, res) => {
 });
 
 /**
- * ✔ POST – ustvari novo povezavo Pet ↔ Zdravilo
+ * POST /
+ * Ustvari novo zdravljenje za ljubljenčka
  */
 router.post("/", protect, async (req, res) => {
   try {
@@ -83,7 +88,7 @@ router.post("/", protect, async (req, res) => {
       datum_konca,
     });
 
-    // 🔔 Samodejno ustvari opomnik samo, če je zdravljenje danes ali v prihodnosti
+    // Samodejno ustvari opomnik, če zdravljenje še ni poteklo
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -105,7 +110,6 @@ router.post("/", protect, async (req, res) => {
       await povezava.save();
     }
 
-    // ✅ POPRAVEK: populate zdravilo
     const populated = await povezava.populate(
       "zdravilo",
       "ime vrsta_odmerka"
@@ -118,7 +122,8 @@ router.post("/", protect, async (req, res) => {
 });
 
 /**
- * ✔ PUT – posodobitev zdravila za ljubljenčka
+ * PUT /:id
+ * Posodobi obstoječe zdravljenje
  */
 router.put("/:id", protect, async (req, res) => {
   try {
@@ -149,7 +154,6 @@ router.put("/:id", protect, async (req, res) => {
       }
     );
 
-    // ✅ POPRAVEK: populate zdravilo
     const populated = await updated.populate(
       "zdravilo",
       "ime vrsta_odmerka"
@@ -162,7 +166,8 @@ router.put("/:id", protect, async (req, res) => {
 });
 
 /**
- * ✔ DELETE – izbriši vnos
+ * DELETE /:id
+ * Izbriše zdravljenje in pripadajoč opomnik
  */
 router.delete("/:id", protect, async (req, res) => {
   try {

@@ -9,6 +9,11 @@ import {
 } from "../../api/api";
 import "./Meals.css";
 
+/* ================= POMOŽNE FUNKCIJE ================= */
+
+/**
+ * Pretvori uro iz 24-urnega zapisa v AM/PM format
+ */
 const formatTimeAMPM = (time24) => {
   if (!time24) return "";
   const [h, m] = time24.split(":");
@@ -18,28 +23,43 @@ const formatTimeAMPM = (time24) => {
   return `${hour}:${m} ${ampm}`;
 };
 
+/**
+ * Oblikuje datum v slovenski zapis
+ */
 const formatDateSI = (date) => {
   if (!date) return "";
   return new Date(date).toLocaleDateString("sl-SI");
 };
 
+/* ================= KOMPONENTA ================= */
+
 const Meals = () => {
+  // JWT žeton
   const token = localStorage.getItem("token");
 
+  // Seznam ljubljenčkov
   const [pets, setPets] = useState([]);
+
+  // Izbran ljubljenček
   const [selectedPet, setSelectedPet] = useState("");
+
+  // Obroki izbranega ljubljenčka
   const [obroki, setObroki] = useState([]);
 
+  // Prikaz modalnega obrazca
   const [showForm, setShowForm] = useState(false);
+
+  // Obrok v urejanju
   const [editingMeal, setEditingMeal] = useState(null);
 
+  // Podatki obrazca
   const [formData, setFormData] = useState({
     ime: "",
     datum: "",
     ura: "",
   });
 
-  /* ================= LOAD PETS ================= */
+  /* ================= NALAGANJE LJUBLJENČKOV ================= */
 
   useEffect(() => {
     const loadPets = async () => {
@@ -53,7 +73,7 @@ const Meals = () => {
     loadPets();
   }, [token]);
 
-  /* ================= LOAD MEALS ================= */
+  /* ================= NALAGANJE OBROKOV ================= */
 
   useEffect(() => {
     if (!selectedPet) {
@@ -73,14 +93,14 @@ const Meals = () => {
     loadMeals();
   }, [selectedPet, token]);
 
-  /* ================= SUBMIT (ADD / EDIT) ================= */
+  /* ================= SHRANJEVANJE (DODAJ / UREDI) ================= */
 
   const submitMeal = async (e) => {
     e.preventDefault();
 
     try {
       if (editingMeal) {
-        // ✏️ EDIT
+        // Urejanje obstoječega obroka
         await updateObrok(
           editingMeal._id,
           {
@@ -92,7 +112,7 @@ const Meals = () => {
           token
         );
       } else {
-        // ➕ ADD
+        // Dodajanje novega obroka
         await createObrok(
           {
             pet: selectedPet,
@@ -104,12 +124,12 @@ const Meals = () => {
         );
       }
 
-      // reset
+      // Ponastavitev obrazca
       setFormData({ ime: "", datum: "", ura: "" });
       setEditingMeal(null);
       setShowForm(false);
 
-      // refetch
+      // Ponovno naloži obroke
       const data = await getObrokiByPet(selectedPet, token);
       setObroki(data);
     } catch (err) {
@@ -117,7 +137,7 @@ const Meals = () => {
     }
   };
 
-  /* ================= DELETE ================= */
+  /* ================= BRISANJE ================= */
 
   const removeMeal = async (id) => {
     try {
@@ -128,17 +148,19 @@ const Meals = () => {
     }
   };
 
+  /* ================= RENDER ================= */
+
   return (
     <div className="main-app">
       <Sidebar active="meals" />
 
       <div className="page-content meals-page">
-        {/* HEADER */}
+        {/* Naslov strani */}
         <div className="page-header">
           <h1>Obroki</h1>
         </div>
 
-        {/* FILTER + ADD */}
+        {/* Izbira ljubljenčka in dodajanje */}
         <div className="page-filter">
           <select
             className="pet-select"
@@ -167,12 +189,12 @@ const Meals = () => {
           )}
         </div>
 
-        {/* EMPTY */}
+        {/* Prazno stanje */}
         {selectedPet && obroki.length === 0 && (
           <p className="empty-text">Za tega ljubljenčka še ni obrokov.</p>
         )}
 
-        {/* LIST */}
+        {/* Seznam obrokov */}
         <div className="meals-list">
           {obroki.map((o) => (
             <div key={o._id} className="meal-card">
@@ -216,7 +238,7 @@ const Meals = () => {
           ))}
         </div>
 
-        {/* MODAL FORM – ISTO KOT MYPETS */}
+        {/* Modalni obrazec */}
         {showForm && (
           <div className="add-pet-form-overlay">
             <form className="add-pet-form" onSubmit={submitMeal}>

@@ -5,7 +5,7 @@ const pregledSchema = new mongoose.Schema(
     datum: { type: Date, required: true },
     veterinar: { type: String, required: true },
     naziv: { type: String, required: true },
-    datoteka: { type: Buffer }, 
+    datoteka: { type: Buffer },
     pet: { type: mongoose.Schema.Types.ObjectId, ref: "Pet", required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
   },

@@ -1,25 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Weather from "../Weather";
 import "./Sidebar.css";
 
+/**
+ * Stranska navigacija aplikacije
+ * Vsebuje glavno navigacijo, podmeni za zdravje,
+ * preklop temnega načina in prikaz vremena
+ */
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  /**
+   * Stanje za odpiranje / zapiranje podmenija Zdravje
+   */
   const [healthOpen, setHealthOpen] = useState(
     location.pathname.startsWith("/medications") ||
-    location.pathname.startsWith("/treatments") ||
-    location.pathname.startsWith("/exams")
+      location.pathname.startsWith("/treatments") ||
+      location.pathname.startsWith("/exams")
   );
 
+  /**
+   * Stanje za temni / svetli način
+   */
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
   );
 
-const isActive = (path) => location.pathname.startsWith(path);
+  /**
+   * Preveri, ali je pot trenutno aktivna
+   */
+  const isActive = (path) => location.pathname.startsWith(path);
 
-  React.useEffect(() => {
+  /**
+   * Uporabi temo na body element in shrani izbiro v localStorage
+   */
+  useEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -31,10 +48,12 @@ const isActive = (path) => location.pathname.startsWith(path);
 
   return (
     <div className="sidebar">
+      {/* Glava stranske navigacije */}
       <div className="sidebar-header">
         <h2>🐾 PetCare</h2>
       </div>
 
+      {/* Glavna navigacija */}
       <nav className="sidebar-nav">
         <div
           className={`nav-item ${isActive("/main") ? "active" : ""}`}
@@ -60,6 +79,7 @@ const isActive = (path) => location.pathname.startsWith(path);
           <span>Moji ljubljenčki</span>
         </div>
 
+        {/* Zdravje – podmeni */}
         <div
           className={`nav-item ${
             location.pathname.startsWith("/medications") ||
@@ -78,21 +98,27 @@ const isActive = (path) => location.pathname.startsWith(path);
         {healthOpen && (
           <div className="submenu">
             <div
-              className={`submenu-item ${isActive("/medications") ? "active" : ""}`}
+              className={`submenu-item ${
+                isActive("/medications") ? "active" : ""
+              }`}
               onClick={() => navigate("/medications")}
             >
               💊 Zdravila
             </div>
 
             <div
-              className={`submenu-item ${isActive("/treatments") ? "active" : ""}`}
+              className={`submenu-item ${
+                isActive("/treatments") ? "active" : ""
+              }`}
               onClick={() => navigate("/treatments")}
             >
               🩺 Zdravljenja
             </div>
 
             <div
-              className={`submenu-item ${isActive("/exams") ? "active" : ""}`}
+              className={`submenu-item ${
+                isActive("/exams") ? "active" : ""
+              }`}
               onClick={() => navigate("/exams")}
             >
               🧾 Pregledi
@@ -125,20 +151,19 @@ const isActive = (path) => location.pathname.startsWith(path);
         </div>
       </nav>
 
+      {/* Preklop teme */}
       <div
         className="nav-item theme-toggle"
         onClick={() => setDarkMode(!darkMode)}
       >
-        <span className="nav-icon">
-          {darkMode ? "☀️" : "🌙"}
-        </span>
-        <span>
-          {darkMode ? "Svetli način" : "Temni način"}
-        </span>
+        <span className="nav-icon">{darkMode ? "☀️" : "🌙"}</span>
+        <span>{darkMode ? "Svetli način" : "Temni način"}</span>
       </div>
 
+      {/* Vreme */}
       <Weather />
 
+      {/* Odjava */}
       <div className="sidebar-footer">
         <div
           className="nav-item"
