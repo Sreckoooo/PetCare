@@ -1,0 +1,17 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.main-app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SAMO struktura – nič dizajna */
+.page-content {
+  flex: 1;
+  margin-left: 260px; /* sidebar širina */
+  box-sizing: border-box;
+}

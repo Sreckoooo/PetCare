@@ -10,6 +10,7 @@ import aktivnostRoutes from './routes/aktivnostRoutes.js';
 import pregledRoutes from './routes/pregledRoutes.js';
 import opomnikRoutes from './routes/opomnikRoutes.js';
 import weatherRoutes from './routes/weatherRoutes.js';
+import PetZdraviloRoutes from './routes/PetZdraviloRoutes.js';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -32,6 +33,7 @@ app.use('/api/aktivnosti', aktivnostRoutes);
 app.use('/api/pregledi', pregledRoutes);
 app.use('/api/opomniki', opomnikRoutes);
 app.use('/api/weather', weatherRoutes);
+app.use('/api/pet-zdravila', PetZdraviloRoutes);
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 const PORT = process.env.PORT || 5001;

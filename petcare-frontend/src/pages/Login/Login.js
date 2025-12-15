@@ -23,7 +23,7 @@ const Login = () => {
         geslo: form.password
       });
       login(res.data);
-      navigate('/main'); 
+      navigate('/main');
     } catch (err) {
       console.error(err);
       setError('Napaka pri prijavi. Preveri email in geslo.');
@@ -36,10 +36,10 @@ const Login = () => {
     <div className="login-page">
       <div className="login-card">
         <header className="login-header">
-          <h1>Hello,</h1>
-          <h1>Welcome Back!</h1>
+          <h1>Dobrodošli nazaj!</h1>
           <p className="subtitle">
-            Water is life. Water is a basic human need. In various lines of life, humans need water.
+            Prijavite se v svoj PetCare račun in nadaljujte s skrbjo za svoje
+            ljubljenčke na enem mestu.
           </p>
         </header>
 
@@ -50,7 +50,7 @@ const Login = () => {
               name="email"
               value={form.email}
               onChange={handleChange}
-              placeholder="Abduldul@gmail.com"
+              placeholder="email@primer.si"
               required
             />
           </div>
@@ -70,14 +70,16 @@ const Login = () => {
 
           <div className="bottom-row">
             <span className="small-text">
-              Nimate računa?{' '}
+              Nimate računa?{" "}
               <button type="button" className="link" onClick={goToSignup}>
                 Registrirajte se
               </button>
             </span>
           </div>
 
-          <button type="submit" className="cta-btn">Get Started</button>
+          <button type="submit" className="cta-btn">
+            Prijava
+          </button>
         </form>
       </div>
 

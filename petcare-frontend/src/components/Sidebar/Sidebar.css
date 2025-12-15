@@ -1,0 +1,217 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* VARIABLES */
+:root {
+    --primary: #2D3142;
+    --secondary: #4F5D75;
+    --accent: #EF8354;
+    --background: #FFFFFF;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px;
+    background: var(--background);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #E8E8E8;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 100;
+}
+
+/* HEADER */
+.sidebar-header {
+    padding: 28px 24px;
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.sidebar-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+/* NAVIGATION */
+.sidebar-nav {
+    flex: 1;
+    padding: 16px 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--secondary);
+    font-weight: 500;
+    font-size: 15px;
+    border-left: 3px solid transparent;
+    margin: 2px 0;
+}
+
+.nav-item:hover {
+    background: #F8F8F8;
+    color: var(--primary);
+}
+
+.nav-item.active {
+    background: #FFF5F0;
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.nav-icon {
+    font-size: 20px;
+    width: 20px;
+    text-align: center;
+}
+
+/* FOOTER */
+.sidebar-footer {
+    border-top: 1px solid #E8E8E8;
+    padding: 12px 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 220px;
+    }
+}
+
+@media (max-width: 968px) {
+    .sidebar {
+        width: 70px;
+    }
+
+    .sidebar-header h2,
+    .nav-item span:not(.nav-icon) {
+        display: none;
+    }
+
+    .nav-item {
+        justify-content: center;
+        padding: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        width: 0;
+        transform: translateX(-100%);
+    }
+}
+
+/* SUBMENU (ZDRAVJE) */
+.submenu {
+    margin-left: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.submenu-item {
+    padding: 10px 24px 10px 48px;
+    font-size: 14px;
+    color: var(--secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.submenu-item:hover {
+    background: #F8F8F8;
+    color: var(--primary);
+}
+
+.submenu-item.active {
+    background: #FFF5F0;
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ARROW ICON FOR SUBMENU */
+.submenu-arrow {
+    margin-left: auto;
+    font-size: 14px;
+    transition: transform 0.2s ease;
+}
+
+.submenu-arrow.open {
+    transform: rotate(90deg);
+}
+
+/* ===== DARK MODE – SIDEBAR ===== */
+
+body.dark .sidebar {
+  background-color: #1a1a1a;
+  border-right: 1px solid #2a2a2a;
+}
+
+/* PetCare logo */
+body.dark .sidebar .logo,
+body.dark .sidebar .logo span,
+body.dark .sidebar .logo h1 {
+  color: #f5f5f5;
+}
+
+body.dark .sidebar .logo svg {
+  fill: #f5f5f5;
+}
+
+/* Menu items + icons */
+body.dark .sidebar a,
+body.dark .sidebar li {
+  color: #e5e7eb;
+}
+
+body.dark .sidebar svg {
+  color: #e5e7eb;
+  fill: currentColor;
+}
+
+/* Hover & active states */
+body.dark .sidebar a:hover {
+  background-color: #2a2a2a;
+}
+
+body.dark .sidebar a.active {
+  background-color: #1f2937;
+  color: #ffffff;
+}
+
+/* ===== DARK MODE – FIX LOGO ===== */
+
+body.dark .sidebar-header h2 {
+  color: #f5f5f5; /* jasno bela */
+}
+
+/* ===== THEME TOGGLE (LIGHT MODE) ===== */
+
+.sidebar-theme {
+    padding: 12px 16px;
+}
+
+/* ===== DARK MODE – THEME TOGGLE AS NAV ITEM ===== */
+
+body.dark .nav-item.theme-toggle {
+  color: #e5e7eb;
+}
+
+body.dark .nav-item.theme-toggle:hover {
+  background-color: #2a2a2a;
+}
+
+body.dark .nav-item.theme-toggle .nav-icon {
+  color: #e5e7eb;
+}

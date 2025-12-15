@@ -1,120 +1,163 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './Profile.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import "./Profile.css";
+import "../../styles/layout.css";
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5001/api";
 
 const Profile = () => {
-    const navigate = useNavigate();
-    const [userData, setUserData] = useState({});
-    const [isEditing, setIsEditing] = useState(false);
-    const [newPassword, setNewPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const res = await axios.get(`${API_BASE}/users/me`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setUserData(res.data);
-            } catch (err) {
-                console.error("Napaka pri pridobivanju uporabnika:", err.response || err);
-            }
-        };
-        fetchUser();
-    }, [token]);
+  const [user, setUser] = useState(null);
+  const [formData, setFormData] = useState({
+    ime: "",
+    priimek: "",
+    email: "",
+    trenutnoGeslo: "",
+    novoGeslo: "",
+  });
 
-    const handleEdit = () => {
-        setIsEditing(!isEditing);
-        setErrorMessage('');
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setUser(res.data);
+        setFormData({
+          ime: res.data.ime,
+          priimek: res.data.priimek,
+          email: res.data.email,
+          trenutnoGeslo: "",
+          novoGeslo: "",
+        });
+      } catch (err) {
+        console.error("Napaka pri pridobivanju uporabnika:", err);
+      }
     };
 
-    const handleSave = async () => {
-        try {
-            // Preveri, če je novo geslo enako trenutnemu
-            if (newPassword && newPassword === userData.geslo) {
-                setErrorMessage("Novo geslo ne sme biti enako trenutnemu!");
-                return;
-            }
+    fetchUser();
+  }, [token]);
 
-            const editableData = {
-                ime: userData.ime,
-                priimek: userData.priimek,
-            };
-            if (newPassword) editableData.geslo = newPassword;
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-            const res = await axios.put(`${API_BASE}/users/me`, editableData, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+  const handleSave = async (e) => {
+    e.preventDefault();
 
-            setUserData(res.data);
-            setIsEditing(false);
+    // frontend validacija za geslo
+    if (formData.novoGeslo && !formData.trenutnoGeslo) {
+      alert("Za spremembo gesla morate vnesti trenutno geslo.");
+      return;
+    }
 
-            if (editableData.geslo) {
-                localStorage.removeItem('token');
-                navigate('/login');
-            } else {
-                setNewPassword('');
-            }
+    try {
+      // payload brez emaila
+      const payload = {
+        ime: formData.ime,
+        priimek: formData.priimek,
+      };
 
-        } catch (err) {
-            console.error("Napaka pri shranjevanju:", err.response || err);
-            setErrorMessage("Prišlo je do napake pri shranjevanju podatkov.");
-        }
-    };
+      // geslo pošljemo samo, če ga želi spremeniti
+      if (formData.novoGeslo) {
+        payload.trenutnoGeslo = formData.trenutnoGeslo;
+        payload.novoGeslo = formData.novoGeslo;
+      }
 
-    const handleInputChange = (field, value) => {
-        setUserData(prev => ({ ...prev, [field]: value }));
-        setErrorMessage('');
-    };
+      await axios.put(`${API_BASE}/users/me`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    if (!userData) return <div className="profile-page">Nalagam...</div>;
+      alert("Profil uspešno posodobljen");
 
+      setFormData({
+        ...formData,
+        trenutnoGeslo: "",
+        novoGeslo: "",
+      });
+    } catch (err) {
+      alert(err.response?.data?.message || "Napaka pri shranjevanju");
+    }
+  };
+
+  if (!user) {
     return (
-        <div className="profile-page">
-            <button onClick={() => navigate('/main')} className="back-arrow">←</button>
-
-            <div className="profile-card">
-                <div className="card-header">
-                    <h2>Osebni podatki</h2>
-                    <button onClick={isEditing ? handleSave : handleEdit} className="edit-btn">
-                        {isEditing ? 'Shrani' : 'Uredi'}
-                    </button>
-                </div>
-
-                {errorMessage && <div className="error-message">{errorMessage}</div>}
-
-                <div className="data-row">
-                    <label>Ime</label>
-                    {isEditing ? (
-                        <input type="text" value={userData.ime || ''} onChange={(e) => handleInputChange('ime', e.target.value)} className="edit-input"/>
-                    ) : <span>{userData.ime}</span>}
-                </div>
-
-                <div className="data-row">
-                    <label>Priimek</label>
-                    {isEditing ? (
-                        <input type="text" value={userData.priimek || ''} onChange={(e) => handleInputChange('priimek', e.target.value)} className="edit-input"/>
-                    ) : <span>{userData.priimek}</span>}
-                </div>
-
-                <div className="data-row">
-                    <label>Email</label>
-                    <span>{userData.email}</span>
-                </div>
-
-                <div className="data-row">
-                    <label>Geslo</label>
-                    {isEditing ? (
-                        <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="edit-input" placeholder="Novo geslo (pusti prazno, če se ne spreminja)" />
-                    ) : <span>••••••••</span>}
-                </div>
-            </div>
-        </div>
+      <div className="main-app">
+        <Sidebar active="profile" />
+        <div className="page-content">Nalagam...</div>
+      </div>
     );
+  }
+
+  return (
+  <div className="main-app">
+    <Sidebar active="profile" />
+
+    <div className="page-content">
+      <div className="profile-page">
+        {/* dekorativni elementi */}
+        <div className="profile-decor profile-decor-1"></div>
+        <div className="profile-decor profile-decor-2"></div>
+        <div className="profile-decor profile-decor-3"></div>
+
+        <div className="profile-card">
+          <div className="profile-header">
+            <h1>Moj profil</h1>
+          </div>
+
+          <form onSubmit={handleSave} className="profile-form">
+            <input
+              type="text"
+              name="ime"
+              placeholder="Ime"
+              value={formData.ime}
+              onChange={handleChange}
+              required
+            />
+
+            <input
+              type="text"
+              name="priimek"
+              placeholder="Priimek"
+              value={formData.priimek}
+              onChange={handleChange}
+              required
+            />
+
+            {/* EMAIL – zaklenjen */}
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              disabled
+            />
+
+            <input
+              type="password"
+              name="trenutnoGeslo"
+              placeholder="Trenutno geslo"
+              value={formData.trenutnoGeslo}
+              onChange={handleChange}
+            />
+
+            <input
+              type="password"
+              name="novoGeslo"
+              placeholder="Novo geslo"
+              value={formData.novoGeslo}
+              onChange={handleChange}
+            />
+
+            <button type="submit">Shrani spremembe</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default Profile;

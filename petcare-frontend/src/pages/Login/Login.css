@@ -12,7 +12,7 @@
 
 .login-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 450px;
   background: #fff;
   border-radius: 30px;
   padding: 2.5rem;
@@ -27,6 +27,7 @@
   font-size: 42px;
   font-weight: 800;
   color: #0f0f0f;
+  text-align: center;
 }
 
 .subtitle {
@@ -34,6 +35,10 @@
   color: #9aa2ad;
   font-size: 14px;
   line-height: 1.6;
+  text-align: center;      /* 🔑 center */
+  max-width: 360px;        /* 🔑 lepša širina */
+  margin-left: auto;       /* 🔑 center block */
+  margin-right: auto;
 }
 
 .login-form {

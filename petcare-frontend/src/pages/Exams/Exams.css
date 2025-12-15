@@ -1,0 +1,242 @@
+/* ================= PAGE ================= */
+
+.exams-page {
+  min-height: calc(100vh - 80px);
+  padding: 40px 48px 64px;
+  background: #f6f7fb;
+}
+
+/* ================= HEADER ================= */
+
+.exams-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.exams-page h1 {
+  font-size: 32px;
+  font-weight: 900;
+  margin: 0 0 24px 0;
+  color: #0f0f0f;
+}
+
+/* ================= CONTROLS ================= */
+
+.pet-select {
+  min-width: 220px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid #e6e8ec;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  box-shadow: 0 4px 10px rgba(0,0,0,.06);
+}
+
+.pet-select:focus {
+  outline: none;
+  border-color: #ff8c52;
+  box-shadow: 0 0 0 3px rgba(255,140,82,.25);
+}
+
+/* ================= ADD BUTTON ================= */
+
+.add-btn {
+  padding: 13px 26px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, #ff9a56, #ff6a2c);
+  box-shadow: 0 10px 24px rgba(255,122,47,.45);
+  transition: all .2s ease;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(255,122,47,.55);
+}
+
+/* ================= FORM ================= */
+
+.exam-form {
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  padding: 28px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 32px;
+  border: 1px solid #e6e8ec;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+.exam-form input {
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid #e6e8ec;
+  font-size: 14px;
+  background: #f9fafb;
+  transition: all .2s ease;
+}
+
+.exam-form input:focus {
+  outline: none;
+  background: #fff;
+  border-color: #ff8c52;
+  box-shadow: 0 0 0 3px rgba(255,140,82,.25);
+}
+
+/* ================= LIST ================= */
+
+.exams-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* ================= CARD ================= */
+
+.exam-card {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e6e8ec;
+  border-radius: 18px;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  transition: background .2s ease, box-shadow .2s ease;
+}
+
+.exam-card:hover {
+  background: #fafafa;
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+
+/* ================= LEFT CONTENT ================= */
+
+.exam-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.exam-main h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 900;
+  color: #111;
+}
+
+/* ================= META (pod nazivom) ================= */
+
+.exam-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.exam-meta span {
+  display: block;
+}
+
+.exam-meta strong {
+  font-weight: 800;
+}
+
+/* ================= ACTIONS ================= */
+
+.exam-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.exam-actions button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 16px;
+  transition: all .2s ease;
+}
+
+.exam-actions button:hover {
+  transform: scale(1.1);
+}
+
+/* download */
+.exam-actions .download-btn:hover {
+  background: rgba(59,130,246,.15);
+  color: #3b82f6;
+}
+
+/* delete */
+.exam-actions .delete-btn:hover {
+  background: rgba(239,68,68,.15);
+  color: #ef4444;
+}
+
+/* ================= EMPTY ================= */
+
+.empty-text {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 18px;
+}
+
+/* ================= DARK MODE ================= */
+
+body.dark .exams-page {
+  background: radial-gradient(circle at top right, #1a1a1a, #0f0f0f);
+}
+
+body.dark .exams-page h1 {
+  color: #fff;
+}
+
+body.dark .pet-select {
+  background: #1e1e1e;
+  border-color: #2a2a2a;
+  color: #fff;
+}
+
+body.dark .exam-card {
+  background: #1e1e1e;
+  border-color: #2a2a2a;
+}
+
+body.dark .exam-card:hover {
+  background: #222;
+}
+
+body.dark .exam-main h3 {
+  color: #fff;
+}
+
+/* 🔑 POPRAVEK: meta tekst (datum, veterinar, datoteka) */
+body.dark .exam-meta {
+  color: #d1d5db;
+}
+
+body.dark .exam-meta strong {
+  color: #fff;
+}
+
+body.dark .exam-actions button {
+  background: #2a2a2a;
+  color: #d1d5db;
+}

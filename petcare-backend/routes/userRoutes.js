@@ -60,28 +60,43 @@ router.get('/me', protect, async (req, res) => {
   res.json(req.user);
 });
 
-// PUT /me – urejanje lastnih podatkov
+// PUT /me – urejanje lastnih podatkov + menjava gesla
 router.put('/me', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ message: 'Uporabnik ni najden' });
 
-    const { ime, priimek, geslo } = req.body;
+    const { ime, priimek, trenutnoGeslo, novoGeslo } = req.body;
 
+    // osnovni podatki
     if (ime) user.ime = ime;
     if (priimek) user.priimek = priimek;
-    if (geslo) {
-      const isSamePassword = await bcrypt.compare(geslo, user.geslo);
-      if (isSamePassword) {
-        return res.status(400).json({ message: 'Novo geslo ne sme biti enako trenutnemu' });
+
+    // menjava gesla
+    if (novoGeslo) {
+      if (!trenutnoGeslo) {
+        return res
+          .status(400)
+          .json({ message: 'Za spremembo gesla morate vnesti trenutno geslo' });
       }
-      // Hash gesla pred shranjevanjem
-      const hashedPassword = await bcrypt.hash(geslo, 10);
-      user.geslo = hashedPassword;
+
+      const isMatch = await bcrypt.compare(trenutnoGeslo, user.geslo);
+      if (!isMatch) {
+        return res.status(401).json({ message: 'Trenutno geslo ni pravilno' });
+      }
+
+      const isSamePassword = await bcrypt.compare(novoGeslo, user.geslo);
+      if (isSamePassword) {
+        return res
+          .status(400)
+          .json({ message: 'Novo geslo ne sme biti enako trenutnemu' });
+      }
+
+      user.geslo = await bcrypt.hash(novoGeslo, 10);
     }
 
     const updatedUser = await user.save();
-    const { geslo: pw, ...userWithoutPassword } = updatedUser._doc;
+    const { geslo, ...userWithoutPassword } = updatedUser._doc;
 
     res.json(userWithoutPassword);
   } catch (err) {
