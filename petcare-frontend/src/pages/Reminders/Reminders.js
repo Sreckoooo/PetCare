@@ -289,7 +289,7 @@ const Reminders = () => {
     }
 
     try {
-      
+
       if (formData.tip === "splošni") {
         await createOpomnik(
           {
@@ -303,7 +303,7 @@ const Reminders = () => {
         );
       }
 
-      
+
       if (formData.tip === "obrok") {
         await createObrok(
           {
@@ -316,7 +316,7 @@ const Reminders = () => {
         );
       }
 
-      
+
       if (formData.tip === "aktivnost") {
         await createAktivnost(
           {
@@ -330,7 +330,7 @@ const Reminders = () => {
         );
       }
 
-      
+
       if (formData.tip === "zdravilo") {
         await createPetZdravilo(
           {
@@ -346,7 +346,7 @@ const Reminders = () => {
         );
       }
 
-      
+
       setShowForm(false);
       setFormData({
         naziv: "",
@@ -457,7 +457,7 @@ const Reminders = () => {
   const filteredByView = items.filter(i => {
     if (!i.rawDate) return false;
 
-    
+
     if (hideDone && i.status === "done") return false;
 
     if (view === "vse") return true;
