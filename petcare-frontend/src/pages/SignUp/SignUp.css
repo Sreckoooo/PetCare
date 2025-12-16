@@ -4,14 +4,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 🔑 center horizontally */
   gap: 10px;
   margin-top: 10px;
   font-size: 13px;
   color: #7a828d;
   line-height: 1.5;
   text-align: center;
-  /* 🔑 center text */
 }
 
 .terms-checkbox input[type="checkbox"] {

@@ -9,9 +9,8 @@ body,
   min-height: 100vh;
 }
 
-/* SAMO struktura – nič dizajna */
 .page-content {
   flex: 1;
-  margin-left: 260px; /* sidebar širina */
+  margin-left: 260px;
   box-sizing: border-box;
 }

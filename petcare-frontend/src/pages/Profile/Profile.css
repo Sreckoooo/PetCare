@@ -11,7 +11,6 @@
     overflow: hidden;
 }
 
-/* da profil res zapolni content */
 .page-content {
     display: flex;
     flex-direction: column;
@@ -35,7 +34,7 @@
     z-index: 2;
 }
 
-/* subtilen zgornji rob */
+
 .profile-card::before {
     content: "";
     position: absolute;
@@ -93,7 +92,7 @@
     box-shadow: 0 0 0 3px rgba(255, 140, 82, 0.25);
 }
 
-/* zaklenjen email */
+
 .profile-form input:disabled {
     background: #f3f4f6;
     color: #6b7280;
@@ -130,7 +129,6 @@
     border-radius: 50%;
     background: linear-gradient(135deg, #ff9a56 0%, #ff7e39 100%);
     opacity: 0.85;
-    /* 🔥 kot login */
     z-index: 0;
 }
 

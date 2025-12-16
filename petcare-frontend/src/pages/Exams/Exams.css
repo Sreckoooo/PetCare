@@ -1,4 +1,4 @@
-/* ================= PAGE ================= */
+/* ===================== STRAN ===================== */
 
 .exams-page {
   min-height: calc(100vh - 80px);
@@ -6,7 +6,7 @@
   background: #f6f7fb;
 }
 
-/* ================= HEADER ================= */
+/* ===================== GLAVA STRANI ===================== */
 
 .exams-header {
   display: flex;
@@ -22,7 +22,7 @@
   color: #0f0f0f;
 }
 
-/* ================= CONTROLS ================= */
+/* ===================== IZBIRA LJUBLJENČKA ===================== */
 
 .pet-select {
   min-width: 220px;
@@ -42,7 +42,7 @@
   box-shadow: 0 0 0 3px rgba(255, 140, 82, .25);
 }
 
-/* ================= ADD BUTTON ================= */
+/* ===================== GUMB DODAJ ===================== */
 
 .add-btn {
   padding: 13px 26px;
@@ -62,7 +62,7 @@
   box-shadow: 0 16px 36px rgba(255, 122, 47, .55);
 }
 
-/* ================= FORM ================= */
+/* ===================== OBRAZEC PREGLEDA ===================== */
 
 .exam-form {
   background: linear-gradient(180deg, #ffffff, #fafafa);
@@ -92,7 +92,7 @@
   box-shadow: 0 0 0 3px rgba(255, 140, 82, .25);
 }
 
-/* ================= LIST ================= */
+/* ===================== SEZNAM PREGLEDOV ===================== */
 
 .exams-list {
   display: flex;
@@ -101,7 +101,7 @@
   width: 100%;
 }
 
-/* ================= CARD ================= */
+/* ===================== KARTICA PREGLEDA ===================== */
 
 .exam-card {
   width: 100%;
@@ -121,7 +121,7 @@
   box-shadow: 0 10px 24px rgba(0, 0, 0, .08);
 }
 
-/* ================= LEFT CONTENT ================= */
+/* ===================== LEVI DEL KARTICE ===================== */
 
 .exam-main {
   display: flex;
@@ -136,7 +136,7 @@
   color: #111;
 }
 
-/* ================= META (pod nazivom) ================= */
+/* ===================== PODATKI PREGLEDA ===================== */
 
 .exam-meta {
   display: flex;
@@ -154,7 +154,7 @@
   font-weight: 800;
 }
 
-/* ================= ACTIONS ================= */
+/* ===================== AKCIJE (PRENOS / IZBRIŠI) ===================== */
 
 .exam-actions {
   display: flex;
@@ -190,7 +190,7 @@
   color: #ef4444;
 }
 
-/* ================= EMPTY ================= */
+/* ===================== PRAZNO STANJE ===================== */
 
 .empty-text {
   font-size: 14px;
@@ -198,7 +198,7 @@
   margin-top: 18px;
 }
 
-/* ================= DARK MODE ================= */
+/* ===================== TEMNI NAČIN ===================== */
 
 body.dark .exams-page {
   background: radial-gradient(circle at top right, #1a1a1a, #0f0f0f);

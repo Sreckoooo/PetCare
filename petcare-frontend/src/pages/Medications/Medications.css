@@ -1,4 +1,4 @@
-/* ================= BASE ================= */
+/* ===================== OSNOVNE SPREMENLJIVKE ===================== */
 
 :root {
   --accent: #ff8c52;
@@ -11,7 +11,7 @@
   --white: #ffffff;
 }
 
-/* ================= PAGE ================= */
+/* ===================== STRAN ===================== */
 
 .medications-page {
   min-height: calc(100vh - 80px);
@@ -21,7 +21,7 @@
   overflow: hidden;
 }
 
-/* ================= HEADER ================= */
+/* ===================== GLAVA STRANI ===================== */
 
 .medications-header {
   display: flex;
@@ -38,7 +38,7 @@
   letter-spacing: -0.02em;
 }
 
-/* ================= ADD BUTTON ================= */
+/* ===================== GUMB DODAJ ===================== */
 
 .add-btn {
   padding: 14px 30px;
@@ -58,7 +58,7 @@
   box-shadow: 0 20px 40px rgba(255, 122, 47, 0.55);
 }
 
-/* ================= LIST ================= */
+/* ===================== SEZNAM ZDRAVIL ===================== */
 
 .medications-list {
   display: flex;
@@ -67,7 +67,7 @@
   width: 100%;
 }
 
-/* ================= LIST ITEM ================= */
+/* ===================== KARTICA ZDRAVILA ===================== */
 
 .medication-card {
   display: flex;
@@ -85,7 +85,7 @@
   box-shadow: 0 10px 26px rgba(0, 0, 0, .08);
 }
 
-/* ================= INFO ================= */
+/* ===================== PODATKI O ZDRAVILU ===================== */
 
 .medication-info {
   display: flex;
@@ -106,7 +106,7 @@
   color: var(--text-muted);
 }
 
-/* ================= ACTIONS ================= */
+/* ===================== AKCIJE (UREDI / IZBRIŠI) ===================== */
 
 .medication-actions {
   display: flex;
@@ -129,26 +129,26 @@
   transform: scale(1.1);
 }
 
-/* edit */
+/* uredi */
 .medication-actions .edit-btn:hover {
   background: rgba(59, 130, 246, .15);
   color: #3b82f6;
 }
 
-/* delete */
+/* izbriši */
 .medication-actions .delete-btn:hover {
   background: rgba(239, 68, 68, .15);
   color: #ef4444;
 }
 
-/* ================= EMPTY ================= */
+/* ===================== PRAZNO STANJE ===================== */
 
 .empty-text {
   font-size: 15px;
   color: var(--text-muted);
 }
 
-/* ================= MODAL ================= */
+/* ===================== MODALNO OKNO ===================== */
 
 .medication-form-overlay {
   position: fixed;
@@ -178,7 +178,7 @@
   margin-bottom: 6px;
 }
 
-/* ================= INPUTS ================= */
+/* ===================== VNOSNA POLJA ===================== */
 
 .medication-form input {
   width: 100%;
@@ -197,7 +197,7 @@
   box-shadow: 0 0 0 3px rgba(255, 140, 82, .25);
 }
 
-/* ================= FORM BUTTONS ================= */
+/* ===================== GUMBA OBRAZCA ===================== */
 
 .form-buttons {
   margin-top: 28px;
@@ -225,7 +225,7 @@
   background: #f1f1f1;
 }
 
-/* ================= DARK MODE ================= */
+/* ===================== TEMNI NAČIN ===================== */
 
 body.dark .medications-page {
   background: radial-gradient(circle at top right, #1a1a1a, #0f0f0f);

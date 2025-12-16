@@ -1,4 +1,4 @@
-/* ================= PAGE ================= */
+/* ===================== STRAN ===================== */
 
 .treatments-page {
   min-height: calc(100vh - 80px);
@@ -6,7 +6,7 @@
   background: #f6f7fb;
 }
 
-/* ================= HEADER ================= */
+/* ===================== GLAVA STRANI ===================== */
 
 .page-header {
   margin-bottom: 20px;
@@ -19,7 +19,7 @@
   color: #0f0f0f;
 }
 
-/* ================= FILTER ROW ================= */
+/* ===================== VRSTICA S FILTRI ===================== */
 
 .page-filter {
   display: flex;
@@ -28,7 +28,7 @@
   margin-bottom: 28px;
 }
 
-/* ================= CONTROLS ================= */
+/* ===================== IZBIRA LJUBLJENČKA ===================== */
 
 .pet-select {
   min-width: 220px;
@@ -48,7 +48,7 @@
   box-shadow: 0 0 0 3px rgba(255, 140, 82, .25);
 }
 
-/* ================= ADD BUTTON ================= */
+/* ===================== GUMB DODAJ ===================== */
 
 .add-btn {
   padding: 13px 26px;
@@ -68,7 +68,7 @@
   box-shadow: 0 16px 36px rgba(255, 122, 47, .55);
 }
 
-/* ================= LIST ================= */
+/* ===================== SEZNAM ZDRAVLJENJ ===================== */
 
 .treatments-list {
   display: flex;
@@ -76,7 +76,7 @@
   gap: 18px;
 }
 
-/* ================= CARD ================= */
+/* ===================== KARTICA ZDRAVLJENJA ===================== */
 
 .treatment-card {
   width: 100%;
@@ -94,7 +94,7 @@
   box-shadow: 0 12px 28px rgba(0, 0, 0, .08);
 }
 
-/* ================= LEFT ================= */
+/* ===================== LEVI DEL KARTICE ===================== */
 
 .treatment-left {
   display: flex;
@@ -115,7 +115,7 @@
   color: #6b7280;
 }
 
-/* ================= META ================= */
+/* ===================== DODATNI PODATKI ===================== */
 
 .treatment-meta {
   display: flex;
@@ -133,7 +133,7 @@
   font-weight: 800;
 }
 
-/* ================= ACTIONS ================= */
+/* ===================== AKCIJE ===================== */
 
 .treatment-actions {
   display: flex;
@@ -165,7 +165,7 @@
   color: #ef4444;
 }
 
-/* ================= EMPTY ================= */
+/* ===================== PRAZNO STANJE ===================== */
 
 .empty-text {
   font-size: 14px;
@@ -173,7 +173,7 @@
   margin-top: 18px;
 }
 
-/* ================= DARK MODE ================= */
+/* ===================== TEMNI NAČIN ===================== */
 
 body.dark .treatments-page {
   background: radial-gradient(circle at top right, #1a1a1a, #0f0f0f);
@@ -212,6 +212,8 @@ body.dark .treatment-actions .icon-btn {
 }
 
 
+
+/* ===================== MODALNO OKNO ===================== */
 
 .modal-overlay {
   position: fixed;

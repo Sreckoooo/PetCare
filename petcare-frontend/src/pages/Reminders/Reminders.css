@@ -1,4 +1,4 @@
-/* ================= PAGE ================= */
+/* ===================== STRAN ===================== */
 
 .reminders-page {
   min-height: calc(100vh - 80px);
@@ -6,7 +6,7 @@
   background: #f6f7fb;
 }
 
-/* ================= HEADER ================= */
+/* ===================== NASLOV STRANI ===================== */
 
 .reminders-page h1 {
   font-size: 34px;
@@ -15,7 +15,7 @@
   color: #0f0f0f;
 }
 
-/* ================= TOP ACTION ROW ================= */
+/* ===================== ZGORNJA VRSTICA AKCIJ ===================== */
 
 .reminders-actions {
   display: flex;
@@ -25,7 +25,7 @@
   margin-bottom: 24px;
 }
 
-/* ================= SELECT ================= */
+/* ===================== IZBIRA (SELECT) ===================== */
 
 .reminders-page select {
   width: 220px;
@@ -44,7 +44,7 @@
   box-shadow: 0 0 0 3px rgba(255, 140, 82, .25);
 }
 
-/* ================= ADD BUTTON ================= */
+/* ===================== GUMB DODAJ ===================== */
 
 .add-btn {
   padding: 13px 26px;
@@ -64,7 +64,7 @@
   box-shadow: 0 16px 36px rgba(255, 122, 47, .55);
 }
 
-/* ================= TABS ================= */
+/* ===================== ZAVIHKI ===================== */
 
 .reminder-tabs {
   display: flex;
@@ -88,7 +88,7 @@
   color: #fff;
 }
 
-/* ================= DAY HEADER ================= */
+/* ===================== NASLOV DNEVA ===================== */
 
 .reminders-page h2 {
   margin: 36px 0 18px;
@@ -97,7 +97,7 @@
   color: #111;
 }
 
-/* ================= CARD ================= */
+/* ===================== KARTICA OPOMNIKA ===================== */
 
 .card {
   width: 100%;
@@ -115,9 +115,7 @@
   box-shadow: 0 12px 28px rgba(0, 0, 0, .08);
 }
 
-
-
-/* ================= CARD HEADER ================= */
+/* ===================== GLAVA OPOMNIKA ===================== */
 
 .reminder-header {
   display: flex;
@@ -142,7 +140,6 @@
   right: 22px;
   top: 50%;
   transform: translateY(-50%);
-  /* 🔥 PRAVA SREDINA */
 
   width: 44px;
   height: 44px;
@@ -163,7 +160,7 @@
   transform: translateY(-50%) scale(1.1);
 }
 
-/* ================= TAG ================= */
+/* ===================== OZNAKE TIPA ===================== */
 
 .reminder-type {
   padding: 4px 10px;
@@ -193,7 +190,7 @@
   color: #1d4ed8;
 }
 
-/* ================= DETAILS ================= */
+/* ===================== PODROBNOSTI OPOMNIKA ===================== */
 
 .reminder-details {
   margin-top: 10px;
@@ -204,7 +201,7 @@
   gap: 6px;
 }
 
-/* ================= FOOTER / CHECKBOX ================= */
+/* ===================== AKCIJE OPOMNIKA ===================== */
 
 .reminder-actions {
   margin-top: 14px;
@@ -224,14 +221,14 @@
   height: 16px;
 }
 
-/* ================= DONE ================= */
+/* ===================== STANJE OPRAVLJENO ===================== */
 
 .card.done {
   opacity: 0.55;
   text-decoration: line-through;
 }
 
-/* ================= DARK MODE ================= */
+/* ===================== TEMNI NAČIN ===================== */
 
 body.dark .reminders-page {
   background: radial-gradient(circle at top right, #1a1a1a, #0f0f0f);
@@ -261,4 +258,16 @@ body.dark .reminder-header button {
 body.dark .reminder-tabs button {
   background: #2a2a2a;
   color: #d1d5db;
+}
+
+/* ===================== DARK MODE – OHRANI BARVE ZAVIHOV ===================== */
+
+body.dark .reminder-tabs button {
+  background: #e5e7eb;      /* isto kot light */
+  color: #111;              /* isto kot light */
+}
+
+body.dark .reminder-tabs button.active {
+  background: linear-gradient(135deg, #ff9a56, #ff6a2c);
+  color: #fff;
 }

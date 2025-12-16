@@ -1,10 +1,10 @@
-/* ================= LAYOUT ================= */
+/* ===================== POSTAVITEV STRANI ===================== */
 
 .main-app-page {
   padding: 24px;
 }
 
-/* ================= NASLOV ================= */
+/* ===================== NASLOV STRANI ===================== */
 
 .main-app-page h1 {
   margin-bottom: 6px;
@@ -13,7 +13,8 @@
   font-weight: 700;
 }
 
-/* 🔹 PODNASLOV: Pregled za danes */
+/* ===================== PODNASLOV (PREGLED ZA DANES) ===================== */
+
 .dashboard-subtitle {
   margin-bottom: 36px;
   text-align: center;
@@ -26,7 +27,7 @@
   gap: 8px;
 }
 
-/* ================= KARTICE ================= */
+/* ===================== POVZETEK ZA DANES (KARTICE) ===================== */
 
 .dashboard-cards {
   display: grid;
@@ -61,7 +62,7 @@
   transform: translateY(-1px);
 }
 
-/* ================= BARVE ================= */
+/* ===================== BARVNE TEME KARTIC ===================== */
 
 .card.obrok {
   background: #ffb703;
@@ -79,7 +80,7 @@
   background: #ef476f;
 }
 
-/* ================= VSEBINA V KARTICI ================= */
+/* ===================== VSEBINA KARTIC ===================== */
 
 .card-content {
   margin-top: 14px;
@@ -87,7 +88,7 @@
   line-height: 1.4;
 }
 
-/* posamezna vrstica */
+/* posamezna vrstica v kartici */
 .card-item {
   padding: 8px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.35);
@@ -124,7 +125,7 @@
   align-items: center;
 }
 
-/* ura */
+/* ura dogodka */
 .card-item .item-time {
   background: rgba(255, 255, 255, 0.28);
   padding: 3px 7px;
@@ -134,7 +135,7 @@
   font-weight: 500;
 }
 
-/* ================= KOLEDAR ================= */
+/* ===================== KOLEDAR ===================== */
 
 .calendar-grid {
   display: grid;
@@ -163,7 +164,7 @@
   margin-top: 8px;
 }
 
-/* ================= DOGODKI (KOLEDAR) ================= */
+/* ===================== DOGODKI V KOLEDARJU ===================== */
 
 .calendar-event {
   padding: 6px 8px;
@@ -190,7 +191,7 @@
   opacity: 0.85;
 }
 
-/* ================= BARVE DOGODKOV ================= */
+/* ===================== BARVE DOGODKOV ===================== */
 
 .calendar-event.obrok {
   background: #ffb703;
@@ -208,7 +209,7 @@
   background: #ef476f;
 }
 
-/* ================= RESPONSIVE ================= */
+/* ===================== PRILAGODITEV ZASLONOM ===================== */
 
 @media (max-width: 900px) {
   .calendar-grid {
@@ -220,4 +221,34 @@
   .calendar-grid {
     grid-template-columns: repeat(1, 1fr);
   }
+}
+
+/* ===================== DARK MODE – OHRANI BARVE KARTIC ===================== */
+
+body.dark .card.obrok {
+  background: #ffb703;
+  color: #fff;
+}
+
+body.dark .card.aktivnost {
+  background: #219ebc;
+  color: #fff;
+}
+
+body.dark .card.zdravljenje {
+  background: #9b5de5;
+  color: #fff;
+}
+
+body.dark .card.opomnik {
+  background: #ef476f;
+  color: #fff;
+}
+
+/* vsebina v karticah ostane svetla */
+body.dark .card .card-content,
+body.dark .card .card-item,
+body.dark .card .item-main,
+body.dark .card .item-meta {
+  color: #fff;
 }
