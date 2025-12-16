@@ -289,7 +289,7 @@ const Reminders = () => {
     }
 
     try {
-      // 🔹 SPLOŠNI OPOMNIK
+      
       if (formData.tip === "splošni") {
         await createOpomnik(
           {
@@ -303,7 +303,7 @@ const Reminders = () => {
         );
       }
 
-      // 🔹 OBROK
+      
       if (formData.tip === "obrok") {
         await createObrok(
           {
@@ -316,7 +316,7 @@ const Reminders = () => {
         );
       }
 
-      // 🔹 AKTIVNOST
+      
       if (formData.tip === "aktivnost") {
         await createAktivnost(
           {
@@ -330,7 +330,7 @@ const Reminders = () => {
         );
       }
 
-      // 🔹 ZDRAVLJENJE (privzeto brez odmerka/pogostosti – to je hitri opomnik)
+      
       if (formData.tip === "zdravilo") {
         await createPetZdravilo(
           {
@@ -346,7 +346,7 @@ const Reminders = () => {
         );
       }
 
-      // reset + reload
+      
       setShowForm(false);
       setFormData({
         naziv: "",
@@ -369,7 +369,6 @@ const Reminders = () => {
      DELETE
   ========================= */
   const removeReminder = async (item) => {
-    // 🔹 ročni opomnik → briši iz backenda
     if (item.opomnikId) {
       try {
         await deleteOpomnik(item.opomnikId, token);
@@ -382,7 +381,6 @@ const Reminders = () => {
       return;
     }
 
-    // 🔹 avtomatski opomnik → samo skrij (persistirano)
     const hidden = getHiddenReminders();
     const key = `${item.tip}-${item.sourceId}`;
 
@@ -397,7 +395,6 @@ const Reminders = () => {
      TOGGLE STATUS
   ========================= */
   const toggleStatus = async (item) => {
-    // 🔹 PRAVI opomnik → backend
     if (item.opomnikId) {
       try {
         const newStatus = item.status === "done" ? "pending" : "done";
@@ -429,7 +426,6 @@ const Reminders = () => {
       return;
     }
 
-    // 🔹 AVTOMATSKI opomnik → localStorage
     const doneMap = getDoneMap();
     const key = `${item.tip}-${item.sourceId}`;
 
@@ -461,7 +457,7 @@ const Reminders = () => {
   const filteredByView = items.filter(i => {
     if (!i.rawDate) return false;
 
-    // 🔹 najprej skrij opravljene
+    
     if (hideDone && i.status === "done") return false;
 
     if (view === "vse") return true;
@@ -509,7 +505,6 @@ const Reminders = () => {
       <div className="page-content reminders-page">
         <h1>Opomniki</h1>
 
-        {/* 🔹 ISTA VRSTICA: izberi ljubljenčka + dodaj */}
         <div className="reminders-actions">
           <select
             value={selectedPet}
@@ -747,7 +742,7 @@ const Reminders = () => {
                   )}
                 </div>
 
-                {/* DESNI DEL – DELETE (ZDAJ BO NA SREDINI) */}
+                {/* DESNI DEL – DELETE */}
                 <button
                   className="reminder-delete"
                   onClick={() => removeReminder(i)}
