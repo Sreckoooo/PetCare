@@ -25,7 +25,7 @@
   margin-bottom: 24px;
 }
 
-/* ================= SELECT (PAGE FILTER) ================= */
+/* ================= SELECT ================= */
 
 .reminders-page select {
   width: 220px;
@@ -107,18 +107,15 @@
   padding: 22px 26px;
   margin-bottom: 18px;
   transition: all .2s ease;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+position: relative;
 }
 
 .card:hover {
   box-shadow: 0 12px 28px rgba(0,0,0,.08);
 }
 
-.reminder-main {
-  flex: 1;
-}
+
 
 /* ================= CARD HEADER ================= */
 
@@ -138,28 +135,31 @@
   gap: 10px;
 }
 
-/* ================= DELETE BUTTON ================= */
+/* DELETE BUTTON (HEADER) */
 
-.reminder-delete,
-.reminder-header button {
+.reminder-delete {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%); /* 🔥 PRAVA SREDINA */
+
   width: 44px;
   height: 44px;
   border-radius: 50%;
   border: none;
-  cursor: pointer;
   background: #f3f4f6;
   font-size: 18px;
+  cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all .2s ease;
 }
 
-.reminder-delete:hover,
-.reminder-header button:hover {
+.reminder-delete:hover {
   background: rgba(239,68,68,.15);
   color: #ef4444;
-  transform: scale(1.1);
+  transform: translateY(-50%) scale(1.1);
 }
 
 /* ================= TAG ================= */
@@ -262,11 +262,5 @@ body.dark .reminder-tabs button {
   color: #d1d5db;
 }
 
-/* ===================================================== */
-/* ======== MODAL FORM (DODAJ / EDIT OPOMNIK) ========== */
-/* ===================================================== */
 
-/* TO JE POPRAVEK, KI GA RABIŠ */
-.add-pet-form select {
-  width: 100%;
-}
+
