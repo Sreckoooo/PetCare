@@ -41,7 +41,7 @@ Pred zagonom morajo biti nameščeni:
 
 4. Ustvari datoteko .env v backend mapi in vanjo vpiši:
 
-   PORT=5000
+   PORT=5001
    MONGO_URI=mongodb://localhost:27017/petcare
    JWT_SECRET=skrivno_geslo
 
@@ -49,7 +49,7 @@ Pred zagonom morajo biti nameščeni:
    npm start
 
 Backend bo dostopen na:
-http://localhost:5000
+http://localhost:5001
 
 -------------------------------------------------
 4. ZAGON FRONTENDA
