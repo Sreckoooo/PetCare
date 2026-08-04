@@ -1,16 +1,33 @@
-html,
-body,
-#root {
-  height: 100%;
+/* =========================================
+   GLOBAL LAYOUT
+========================================= */
+
+.container {
+
+    width: min(1200px, 92%);
+
+    margin: auto;
+
 }
 
-.main-app {
-  display: flex;
-  min-height: 100vh;
+.page {
+
+    min-height: 100vh;
+
+    padding: 32px;
+
 }
 
-.page-content {
-  flex: 1;
-  margin-left: 260px;
-  box-sizing: border-box;
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width:768px){
+
+    .page{
+
+        padding:20px;
+
+    }
+
 }

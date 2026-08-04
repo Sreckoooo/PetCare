@@ -1,0 +1,33 @@
+/* =========================================
+   INPUTS
+========================================= */
+
+input,
+select,
+textarea {
+
+    width: 100%;
+
+    padding: 14px 16px;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-md);
+
+    background: var(--surface);
+
+    color: var(--text-primary);
+
+    transition: var(--transition);
+
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+
+    outline: none;
+
+    border-color: var(--primary);
+
+}
