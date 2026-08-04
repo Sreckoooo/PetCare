@@ -14,12 +14,12 @@ router.post("/register", async (req, res) => {
   const { ime, priimek, email, geslo } = req.body;
 
   if (!ime || !priimek || !email || !geslo) {
-    return res.status(400).json({ message: "Vsa polja so obvezna" });
+    return res.status(400).json({ message: "All fields are required." });
   }
 
   const userExists = await User.findOne({ email });
   if (userExists) {
-    return res.status(400).json({ message: "Uporabnik že obstaja" });
+    return res.status(400).json({ message: "User already exists." });
   }
 
   const hashedPassword = await bcrypt.hash(geslo, 10);
@@ -34,7 +34,7 @@ router.post("/register", async (req, res) => {
 
   res
     .status(201)
-    .json({ message: "Registracija uspešna", user: userWithoutPassword });
+    .json({ message: "Registration successful.", user: userWithoutPassword });
 });
 
 /**
@@ -47,7 +47,7 @@ router.post("/login", async (req, res) => {
   if (!email || !geslo) {
     return res
       .status(400)
-      .json({ message: "Email in geslo sta obvezna" });
+      .json({ message: "Email and password are required." });
   }
 
   // Dovoli samo pričakovana polja
@@ -56,18 +56,18 @@ router.post("/login", async (req, res) => {
   );
   if (extraFields.length > 0) {
     return res.status(400).json({
-      message: `Nepričakovana polja: ${extraFields.join(", ")}`,
+      message: `Unexpected fields: ${extraFields.join(", ")}`,
     });
   }
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(404).json({ message: "Uporabnik ne obstaja" });
+    return res.status(404).json({ message: "User does not exist." });
   }
 
   const isMatch = await bcrypt.compare(geslo, user.geslo);
   if (!isMatch) {
-    return res.status(401).json({ message: "Napačno geslo" });
+    return res.status(401).json({ message: "Incorrect password." });
   }
 
   const token = jwt.sign(
@@ -77,7 +77,7 @@ router.post("/login", async (req, res) => {
   );
 
   res.json({
-    message: "Prijava uspešna",
+    message: "Login successful.",
     user: {
       ime: user.ime,
       priimek: user.priimek,
@@ -103,7 +103,7 @@ router.put("/me", protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
-      return res.status(404).json({ message: "Uporabnik ni najden" });
+      return res.status(404).json({ message: "User not found." });
     }
 
     const { ime, priimek, trenutnoGeslo, novoGeslo } = req.body;
@@ -116,7 +116,7 @@ router.put("/me", protect, async (req, res) => {
     if (novoGeslo) {
       if (!trenutnoGeslo) {
         return res.status(400).json({
-          message: "Za spremembo gesla morate vnesti trenutno geslo",
+          message: "You must enter your current password to change it.",
         });
       }
 
@@ -124,13 +124,13 @@ router.put("/me", protect, async (req, res) => {
       if (!isMatch) {
         return res
           .status(401)
-          .json({ message: "Trenutno geslo ni pravilno" });
+          .json({ message: "Current password is incorrect." });
       }
 
       const isSamePassword = await bcrypt.compare(novoGeslo, user.geslo);
       if (isSamePassword) {
         return res.status(400).json({
-          message: "Novo geslo ne sme biti enako trenutnemu",
+          message: "New password cannot be the same as the current password.",
         });
       }
 

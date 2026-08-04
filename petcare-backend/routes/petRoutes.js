@@ -24,7 +24,7 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
     : undefined;
 
   if (!ime || !pasma || !datum_rojstva || !spol) {
-    return res.status(400).json({ message: "Vsa polja so obvezna" });
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
@@ -89,7 +89,7 @@ router.put("/:id", protect, upload.single("image"), async (req, res) => {
     });
 
     if (!pet) {
-      return res.status(404).json({ message: "Žival ni najdena" });
+      return res.status(404).json({ message: "Pet not found" });
     }
 
     const { ime, pasma, datum_rojstva, spol, vrsta } = req.body;
@@ -126,10 +126,10 @@ router.delete("/:id", protect, async (req, res) => {
     });
 
     if (!pet) {
-      return res.status(404).json({ message: "Žival ni najdena" });
+      return res.status(404).json({ message: "Pet not found" });
     }
 
-    res.json({ message: "Žival uspešno izbrisana" });
+    res.json({ message: "Pet successfully deleted" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
