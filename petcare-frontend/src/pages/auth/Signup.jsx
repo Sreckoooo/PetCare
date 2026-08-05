@@ -71,21 +71,21 @@ export default function Signup() {
     };
 
     return (
-        <div className="relative flex min-h-[100dvh] bg-[#030712]">
+        <div className="relative min-h-screen overflow-hidden bg-[#030712]">
             <div className="absolute inset-0">
                 <div className="absolute left-[-120px] top-[-120px] h-80 w-80 rounded-full bg-cyan-500/20 blur-3xl" />
                 <div className="absolute bottom-[-180px] right-[-120px] h-96 w-96 rounded-full bg-violet-600/20 blur-3xl" />
             </div>
 
-            <div className="relative z-10 flex w-full">
+            <div className="relative z-10 flex min-h-screen">
                 {/* Left */}
                 <motion.div
                     initial={{ opacity: 0, x: -40 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="flex w-full items-center justify-center px-4 py-6 lg:w-1/2"
+                    className="flex w-full items-center justify-center p-8 lg:w-1/2"
                 >
-                    <Card className="my-6 w-full max-w-[460px] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-xl">
+                    <Card className="w-full max-w-md border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
                         <div className="mb-6 text-center">
                             <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600">
                                 <PawPrint className="h-8 w-8 text-white" />
@@ -102,7 +102,7 @@ export default function Signup() {
 
                         <form
                             onSubmit={handleSubmit(onSubmit)}
-                            className="space-y-3 pb-2"
+                            className="space-y-5"
                         >
                             <div>
                                 <Label className="mb-2 text-slate-300">

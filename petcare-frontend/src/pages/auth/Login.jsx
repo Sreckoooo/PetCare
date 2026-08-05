@@ -67,7 +67,7 @@ export default function Login() {
     };
 
     return (
-        <div className="relative min-h-[100dvh] bg-slate-950">
+        <div className="relative min-h-screen overflow-hidden bg-slate-950">
 
             <div className="absolute inset-0">
 
@@ -79,7 +79,7 @@ export default function Login() {
 
             </div>
 
-            <div className="relative z-10 grid min-h-[100dvh] lg:grid-cols-2">
+            <div className="relative z-10 grid min-h-screen lg:grid-cols-2">
 
                 <motion.div
                     initial={{ opacity: 0, x: -40 }}
@@ -88,9 +88,9 @@ export default function Login() {
                     className="flex items-center justify-center px-8 py-12"
                 >
 
-                    <Card className="w-full max-w-md border border-white/10 bg-white/5 shadow-2xl backdrop-blur-3xl my-6">
+                    <Card className="w-full max-w-md border border-white/10 bg-white/5 shadow-2xl backdrop-blur-3xl">
 
-                        <CardContent className="p-6 sm:p-8 lg:p-10">
+                        <CardContent className="p-10">
 
                             <div className="mb-10 flex flex-col items-center">
 
