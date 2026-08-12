@@ -40,31 +40,39 @@ const MyPets = () => {
     // eslint-disable-next-line
   }, []);
 
+  const formatPetImage = (pet) => {
+    if (!pet.image) {
+      return { ...pet, image: null };
+    }
+
+    if (typeof pet.image === "string") {
+      return pet;
+    }
+
+    if (pet.image?.data) {
+      return {
+        ...pet,
+        image: `data:${pet.image.contentType};base64,${pet.image.data}`,
+      };
+    }
+
+    return {
+      ...pet,
+      image: null,
+    };
+  };
+
   const fetchPets = async () => {
     try {
       const res = await axios.get(`${API_BASE}/pets`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Pretvorba slik v base64 zapis za prikaz
-      const petsWithImages = res.data.map((p) => {
-        if (!p.image) return { ...p, image: null };
-        if (typeof p.image === "string") return p;
-
-        if (p.image?.data) {
-          return {
-            ...p,
-            image: `data:${p.image.contentType};base64,${p.image.data}`,
-          };
-        }
-
-        return { ...p, image: null };
-      });
-
-      setPets(petsWithImages);
+      setPets(res.data.map(formatPetImage));
     } catch (err) {
       console.error("Napaka pri pridobivanju ljubljenčkov:", err);
     }
+
     setLoading(false);
   };
 
@@ -74,18 +82,22 @@ const MyPets = () => {
     e.preventDefault();
 
     const formData = new FormData();
+
     Object.keys(newPetData).forEach((key) => {
-      if (newPetData[key]) formData.append(key, newPetData[key]);
+      if (newPetData[key]) {
+        formData.append(key, newPetData[key]);
+      }
     });
 
-    const res = await axios.post(`${API_BASE}/pets`, formData, {
+    await axios.post(`${API_BASE}/pets`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       },
     });
 
-    setPets([...pets, res.data]);
+    await fetchPets();
+
     closeForm();
   };
 
@@ -314,8 +326,8 @@ const MyPets = () => {
                     <span>
                       {pet.datum_rojstva
                         ? new Date(pet.datum_rojstva).toLocaleDateString(
-                            "sl-SI"
-                          )
+                          "sl-SI"
+                        )
                         : "-"}
                     </span>
                   </div>
