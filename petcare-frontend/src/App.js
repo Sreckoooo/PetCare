@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { Toaster } from "react-hot-toast";
 
 import Login from './pages/Login/Login';
 import SignUp from './pages/SignUp/SignUp';
@@ -32,14 +31,6 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Toaster
-          position="top-right"
-          reverseOrder={false}
-          toastOptions={{
-            duration: 3000,
-          }}
-        />
-
         <div className="App">
           <Routes>
             <Route path="/" element={<Login />} />

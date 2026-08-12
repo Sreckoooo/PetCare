@@ -1,160 +1,123 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
-
 import "./Login.css";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+/**
+ * Login stran
+ * Omogoča prijavo obstoječega uporabnika
+ */
 const Login = () => {
-    const navigate = useNavigate();
-    const { login } = useAuth();
+  // Navigacija po aplikaciji
+  const navigate = useNavigate();
 
-    const [form, setForm] = useState({
-        email: "",
-        password: ""
-    });
+  // Funkcija za prijavo iz AuthContext-a
+  const { login } = useAuth();
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+  // Podatki obrazca
+  const [form, setForm] = useState({ email: "", password: "" });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+  // Sporočilo o napaki
+  const [error, setError] = useState("");
 
-        setForm((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+  /**
+   * Posodobi stanje obrazca
+   */
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
-        if (error) setError("");
-    };
+  /**
+   * Pošlje prijavne podatke na backend
+   */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    try {
+      const res = await axios.post(`${API_URL}/users/login`, {
+        email: form.email,
+        geslo: form.password,
+      });
 
-        if (loading) return;
+      // Shrani uporabnika in žeton
+      login(res.data);
 
-        if (!form.email.trim() || !form.password.trim()) {
-            setError("Izpolnite vsa polja.");
-            return;
-        }
+      // Preusmeritev na nadzorno ploščo
+      navigate("/main");
+    } catch (err) {
+      console.error(err);
+      setError("Napaka pri prijavi. Preveri email in geslo.");
+    }
+  };
 
-        setLoading(true);
+  /**
+   * Preusmeritev na registracijo
+   */
+  const goToSignup = () => navigate("/signup");
 
-        try {
-            const res = await axios.post(`${API_URL}/users/login`, {
-                email: form.email.trim(),
-                geslo: form.password
-            });
+  return (
+    <div className="login-page">
+      <div className="login-card">
+        {/* Glava prijavne kartice */}
+        <header className="login-header">
+          <h1>Dobrodošli nazaj!</h1>
+          <p className="subtitle">
+            Prijavite se v svoj PetCare račun in nadaljujte s skrbjo za svoje
+            ljubljenčke na enem mestu.
+          </p>
+        </header>
 
-            login(res.data);
+        {/* Prijavni obrazec */}
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="email@primer.si"
+              required
+            />
+          </div>
 
-            navigate("/main");
-        } catch (err) {
-            setError(
-                err.response?.data?.message ||
-                err.response?.data?.error ||
-                "Prijava ni uspela."
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
+          <div className="form-group">
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+              required
+            />
+          </div>
 
-    return (
-        <div className="auth-page fade">
+          {/* Prikaz napake */}
+          {error && <p className="error-text">{error}</p>}
 
-            <div className="auth-container">
+          {/* Povezava do registracije */}
+          <div className="bottom-row">
+            <span className="small-text">
+              Nimate računa?{" "}
+              <button type="button" className="link" onClick={goToSignup}>
+                Registrirajte se
+              </button>
+            </span>
+          </div>
 
-                <div className="card auth-card">
+          <button type="submit" className="cta-btn">
+            Prijava
+          </button>
+        </form>
+      </div>
 
-                    <div className="auth-header">
-                        <h1 className="auth-title">PetCare</h1>
-
-                        <p className="auth-subtitle">
-                            Dobrodošli nazaj.
-                            Prijavite se in nadaljujte s skrbjo za svoje
-                            ljubljenčke.
-                        </p>
-                    </div>
-
-                    {error && (
-                        <div className="auth-error">
-                            {error}
-                        </div>
-                    )}
-
-                    <form
-                        className="auth-form"
-                        onSubmit={handleSubmit}
-                    >
-
-                        <div className="auth-group">
-                            <label>E-pošta</label>
-
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Vnesite e-pošto"
-                                value={form.email}
-                                onChange={handleChange}
-                                autoComplete="email"
-                                disabled={loading}
-                            />
-                        </div>
-
-                        <div className="auth-group">
-                            <label>Geslo</label>
-
-                            <input
-                                type="password"
-                                name="password"
-                                placeholder="Vnesite geslo"
-                                value={form.password}
-                                onChange={handleChange}
-                                autoComplete="current-password"
-                                disabled={loading}
-                            />
-                        </div>
-
-                        <div className="auth-actions">
-                            <button
-                                type="submit"
-                                className="btn btn-primary"
-                                disabled={loading}
-                            >
-                                {loading ? "Prijavljanje..." : "Prijava"}
-                            </button>
-                        </div>
-
-                    </form>
-
-                    <div className="auth-divider">
-                        ali
-                    </div>
-
-                    <div className="auth-footer">
-
-                        <p>
-                            Še nimate računa?
-                        </p>
-
-                        <Link
-                            to="/signup"
-                            className="auth-link"
-                        >
-                            Ustvari račun
-                        </Link>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-    );
+      {/* Dekorativni elementi */}
+      <div className="decor decor-1"></div>
+      <div className="decor decor-2"></div>
+    </div>
+  );
 };
 
 export default Login;
