@@ -1,13 +1,9 @@
 import axios from "axios";
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5001/api",
-});
 
 /**
  * Osnovni URL za backend API
  */
-const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001/api";
 
 /**
  * Generira Authorization header z JWT žetonom
@@ -110,18 +106,6 @@ export const deleteZdravilo = async (id, token) => {
 /* =====================================================
    ZDRAVLJENJA (PET–ZDRAVILA)
 ===================================================== */
-
-/**
- * Pridobi vsa zdravljenja uporabnika
- */
-export const getPetZdravila = async (token) => {
-  const res = await axios.get(
-    `${API_URL}/pet-zdravila`,
-    authHeader(token)
-  );
-
-  return res.data;
-};
 
 /**
  * Pridobi vsa zdravljenja za določenega ljubljenčka
@@ -435,25 +419,5 @@ export const updateOpomnikStatus = async (id, status, token) => {
     { status },
     authHeader(token)
   );
-  return res.data;
-};
-
-/* =====================================================
-   AUTH
-===================================================== */
-
-/**
- * Registracija uporabnika
- */
-export const registerUser = async (data) => {
-  const res = await api.post("/users/register", data);
-  return res.data;
-};
-
-/**
- * Prijava uporabnika
- */
-export const loginUser = async (data) => {
-  const res = await api.post("/users/login", data);
   return res.data;
 };
