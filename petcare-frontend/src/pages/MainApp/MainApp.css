@@ -211,16 +211,127 @@
 
 /* ===================== PRILAGODITEV ZASLONOM ===================== */
 
-@media (max-width: 900px) {
-  .calendar-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+/* ===================== MOBILNI PRIKAZ ===================== */
+
+@media (max-width: 968px) {
+    .main-app-page {
+        margin-left: 70px !important;
+        width: calc(100% - 70px) !important;
+        max-width: calc(100% - 70px) !important;
+        min-width: 0 !important;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .calendar-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
+/* ===================== TELEFON ===================== */
+
 @media (max-width: 600px) {
-  .calendar-grid {
-    grid-template-columns: repeat(1, 1fr);
-  }
+    .app-layout {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    .main-app-page {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 20px 16px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+
+    /* Naslov */
+
+    .main-app-page h1 {
+        font-size: 32px;
+        line-height: 1.15;
+        margin-bottom: 8px;
+    }
+
+    .dashboard-subtitle {
+        font-size: 15px;
+        margin-bottom: 24px;
+    }
+
+    /* Kartice */
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .card {
+        width: 100%;
+        min-width: 0;
+        padding: 16px;
+        font-size: 17px;
+    }
+
+    .card.active {
+        padding-bottom: 20px;
+    }
+
+    .card-content {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .card-item {
+        min-width: 0;
+    }
+
+    .card-item .item-main {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .card-item .item-meta {
+        flex-shrink: 0;
+    }
+
+    /* Koledar */
+
+    .calendar-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .calendar-day {
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+    }
+
+    .calendar-day h3 {
+        font-size: 14px;
+    }
+
+    .calendar-event {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* ===================== PREPREČI HORIZONTALNI SKROL ===================== */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* ===================== DARK MODE – OHRANI BARVE KARTIC ===================== */

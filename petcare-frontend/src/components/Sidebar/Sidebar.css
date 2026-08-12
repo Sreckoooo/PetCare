@@ -131,11 +131,15 @@
 
 /* ===================== ODZIVNOST ===================== */
 
+/* ===================== ODZIVNOST ===================== */
+
 @media (max-width: 1200px) {
     .sidebar {
         width: 220px;
     }
 }
+
+/* ===================== TABLICA ===================== */
 
 @media (max-width: 968px) {
     .sidebar {
@@ -143,7 +147,9 @@
     }
 
     .sidebar-header h2,
-    .nav-item span:not(.nav-icon) {
+    .nav-item span:not(.nav-icon),
+    .submenu,
+    .submenu-arrow {
         display: none;
     }
 
@@ -151,12 +157,25 @@
         justify-content: center;
         padding: 16px;
     }
+
+    .nav-icon {
+        display: block;
+    }
+
+    .sidebar-footer .nav-item {
+        justify-content: center;
+    }
 }
+
+/* ===================== TELEFON ===================== */
 
 @media (max-width: 600px) {
     .sidebar {
         width: 0;
+        min-width: 0;
         transform: translateX(-100%);
+        overflow: hidden;
+        border: none;
     }
 }
 
