@@ -13,7 +13,7 @@
   font-weight: 700;
 }
 
-/* ===================== PODNASLOV (PREGLED ZA DANES) ===================== */
+/* ===================== PODNASLOV ===================== */
 
 .dashboard-subtitle {
   margin-bottom: 36px;
@@ -27,7 +27,7 @@
   gap: 8px;
 }
 
-/* ===================== POVZETEK ZA DANES (KARTICE) ===================== */
+/* ===================== POVZETEK ZA DANES ===================== */
 
 .dashboard-cards {
   display: grid;
@@ -56,6 +56,7 @@
 }
 
 /* aktivna kartica */
+
 .card.active {
   padding-bottom: 24px;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
@@ -88,7 +89,6 @@
   line-height: 1.4;
 }
 
-/* posamezna vrstica v kartici */
 .card-item {
   padding: 8px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.35);
@@ -111,12 +111,10 @@
   padding-right: 6px;
 }
 
-/* levi del (ime dogodka) */
 .card-item .item-main {
   font-weight: 500;
 }
 
-/* desni del (meta podatki) */
 .card-item .item-meta {
   display: flex;
   gap: 6px;
@@ -125,7 +123,6 @@
   align-items: center;
 }
 
-/* ura dogodka */
 .card-item .item-time {
   background: rgba(255, 255, 255, 0.28);
   padding: 3px 7px;
@@ -135,31 +132,104 @@
   font-weight: 500;
 }
 
-/* ===================== KOLEDAR ===================== */
+/* ========================================================= */
+/* ===================== KOLEDAR ============================ */
+/* ========================================================= */
+
+/*
+   Koledar je sedaj prikazan kot en dan.
+   Puščica levo -> prejšnji dan
+   Puščica desno -> naslednji dan
+*/
+
+.calendar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* ===================== PUŠČICE ===================== */
+
+.calendar-arrow {
+  width: 46px;
+  height: 46px;
+
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: #2d3142;
+
+  font-size: 25px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.calendar-arrow:hover:not(:disabled) {
+  transform: scale(1.06);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  background: #f8f8f8;
+}
+
+.calendar-arrow:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.calendar-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ===================== DAN ===================== */
 
 .calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
+  display: block;
+  width: 100%;
+  max-width: 900px;
 }
 
 .calendar-day {
   background: #f9f9f9;
-  border-radius: 10px;
-  padding: 10px;
+  border-radius: 14px;
+  padding: 18px;
+
+  width: 100%;
   min-height: 160px;
+
   display: flex;
   flex-direction: column;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
 }
 
 .calendar-day h3 {
-  font-size: 13px;
-  margin-bottom: 8px;
+  font-size: 18px;
+  margin-bottom: 14px;
   color: #333;
+  text-transform: none;
 }
 
+/* ===================== PRAZEN DAN ===================== */
+
 .calendar-empty {
-  font-size: 12px;
+  font-size: 13px;
   color: #999;
   margin-top: 8px;
 }
@@ -167,14 +237,20 @@
 /* ===================== DOGODKI V KOLEDARJU ===================== */
 
 .calendar-event {
-  padding: 6px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-  margin-bottom: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 8px;
+
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+
   color: #fff;
+}
+
+.calendar-event:last-child {
+  margin-bottom: 0;
 }
 
 .event-title {
@@ -182,12 +258,12 @@
 }
 
 .event-time {
-  font-size: 11px;
+  font-size: 12px;
   opacity: 0.9;
 }
 
 .event-pet {
-  font-size: 11px;
+  font-size: 12px;
   opacity: 0.85;
 }
 
@@ -209,132 +285,172 @@
   background: #ef476f;
 }
 
-/* ===================== PRILAGODITEV ZASLONOM ===================== */
-
-/* ===================== MOBILNI PRIKAZ ===================== */
+/* ========================================================= */
+/* ===================== TABLICA ============================ */
+/* ========================================================= */
 
 @media (max-width: 968px) {
-    .main-app-page {
-        margin-left: 70px !important;
-        width: calc(100% - 70px) !important;
-        max-width: calc(100% - 70px) !important;
-        min-width: 0 !important;
-        padding: 20px;
-        box-sizing: border-box;
-    }
 
-    .dashboard-cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .main-app-page {
+    margin-left: 70px !important;
+    width: calc(100% - 70px) !important;
+    max-width: calc(100% - 70px) !important;
+    min-width: 0 !important;
 
-    .calendar-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    padding: 20px;
+
+    box-sizing: border-box;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .calendar-container {
+    gap: 12px;
+  }
+
+  .calendar-grid {
+    max-width: 700px;
+  }
 }
 
-/* ===================== TELEFON ===================== */
+/* ========================================================= */
+/* ===================== TELEFON ============================ */
+/* ========================================================= */
 
 @media (max-width: 600px) {
-    .app-layout {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: hidden;
-    }
 
-    .main-app-page {
-        margin-left: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
-        padding: 20px 16px;
-        box-sizing: border-box;
-        overflow-x: hidden;
-    }
+  .app-layout {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
 
-    /* Naslov */
+  .main-app-page {
+    margin-left: 0 !important;
 
-    .main-app-page h1 {
-        font-size: 32px;
-        line-height: 1.15;
-        margin-bottom: 8px;
-    }
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
 
-    .dashboard-subtitle {
-        font-size: 15px;
-        margin-bottom: 24px;
-    }
+    padding: 20px 16px;
 
-    /* Kartice */
+    box-sizing: border-box;
 
-    .dashboard-cards {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        width: 100%;
-    }
+    overflow-x: hidden;
+  }
 
-    .card {
-        width: 100%;
-        min-width: 0;
-        padding: 16px;
-        font-size: 17px;
-    }
+  /* ===================== NASLOV ===================== */
 
-    .card.active {
-        padding-bottom: 20px;
-    }
+  .main-app-page h1 {
+    font-size: 32px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
 
-    .card-content {
-        width: 100%;
-        min-width: 0;
-    }
+  .dashboard-subtitle {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
 
-    .card-item {
-        min-width: 0;
-    }
+  /* ===================== KARTICE ===================== */
 
-    .card-item .item-main {
-        min-width: 0;
-        overflow-wrap: anywhere;
-    }
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+  }
 
-    .card-item .item-meta {
-        flex-shrink: 0;
-    }
+  .card {
+    width: 100%;
+    min-width: 0;
+    padding: 16px;
+    font-size: 17px;
+  }
 
-    /* Koledar */
+  .card.active {
+    padding-bottom: 20px;
+  }
 
-    .calendar-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        width: 100%;
-    }
+  .card-content {
+    width: 100%;
+    min-width: 0;
+  }
 
-    .calendar-day {
-        width: 100%;
-        min-width: 0;
-        min-height: auto;
-    }
+  .card-item {
+    min-width: 0;
+  }
 
-    .calendar-day h3 {
-        font-size: 14px;
-    }
+  .card-item .item-main {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
 
-    .calendar-event {
-        width: 100%;
-        box-sizing: border-box;
-    }
+  .card-item .item-meta {
+    flex-shrink: 0;
+  }
+
+  /* ===================== MOBILNI KOLEDAR ===================== */
+
+  .calendar-container {
+    width: 100%;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .calendar-grid {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .calendar-day {
+    width: 100%;
+    min-width: 0;
+    min-height: auto;
+    padding: 16px;
+
+    border-radius: 14px;
+  }
+
+  .calendar-day h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .calendar-event {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+  }
+
+  /* ===================== MOBILNE PUŠČICE ===================== */
+
+  .calendar-arrow {
+    width: 42px;
+    height: 42px;
+
+    font-size: 23px;
+
+    flex-shrink: 0;
+  }
 }
 
-/* ===================== PREPREČI HORIZONTALNI SKROL ===================== */
+/* ========================================================= */
+/* ================= PREPREČI HORIZONTALNI SKROL ============ */
+/* ========================================================= */
 
 html,
 body {
-    max-width: 100%;
-    overflow-x: hidden;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-/* ===================== DARK MODE – OHRANI BARVE KARTIC ===================== */
+/* ========================================================= */
+/* ===================== DARK MODE ========================== */
+/* ========================================================= */
 
 body.dark .card.obrok {
   background: #ffb703;
@@ -357,9 +473,33 @@ body.dark .card.opomnik {
 }
 
 /* vsebina v karticah ostane svetla */
+
 body.dark .card .card-content,
 body.dark .card .card-item,
 body.dark .card .item-main,
 body.dark .card .item-meta {
   color: #fff;
+}
+
+/* ===================== DARK MODE – KOLEDAR ===================== */
+
+body.dark .calendar-day {
+  background: #242424;
+}
+
+body.dark .calendar-day h3 {
+  color: #f5f5f5;
+}
+
+body.dark .calendar-empty {
+  color: #aaa;
+}
+
+body.dark .calendar-arrow {
+  background: #2a2a2a;
+  color: #f5f5f5;
+}
+
+body.dark .calendar-arrow:hover:not(:disabled) {
+  background: #333;
 }

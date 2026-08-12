@@ -28,10 +28,14 @@ const formatDateSI = (date) =>
  */
 const formatTimeAMPM = (time) => {
   if (!time) return "";
+
   const [h, m] = time.split(":");
   let hour = Number(h);
+
   const ampm = hour >= 12 ? "PM" : "AM";
+
   hour = hour % 12 || 12;
+
   return `${hour}:${m} ${ampm}`;
 };
 
@@ -44,7 +48,8 @@ const isSameDay = (a, b) =>
   a.getDate() === b.getDate();
 
 /**
- * Normalizira datum (nastavi čas na 00:00)
+ * Normalizira datum
+ * Nastavi uro na 00:00
  */
 const normalizeDate = (date) => {
   const d = new Date(date);
@@ -61,7 +66,10 @@ const MainApp = () => {
   // Dnevi za koledar
   const [calendarDays, setCalendarDays] = useState([]);
 
-  // Izbran tip kartice (obrok, aktivnost, zdravljenje, opomnik)
+  // Trenutno izbran dan v koledarju
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+
+  // Izbran tip kartice
   const [selectedType, setSelectedType] = useState(null);
 
   /* ================= NALAGANJE PODATKOV ================= */
@@ -79,9 +87,12 @@ const MainApp = () => {
         ]);
 
         /* ===== ZDRAVLJENJA ===== */
+
         let zdravljenja = [];
+
         for (const pet of pets) {
           const z = await getPetZdravilaByPet(pet._id, token);
+
           zdravljenja.push(
             ...z.map((zz) => ({
               ...zz,
@@ -91,12 +102,20 @@ const MainApp = () => {
         }
 
         /* ===== KOLEDAR ===== */
+
         const now = new Date();
+
         const year = now.getFullYear();
         const month = now.getMonth();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const daysInMonth = new Date(
+          year,
+          month + 1,
+          0
+        ).getDate();
 
         const days = [];
+
         for (let d = 1; d <= daysInMonth; d++) {
           days.push(new Date(year, month, d));
         }
@@ -105,7 +124,8 @@ const MainApp = () => {
           const events = [];
           const currentDay = normalizeDate(day);
 
-          /* ===== OPOMNIKI (SAMO SPLOŠNI) ===== */
+          /* ===== OPOMNIKI ===== */
+
           opomniki.forEach((o) => {
             // Izloči opomnike vezane na druge module
             if (
@@ -130,6 +150,7 @@ const MainApp = () => {
           });
 
           /* ===== OBROKI ===== */
+
           obroki.forEach((o) => {
             if (isSameDay(new Date(o.datum), day)) {
               events.push({
@@ -143,6 +164,7 @@ const MainApp = () => {
           });
 
           /* ===== AKTIVNOSTI ===== */
+
           aktivnosti.forEach((a) => {
             if (isSameDay(new Date(a.datum), day)) {
               events.push({
@@ -156,13 +178,18 @@ const MainApp = () => {
           });
 
           /* ===== ZDRAVLJENJA ===== */
+
           zdravljenja.forEach((z) => {
             const start = normalizeDate(z.datum_zacetka);
+
             const end = z.datum_konca
               ? normalizeDate(z.datum_konca)
               : null;
 
-            if (start <= currentDay && (!end || end >= currentDay)) {
+            if (
+              start <= currentDay &&
+              (!end || end >= currentDay)
+            ) {
               events.push({
                 id: z._id,
                 type: "zdravljenje",
@@ -173,12 +200,28 @@ const MainApp = () => {
             }
           });
 
-          return { date: day, events };
+          return {
+            date: day,
+            events,
+          };
         });
 
         setCalendarDays(calendar);
+
+        /* ===== IZBERI DANAŠNJI DAN ===== */
+
+        const todayIndex = calendar.findIndex((day) =>
+          isSameDay(day.date, new Date())
+        );
+
+        if (todayIndex !== -1) {
+          setSelectedDayIndex(todayIndex);
+        }
       } catch (err) {
-        console.error("Napaka pri nalaganju nadzorne plošče", err);
+        console.error(
+          "Napaka pri nalaganju nadzorne plošče",
+          err
+        );
       }
     };
 
@@ -194,97 +237,249 @@ const MainApp = () => {
   const todayEvents = today ? today.events : [];
 
   const todayByType = {
-    obrok: todayEvents.filter((e) => e.type === "obrok"),
-    aktivnost: todayEvents.filter((e) => e.type === "aktivnost"),
-    zdravljenje: todayEvents.filter((e) => e.type === "zdravljenje"),
-    opomnik: todayEvents.filter((e) => e.type === "opomnik"),
+    obrok: todayEvents.filter(
+      (e) => e.type === "obrok"
+    ),
+
+    aktivnost: todayEvents.filter(
+      (e) => e.type === "aktivnost"
+    ),
+
+    zdravljenje: todayEvents.filter(
+      (e) => e.type === "zdravljenje"
+    ),
+
+    opomnik: todayEvents.filter(
+      (e) => e.type === "opomnik"
+    ),
+  };
+
+  /* ================= TRENUTNI DAN KOLEDARJA ================= */
+
+  const selectedDay = calendarDays[selectedDayIndex];
+
+  /* ================= PUŠČICE KOLEDARJA ================= */
+
+  const previousDay = () => {
+    setSelectedDayIndex((current) =>
+      current > 0 ? current - 1 : current
+    );
+  };
+
+  const nextDay = () => {
+    setSelectedDayIndex((current) =>
+      current < calendarDays.length - 1
+        ? current + 1
+        : current
+    );
   };
 
   /* ================= RENDER ================= */
 
   return (
     <div className="app-layout">
+
       <Sidebar active="home" />
 
       <div className="page-content main-app-page">
-        <h1>Nadzorna plošča</h1>
-        <p className="dashboard-subtitle">Pregled za danes</p>
 
-        {/* Kartice za današnje dogodke */}
+        {/* ================= NASLOV ================= */}
+
+        <h1>Nadzorna plošča</h1>
+
+        <p className="dashboard-subtitle">
+          Pregled za danes
+        </p>
+
+        {/* ================= KARTICE ================= */}
+
         <div className="dashboard-cards">
-          {["obrok", "aktivnost", "zdravljenje", "opomnik"].map((type) => (
+
+          {[
+            "obrok",
+            "aktivnost",
+            "zdravljenje",
+            "opomnik",
+          ].map((type) => (
+
             <div
               key={type}
               className={`card ${type} ${
-                selectedType === type ? "active" : ""
+                selectedType === type
+                  ? "active"
+                  : ""
               }`}
               onClick={() =>
-                setSelectedType((p) => (p === type ? null : type))
+                setSelectedType((p) =>
+                  p === type ? null : type
+                )
               }
             >
-              {type === "obrok" && "🍽 Obroki"}
-              {type === "aktivnost" && "🏃 Aktivnosti"}
-              {type === "zdravljenje" && "💊 Zdravljenja"}
-              {type === "opomnik" && "🔔 Opomniki"}:{" "}
+
+              {type === "obrok" &&
+                "🍽 Obroki"}
+
+              {type === "aktivnost" &&
+                "🏃 Aktivnosti"}
+
+              {type === "zdravljenje" &&
+                "💊 Zdravljenja"}
+
+              {type === "opomnik" &&
+                "🔔 Opomniki"}
+
+              :{" "}
               {todayByType[type].length}
 
+              {/* ===== VSEBINA KARTICE ===== */}
+
               {selectedType === type && (
+
                 <div className="card-content">
+
                   {todayByType[type].length === 0 && (
+
                     <div className="card-item">
-                      <span className="item-main">Danes ni dogodkov</span>
+
+                      <span className="item-main">
+                        Danes ni dogodkov
+                      </span>
+
                     </div>
                   )}
 
                   {todayByType[type].map((e) => (
-                    <div key={e.id} className="card-item">
-                      <span className="item-main">{e.title}</span>
+
+                    <div
+                      key={e.id}
+                      className="card-item"
+                    >
+
+                      <span className="item-main">
+                        {e.title}
+                      </span>
 
                       <span className="item-meta">
-                        {e.pet && <span>{e.pet}</span>}
-                        {e.time && (
-                          <span className="item-time">
-                            {formatTimeAMPM(e.time)}
+
+                        {e.pet && (
+                          <span>
+                            {e.pet}
                           </span>
                         )}
+
+                        {e.time && (
+                          <span className="item-time">
+                            {formatTimeAMPM(
+                              e.time
+                            )}
+                          </span>
+                        )}
+
                       </span>
+
                     </div>
                   ))}
+
                 </div>
               )}
+
             </div>
           ))}
+
         </div>
 
-        {/* Koledarski pregled */}
-        <div className="calendar-grid">
-          {calendarDays.map((day) => (
-            <div key={day.date.toISOString()} className="calendar-day">
-              <h3>{formatDateSI(day.date)}</h3>
+        {/* ================= KOLEDAR ================= */}
 
-              {day.events.length === 0 && (
-                <p className="calendar-empty">Ni dogodkov</p>
-              )}
+        <div className="calendar-container">
 
-              {day.events.map((e) => (
-                <div
-                  key={`${e.type}-${e.id}`}
-                  className={`calendar-event ${e.type}`}
-                >
-                  <span className="event-title">{e.title}</span>
-                  {e.time && (
-                    <span className="event-time">
-                      {formatTimeAMPM(e.time)}
+          {/* LEVA PUŠČICA */}
+
+          <button
+            className="calendar-arrow calendar-arrow-left"
+            onClick={previousDay}
+            disabled={
+              selectedDayIndex === 0 ||
+              calendarDays.length === 0
+            }
+            aria-label="Prejšnji dan"
+          >
+            ←
+          </button>
+
+          {/* DAN */}
+
+          <div className="calendar-grid">
+
+            {selectedDay && (
+
+              <div
+                key={selectedDay.date.toISOString()}
+                className="calendar-day"
+              >
+
+                <h3>
+                  {formatDateSI(
+                    selectedDay.date
+                  )}
+                </h3>
+
+                {selectedDay.events.length === 0 && (
+
+                  <p className="calendar-empty">
+                    Ni dogodkov
+                  </p>
+                )}
+
+                {selectedDay.events.map((e) => (
+
+                  <div
+                    key={`${e.type}-${e.id}`}
+                    className={`calendar-event ${e.type}`}
+                  >
+
+                    <span className="event-title">
+                      {e.title}
                     </span>
-                  )}
-                  {e.pet && (
-                    <span className="event-pet">🐾 {e.pet}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          ))}
+
+                    {e.time && (
+                      <span className="event-time">
+                        {formatTimeAMPM(
+                          e.time
+                        )}
+                      </span>
+                    )}
+
+                    {e.pet && (
+                      <span className="event-pet">
+                        🐾 {e.pet}
+                      </span>
+                    )}
+
+                  </div>
+                ))}
+
+              </div>
+            )}
+
+          </div>
+
+          {/* DESNA PUŠČICA */}
+
+          <button
+            className="calendar-arrow calendar-arrow-right"
+            onClick={nextDay}
+            disabled={
+              selectedDayIndex ===
+                calendarDays.length - 1 ||
+              calendarDays.length === 0
+            }
+            aria-label="Naslednji dan"
+          >
+            →
+          </button>
+
         </div>
+
       </div>
     </div>
   );

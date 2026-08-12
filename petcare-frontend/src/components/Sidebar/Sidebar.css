@@ -131,8 +131,6 @@
 
 /* ===================== ODZIVNOST ===================== */
 
-/* ===================== ODZIVNOST ===================== */
-
 @media (max-width: 1200px) {
     .sidebar {
         width: 220px;
@@ -243,4 +241,82 @@ body.dark .nav-item.theme-toggle:hover {
 
 body.dark .nav-item.theme-toggle .nav-icon {
   color: #e5e7eb;
+}
+
+/* ===================== MOBILNI HAMBURGER ===================== */
+
+.mobile-menu-btn {
+    display: none;
+}
+
+/* ===================== MOBILNI SIDEBAR ===================== */
+
+.sidebar-overlay {
+    display: none;
+}
+
+@media (max-width: 600px) {
+
+    .mobile-menu-btn {
+        display: flex;
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        width: 48px;
+        height: 48px;
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        border-radius: 14px;
+
+        background: #ffffff;
+        color: #2D3142;
+
+        font-size: 25px;
+        line-height: 1;
+
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.10);
+
+        cursor: pointer;
+
+        z-index: 1100;
+    }
+
+    .sidebar {
+        width: 260px;
+        height: 100dvh;
+
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+
+        z-index: 1050;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-header h2,
+    .nav-item span:not(.nav-icon),
+    .submenu,
+    .submenu-arrow {
+        display: flex;
+    }
+
+    .nav-item {
+        justify-content: flex-start;
+        padding: 12px 24px;
+    }
+
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.25);
+        z-index: 1040;
+    }
 }
