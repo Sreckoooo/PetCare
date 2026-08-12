@@ -1,16 +1,58 @@
 /* ================= TERMS CHECKBOX ================= */
 
+/* ================= TERMS CHECKBOX ================= */
+
 .terms-checkbox {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   gap: 10px;
+  width: 100%;
   margin-top: 10px;
   font-size: 13px;
   color: #7a828d;
   line-height: 1.5;
   text-align: center;
 }
+
+.terms-checkbox input[type="checkbox"] {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0 0;
+  accent-color: #ff8c52;
+  cursor: pointer;
+}
+
+.terms-checkbox label {
+  display: block;
+  max-width: 300px;
+  cursor: pointer;
+}
+
+/* linki znotraj pogojev */
+.terms-checkbox .link {
+  color: #ff8c52;
+  font-weight: 600;
+}
+
+.terms-checkbox .link:hover {
+  text-decoration: underline;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 480px) {
+  .terms-checkbox {
+    gap: 9px;
+    font-size: 13px;
+  }
+
+  .terms-checkbox label {
+    max-width: 280px;
+  }
+}
+
 
 .terms-checkbox input[type="checkbox"] {
   margin-top: 3px;
