@@ -259,3 +259,132 @@ body.dark .medication-actions button {
 body.dark .medication-form {
   background: linear-gradient(180deg, #1e1e1e, #161616);
 }
+
+/* ===================== MOBILE ===================== */
+
+@media (max-width: 600px) {
+
+  .medications-page {
+  min-height: 100vh;
+  padding: 40px 28px 660px;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+  /* =====================
+     GLAVA
+  ===================== */
+
+  .medications-header {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    margin-bottom: 40px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .medications-header h1 {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    font-size: 34px;
+    line-height: 1.1;
+  }
+
+  /* =====================
+     DODAJ ZDRAVILO
+  ===================== */
+
+  .medications-header .add-btn {
+    width: auto;
+    min-width: 220px;
+    padding: 15px 28px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* =====================
+     SEZNAM
+  ===================== */
+
+  .medications-list {
+    width: 100%;
+    gap: 14px;
+  }
+
+  /* =====================
+     KARTICA
+  ===================== */
+
+  .medication-card {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 20px 18px;
+    border-radius: 20px;
+  }
+
+  .medication-info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .medication-info h3 {
+    font-size: 18px;
+    line-height: 1.15;
+    word-break: break-word;
+  }
+
+  .medication-info span {
+    font-size: 14px;
+  }
+
+  /* =====================
+     GUMBI
+  ===================== */
+
+  .medication-actions {
+    flex-shrink: 0;
+    gap: 8px;
+    margin-left: 12px;
+  }
+
+  .medication-actions button {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  /* =====================
+     MODAL
+  ===================== */
+
+  .medication-form-overlay {
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .medication-form {
+    width: 100%;
+    max-width: 520px;
+    box-sizing: border-box;
+    padding: 32px 24px;
+    border-radius: 28px;
+  }
+
+  .medication-form h3 {
+    font-size: 24px;
+  }
+
+  .medication-form input {
+    box-sizing: border-box;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+}

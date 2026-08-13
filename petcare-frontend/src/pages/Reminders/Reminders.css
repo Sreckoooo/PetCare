@@ -2,8 +2,11 @@
 
 .reminders-page {
   min-height: calc(100vh - 80px);
+  height: auto;
   padding: 40px 48px 64px;
   background: #f6f7fb;
+  overflow: visible;
+  box-sizing: border-box;
 }
 
 /* ===================== NASLOV STRANI ===================== */
@@ -25,7 +28,7 @@
   margin-bottom: 24px;
 }
 
-/* ===================== IZBIRA (SELECT) ===================== */
+/* ===================== IZBIRA LJUBLJENČKA ===================== */
 
 .reminders-page select {
   width: 220px;
@@ -41,7 +44,7 @@
 .reminders-page select:focus {
   outline: none;
   border-color: #ff8c52;
-  box-shadow: 0 0 0 3px rgba(255, 140, 82, .25);
+  box-shadow: 0 0 0 3px rgba(255, 140, 82, 0.25);
 }
 
 /* ===================== GUMB DODAJ ===================== */
@@ -55,37 +58,150 @@
   font-weight: 800;
   color: #fff;
   background: linear-gradient(135deg, #ff9a56, #ff6a2c);
-  box-shadow: 0 10px 24px rgba(255, 122, 47, .45);
-  transition: all .2s ease;
+  box-shadow: 0 10px 24px rgba(255, 122, 47, 0.45);
+  transition: all 0.2s ease;
+
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .add-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 36px rgba(255, 122, 47, .55);
+  box-shadow: 0 16px 36px rgba(255, 122, 47, 0.55);
 }
 
-/* ===================== ZAVIHKI ===================== */
+/* =========================================================
+   FILTRI
+========================================================= */
+
+.reminder-filters {
+  margin: 24px 0 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ===================== GUMB FILTRI ===================== */
+
+.reminder-filter-toggle {
+  min-width: 150px;
+  min-height: 50px;
+  padding: 12px 18px;
+
+  border-radius: 14px;
+  border: 1px solid #e0e2e6;
+
+  background: #f0f1f4;
+  color: #111;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+
+  transition: all 0.2s ease;
+}
+
+.reminder-filter-toggle:hover {
+  transform: translateY(-1px);
+  background: #e8e9ed;
+}
+
+/* hamburger ikona */
+
+.filter-hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.filter-hamburger span {
+  width: 17px;
+  height: 2px;
+  background: #111;
+  border-radius: 2px;
+}
+
+/* puščica */
+
+.filter-arrow {
+  font-size: 13px;
+  margin-left: 2px;
+}
+
+/* ===================== MENI FILTROV ===================== */
+
+.reminder-filter-menu {
+  margin-top: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  gap: 10px;
+
+  width: 220px;
+}
+
+/* ===================== POSAMEZEN FILTER ===================== */
+
+.reminder-filter-menu button {
+  width: 100%;
+  min-height: 50px;
+
+  padding: 12px 18px;
+
+  border-radius: 14px;
+  border: 1px solid #e0e2e6;
+
+  background: #f0f1f4;
+  color: #111;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  text-align: center;
+
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+
+  transition: all 0.2s ease;
+}
+
+.reminder-filter-menu button:hover {
+  transform: translateY(-1px);
+  background: #e8e9ed;
+}
+
+/* aktivni filter */
+
+.reminder-filter-menu button.active {
+  background: linear-gradient(
+    135deg,
+    #ff9a56,
+    #ff6a2c
+  );
+
+  border-color: transparent;
+  color: #fff;
+
+  box-shadow: 0 8px 18px rgba(255, 122, 47, 0.28);
+}
+
+/* =========================================================
+   STARI TABOVI - POPOLNOMA SKRITI
+========================================================= */
 
 .reminder-tabs {
-  display: flex;
-  gap: 10px;
-  margin: 24px 0 36px;
-  flex-wrap: wrap;
-}
-
-.reminder-tabs button {
-  padding: 10px 18px;
-  border-radius: 999px;
-  border: none;
-  background: #e5e7eb;
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.reminder-tabs button.active {
-  background: linear-gradient(135deg, #ff9a56, #ff6a2c);
-  color: #fff;
+  display: none !important;
 }
 
 /* ===================== NASLOV DNEVA ===================== */
@@ -106,13 +222,13 @@
   border-radius: 20px;
   padding: 22px 26px;
   margin-bottom: 18px;
-  transition: all .2s ease;
-
+  transition: all 0.2s ease;
   position: relative;
+  box-sizing: border-box;
 }
 
 .card:hover {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, .08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
 }
 
 /* ===================== GLAVA OPOMNIKA ===================== */
@@ -128,12 +244,13 @@
   font-size: 18px;
   font-weight: 900;
   color: #111;
+
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* DELETE BUTTON (HEADER) */
+/* ===================== DELETE BUTTON ===================== */
 
 .reminder-delete {
   position: absolute;
@@ -143,9 +260,12 @@
 
   width: 44px;
   height: 44px;
+
   border-radius: 50%;
   border: none;
+
   background: #f3f4f6;
+
   font-size: 18px;
   cursor: pointer;
 
@@ -155,7 +275,7 @@
 }
 
 .reminder-delete:hover {
-  background: rgba(239, 68, 68, .15);
+  background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
   transform: translateY(-50%) scale(1.1);
 }
@@ -194,8 +314,10 @@
 
 .reminder-details {
   margin-top: 10px;
+
   font-size: 14px;
   color: #374151;
+
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -211,6 +333,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+
   font-size: 13px;
   font-weight: 700;
   color: #374151;
@@ -221,17 +344,108 @@
   height: 16px;
 }
 
-/* ===================== STANJE OPRAVLJENO ===================== */
+/* ===================== OPRAVLJENO ===================== */
 
 .card.done {
   opacity: 0.55;
   text-decoration: line-through;
 }
 
-/* ===================== TEMNI NAČIN ===================== */
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .reminders-page {
+    height: auto;
+    min-height: 100vh;
+
+    padding: 40px 28px 40px;
+
+    overflow: visible;
+  }
+
+  /* ===================== NASLOV ===================== */
+
+  .reminders-page h1 {
+    text-align: center;
+  }
+
+  /* ===================== ZGORNJE AKCIJE ===================== */
+
+  .reminders-actions {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .reminders-page select {
+    width: 220px;
+    flex-shrink: 0;
+  }
+
+  .reminders-actions .add-btn {
+    width: auto;
+    align-self: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* ===================== FILTRI ===================== */
+
+  .reminder-filters {
+    width: 100%;
+
+    margin: 24px 0 36px;
+
+    align-items: center;
+  }
+
+  .reminder-filter-toggle {
+    width: 220px;
+  }
+
+  .reminder-filter-menu {
+    width: 220px;
+  }
+
+  .reminder-filter-menu button {
+    width: 220px;
+  }
+
+  /* ===================== STARI TABOVI ===================== */
+
+  .reminder-tabs {
+    display: none !important;
+  }
+
+  /* ===================== KARTICE ===================== */
+
+  .card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .reminders-page,
+  .reminders-page * {
+    max-height: none;
+  }
+}
+
+/* =========================================================
+   TEMNI NAČIN
+========================================================= */
 
 body.dark .reminders-page {
-  background: radial-gradient(circle at top right, #1a1a1a, #0f0f0f);
+  background: radial-gradient(
+    circle at top right,
+    #1a1a1a,
+    #0f0f0f
+  );
 }
 
 body.dark .reminders-page h1,
@@ -255,19 +469,29 @@ body.dark .reminder-header button {
   color: #d1d5db;
 }
 
-body.dark .reminder-tabs button {
-  background: #2a2a2a;
-  color: #d1d5db;
+/* ===================== DARK MODE – FILTRI ===================== */
+
+body.dark .reminder-filter-toggle,
+body.dark .reminder-filter-menu button {
+  background: #e5e7eb;
+  color: #111;
 }
 
-/* ===================== DARK MODE – OHRANI BARVE ZAVIHOV ===================== */
-
-body.dark .reminder-tabs button {
-  background: #e5e7eb;      /* isto kot light */
-  color: #111;              /* isto kot light */
+body.dark .reminder-filter-toggle:hover,
+body.dark .reminder-filter-menu button:hover {
+  background: #dcdfe4;
 }
 
-body.dark .reminder-tabs button.active {
-  background: linear-gradient(135deg, #ff9a56, #ff6a2c);
+body.dark .reminder-filter-menu button.active {
+  background: linear-gradient(
+    135deg,
+    #ff9a56,
+    #ff6a2c
+  );
+
   color: #fff;
+}
+
+body.dark .filter-hamburger span {
+  background: #111;
 }

@@ -1,5 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation
+} from 'react-router-dom';
+
 import { AuthProvider } from './context/AuthContext';
 
 import Login from './pages/Login/Login';
@@ -14,6 +20,8 @@ import Activities from './pages/Activities/Activities';
 import Reminders from './pages/Reminders/Reminders';
 import Exams from './pages/Exams/Exams';
 
+import MobileHeader from './components/MobileHeader';
+
 import './App.css';
 import './pages/Login/Login.css';
 import './pages/SignUp/SignUp.css';
@@ -27,30 +35,119 @@ import './pages/Activities/Activities.css';
 import './pages/Reminders/Reminders.css';
 
 
+function AppContent() {
+
+  const location = useLocation();
+
+  const appPages = [
+    '/main',
+    '/profile',
+    '/mypets',
+    '/meals',
+    '/activities',
+    '/reminders',
+    '/medications',
+    '/treatments',
+    '/exams'
+  ];
+
+  const showMobileHeader = appPages.includes(location.pathname);
+
+  return (
+    <>
+      {showMobileHeader && <MobileHeader />}
+
+      <div className="App">
+
+        <Routes>
+
+          <Route
+            path="/"
+            element={<Login />}
+          />
+
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+          <Route
+            path="/signup"
+            element={<SignUp />}
+          />
+
+          <Route
+            path="/main"
+            element={<MainApp />}
+          />
+
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+
+          <Route
+            path="/mypets"
+            element={<MyPets />}
+          />
+
+          <Route
+            path="/meals"
+            element={<Meals />}
+          />
+
+          <Route
+            path="/activities"
+            element={<Activities />}
+          />
+
+          <Route
+            path="/reminders"
+            element={<Reminders />}
+          />
+
+          <Route
+            path="/medications"
+            element={<Medications />}
+          />
+
+          <Route
+            path="/treatments"
+            element={<Treatments />}
+          />
+
+          <Route
+            path="/exams"
+            element={<Exams />}
+          />
+
+          <Route
+            path="*"
+            element={<Login />}
+          />
+
+        </Routes>
+
+      </div>
+    </>
+  );
+}
+
+
 function App() {
+
   return (
     <AuthProvider>
+
       <Router>
-        <div className="App">
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/main" element={<MainApp />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/mypets" element={<MyPets />} />
-            <Route path="*" element={<Login />} />
-            <Route path="/meals" element={<Meals />} />
-            <Route path="/activities" element={<Activities />} />
-            <Route path="/reminders" element={<Reminders />} />
-            <Route path="/medications" element={<Medications />} />
-            <Route path="/treatments" element={<Treatments />} />
-            <Route path="/exams" element={<Exams />} />
-          </Routes>
-        </div>
+
+        <AppContent />
+
       </Router>
+
     </AuthProvider>
   );
 }
+
 
 export default App;

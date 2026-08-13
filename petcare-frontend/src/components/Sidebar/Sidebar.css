@@ -15,53 +15,93 @@
     --background: #FFFFFF;
 }
 
-/* ===================== SIDEBAR ===================== */
+/* ========================================================= */
+/* ===================== SIDEBAR =========================== */
+/* ========================================================= */
 
 .sidebar {
     width: 260px;
+
     background: var(--background);
+
     display: flex;
     flex-direction: column;
+
     border-right: 1px solid #E8E8E8;
+
     position: fixed;
-    height: 100vh;
+
     left: 0;
     top: 0;
+
+    height: 100vh;
+    height: 100dvh;
+
     z-index: 100;
+
+    overflow: hidden;
+
+    overscroll-behavior: none;
 }
 
-/* ===================== GLAVA SIDEBARJA ===================== */
+/* ========================================================= */
+/* ===================== GLAVA ============================= */
+/* ========================================================= */
 
 .sidebar-header {
+    position: relative;
+
     padding: 28px 24px;
+
     border-bottom: 1px solid #E8E8E8;
+
+    flex-shrink: 0;
 }
 
 .sidebar-header h2 {
     font-size: 22px;
     font-weight: 600;
+
     color: var(--primary);
+
     letter-spacing: -0.5px;
 }
 
-/* ===================== NAVIGACIJA ===================== */
+/* ========================================================= */
+/* ===================== NAVIGACIJA ======================== */
+/* ========================================================= */
 
 .sidebar-nav {
     flex: 1;
+
     padding: 16px 0;
+
+    min-height: 0;
+
+    overflow: hidden;
+
+    overscroll-behavior: none;
 }
 
 .nav-item {
     display: flex;
     align-items: center;
+
     gap: 14px;
+
     padding: 12px 24px;
+
     cursor: pointer;
+
     transition: all 0.2s ease;
+
     color: var(--secondary);
+
     font-weight: 500;
     font-size: 15px;
+
     border-left: 3px solid transparent;
+
     margin: 2px 0;
 }
 
@@ -72,37 +112,47 @@
 
 .nav-item.active {
     background: #FFF5F0;
+
     border-left-color: var(--accent);
+
     color: var(--accent);
 }
 
+/* ========================================================= */
+/* ===================== IKONE ============================== */
+/* ========================================================= */
+
 .nav-icon {
     font-size: 20px;
+
     width: 20px;
+    min-width: 20px;
+
     text-align: center;
 }
 
-/* ===================== NOGA SIDEBARJA ===================== */
-
-.sidebar-footer {
-    border-top: 1px solid #E8E8E8;
-    padding: 12px 0;
-}
-
-/* ===================== PODMENI ===================== */
+/* ========================================================= */
+/* ===================== PODMENI ============================ */
+/* ========================================================= */
 
 .submenu {
     margin-left: 12px;
+
     display: flex;
     flex-direction: column;
 }
 
 .submenu-item {
     padding: 10px 24px 10px 48px;
+
     font-size: 14px;
+
     color: var(--secondary);
+
     cursor: pointer;
+
     transition: all 0.2s ease;
+
     border-left: 3px solid transparent;
 }
 
@@ -113,33 +163,60 @@
 
 .submenu-item.active {
     background: #FFF5F0;
+
     border-left-color: var(--accent);
+
     color: var(--accent);
 }
 
-/* ===================== IKONA PUŠČICE PODMENIJA ===================== */
-
 .submenu-arrow {
     margin-left: auto;
+
     font-size: 14px;
-    transition: transform 0.2s ease;
 }
 
-.submenu-arrow.open {
-    transform: rotate(90deg);
+/* ========================================================= */
+/* ===================== NOGA ============================== */
+/* ========================================================= */
+
+.sidebar-footer {
+    border-top: 1px solid #E8E8E8;
+
+    padding: 12px 0;
+
+    flex-shrink: 0;
 }
 
-/* ===================== ODZIVNOST ===================== */
+/* ========================================================= */
+/* ===================== MOBILE GUMB ======================= */
+/* ========================================================= */
 
-@media (max-width: 1200px) {
-    .sidebar {
-        width: 220px;
-    }
+.mobile-menu-btn {
+    display: none;
 }
 
-/* ===================== TABLICA ===================== */
+/* ========================================================= */
+/* ===================== X V SIDEBARU ====================== */
+/* ========================================================= */
 
-@media (max-width: 968px) {
+.sidebar-close-btn {
+    display: none;
+}
+
+/* ========================================================= */
+/* ===================== OVERLAY ============================ */
+/* ========================================================= */
+
+.sidebar-overlay {
+    display: none;
+}
+
+/* ========================================================= */
+/* ===================== TABLICA ============================ */
+/* ========================================================= */
+
+@media (max-width: 968px) and (min-width: 601px) {
+
     .sidebar {
         width: 70px;
     }
@@ -153,11 +230,8 @@
 
     .nav-item {
         justify-content: center;
-        padding: 16px;
-    }
 
-    .nav-icon {
-        display: block;
+        padding: 16px;
     }
 
     .sidebar-footer .nav-item {
@@ -165,158 +239,399 @@
     }
 }
 
-/* ===================== TELEFON ===================== */
+/* ========================================================= */
+/* ===================== TELEFON ============================ */
+/* ========================================================= */
 
 @media (max-width: 600px) {
-    .sidebar {
-        width: 0;
-        min-width: 0;
-        transform: translateX(-100%);
-        overflow: hidden;
-        border: none;
-    }
-}
 
-/* ===================== TEMNI NAČIN – SIDEBAR ===================== */
-
-body.dark .sidebar {
-  background-color: #1a1a1a;
-  border-right: 1px solid #2a2a2a;
-}
-
-/* ===================== TEMNI NAČIN – LOGOTIP ===================== */
-
-body.dark .sidebar .logo,
-body.dark .sidebar .logo span,
-body.dark .sidebar .logo h1 {
-  color: #f5f5f5;
-}
-
-body.dark .sidebar .logo svg {
-  fill: #f5f5f5;
-}
-
-/* ===================== TEMNI NAČIN – MENI ===================== */
-
-body.dark .sidebar a,
-body.dark .sidebar li {
-  color: #e5e7eb;
-}
-
-body.dark .sidebar svg {
-  color: #e5e7eb;
-  fill: currentColor;
-}
-
-body.dark .sidebar a:hover {
-  background-color: #2a2a2a;
-}
-
-body.dark .sidebar a.active {
-  background-color: #1f2937;
-  color: #ffffff;
-}
-
-/* ===================== TEMNI NAČIN – GLAVA ===================== */
-
-body.dark .sidebar-header h2 {
-  color: #f5f5f5;
-}
-
-/* ===================== PREKLOP TEME ===================== */
-
-.sidebar-theme {
-    padding: 12px 16px;
-}
-
-/* ===================== TEMNI NAČIN – PREKLOP TEME ===================== */
-
-body.dark .nav-item.theme-toggle {
-  color: #e5e7eb;
-}
-
-body.dark .nav-item.theme-toggle:hover {
-  background-color: #2a2a2a;
-}
-
-body.dark .nav-item.theme-toggle .nav-icon {
-  color: #e5e7eb;
-}
-
-/* ===================== MOBILNI HAMBURGER ===================== */
-
-.mobile-menu-btn {
-    display: none;
-}
-
-/* ===================== MOBILNI SIDEBAR ===================== */
-
-.sidebar-overlay {
-    display: none;
-}
-
-@media (max-width: 600px) {
+    /* ===================================================== */
+    /* ===================== HAMBURGER ===================== */
+    /* ===================================================== */
 
     .mobile-menu-btn {
         display: flex;
-        position: fixed;
-        top: 14px;
-        left: 14px;
-        width: 48px;
-        height: 48px;
+
+        position: absolute;
+
+        top: 20px;
+        left: 20px;
+
+        width: 58px;
+        height: 58px;
+
+        padding: 0;
+        margin: 0;
+
         align-items: center;
         justify-content: center;
 
         border: none;
-        border-radius: 14px;
+        border-radius: 18px;
 
         background: #ffffff;
+        color: #2D3142;
+
+        font-size: 32px;
+        line-height: 1;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.13);
+
+        z-index: 2000;
+
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-menu-btn:focus,
+    .mobile-menu-btn:active {
+        outline: none;
+    }
+
+    /*
+       Ko je sidebar odprt, skrijemo zunanji hamburger.
+       X je prikazan znotraj sidebara.
+    */
+
+    .mobile-menu-btn-open {
+        display: none;
+    }
+
+    /* ===================================================== */
+    /* ===================== SIDEBAR ======================= */
+    /* ===================================================== */
+
+    .sidebar {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: min(300px, 86vw);
+
+        height: 100vh;
+        height: 100dvh;
+
+        min-height: 100vh;
+        min-height: 100dvh;
+
+        max-height: 100vh;
+        max-height: 100dvh;
+
+        background: #ffffff;
+
+        transform: translateX(-105%);
+
+        transition: transform 0.22s ease;
+
+        z-index: 1900;
+
+        /*
+           SIDEBAR SE NE MORE SCROLLATI
+        */
+        overflow: hidden !important;
+
+        overscroll-behavior: none;
+
+        touch-action: none;
+
+        box-shadow:
+            10px 0 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        z-index: 3000 !important;
+
+        overflow: hidden !important;
+
+        overscroll-behavior: none;
+
+        touch-action: none;
+    }
+
+    /* ===================================================== */
+    /* ===================== SIDEBAR GLAVA ================= */
+    /* ===================================================== */
+
+    .sidebar-header {
+        position: relative;
+
+        height: 82px;
+
+        padding: 20px 20px 20px 76px;
+
+        display: flex;
+        align-items: center;
+
+        border-bottom: 1px solid #E8E8E8;
+
+        flex-shrink: 0;
+    }
+
+    .sidebar-header h2 {
+        font-size: 22px;
+
+        font-weight: 600;
+
+        white-space: nowrap;
+
+        color: var(--primary);
+    }
+
+    /* ===================================================== */
+    /* ===================== X GUMB ======================== */
+    /* ===================================================== */
+
+    .sidebar-close-btn {
+        display: flex;
+
+        position: absolute;
+
+        left: 20px;
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        width: 42px;
+        height: 42px;
+
+        padding: 0;
+
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        border-radius: 12px;
+
+        background: #F5F5F5;
+
         color: #2D3142;
 
         font-size: 25px;
         line-height: 1;
 
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.10);
-
         cursor: pointer;
 
-        z-index: 1100;
+        -webkit-tap-highlight-color: transparent;
     }
 
-    .sidebar {
-        width: 260px;
-        height: 100dvh;
-
-        transform: translateX(-100%);
-        transition: transform 0.25s ease;
-
-        z-index: 1050;
-
-        overflow-y: auto;
-        overflow-x: hidden;
+    .sidebar-close-btn:hover {
+        background: #EEEEEE;
     }
 
-    .sidebar.mobile-open {
-        transform: translateX(0);
+    .sidebar-close-btn:focus,
+    .sidebar-close-btn:active {
+        outline: none;
     }
 
-    .sidebar-header h2,
-    .nav-item span:not(.nav-icon),
-    .submenu,
-    .submenu-arrow {
-        display: flex;
-    }
+    /* ===================================================== */
+    /* ===================== NAVIGACIJA ==================== */
+    /* ===================================================== */
+
+    .sidebar-nav {
+    flex: 1;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    padding: 10px 0;
+
+    min-height: 0;
+
+    overscroll-behavior: contain;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: none;
+}
+
+/* Skrij scrollbar, ampak scroll ostane možen */
+.sidebar-nav::-webkit-scrollbar {
+    display: none;
+}
 
     .nav-item {
-        justify-content: flex-start;
-        padding: 12px 24px;
+    padding: 8px 20px;
+
+    gap: 14px;
+
+    font-size: 16px;
+
+    margin: 1px 0;
+}
+
+.nav-icon {
+    font-size: 21px;
+
+    width: 24px;
+    min-width: 24px;
+}
+
+    .nav-item span:not(.nav-icon) {
+        display: inline;
     }
+
+    /* ===================================================== */
+    /* ===================== PODMENI ======================= */
+    /* ===================================================== */
+
+    .submenu {
+        display: flex;
+
+        margin-left: 8px;
+    }
+
+    .submenu-arrow {
+        display: inline;
+    }
+
+    .submenu-item {
+        padding: 10px 20px 10px 48px;
+
+        font-size: 15px;
+    }
+
+    /* ===================================================== */
+    /* ===================== TEMA ========================== */
+    /* ===================================================== */
+
+    .theme-toggle {
+        flex-shrink: 0;
+    }
+
+    /* ===================================================== */
+    /* ===================== VREME ========================== */
+    /* ===================================================== */
+
+    .sidebar > * {
+        flex-shrink: 0;
+    }
+
+    .sidebar > .sidebar-nav {
+    flex-shrink: 1;
+
+    min-height: 0;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    scrollbar-width: none;
+}
+
+.sidebar > .sidebar-nav::-webkit-scrollbar {
+    display: none;
+}
+
+    /* ===================================================== */
+    /* ===================== NOGA ========================== */
+    /* ===================================================== */
+
+    .sidebar-footer {
+        flex-shrink: 0;
+
+        padding: 8px 0;
+    }
+
+    /* ===================================================== */
+    /* ===================== OVERLAY ======================= */
+    /* ===================================================== */
 
     .sidebar-overlay {
         display: block;
+        z-index: 2999 !important;
         position: fixed;
+
         inset: 0;
+
+        width: 100vw;
+
+        height: 100vh;
+        height: 100dvh;
+
         background: rgba(0, 0, 0, 0.25);
-        z-index: 1040;
+
+        z-index: 1800;
+
+        overscroll-behavior: none;
+
+        touch-action: none;
     }
+}
+
+/* ========================================================= */
+/* ===================== MOBILE BODY LOCK =================== */
+/* ========================================================= */
+
+body.mobile-sidebar-open {
+    overflow: hidden !important;
+
+    touch-action: none !important;
+
+    overscroll-behavior: none !important;
+}
+
+/* ========================================================= */
+/* ===================== DARK MODE ========================= */
+/* ========================================================= */
+
+body.dark .sidebar {
+    background-color: #1a1a1a;
+
+    border-right-color: #2a2a2a;
+}
+
+body.dark .sidebar-header {
+    border-bottom-color: #2a2a2a;
+}
+
+body.dark .sidebar-header h2 {
+    color: #f5f5f5;
+}
+
+body.dark .nav-item,
+body.dark .submenu-item {
+    color: #e5e7eb;
+}
+
+body.dark .nav-item:hover,
+body.dark .submenu-item:hover {
+    background-color: #2a2a2a;
+}
+
+body.dark .nav-item.active,
+body.dark .submenu-item.active {
+    background-color: #1f2937;
+
+    color: #ffffff;
+}
+
+body.dark .sidebar-footer {
+    border-top-color: #2a2a2a;
+}
+
+body.dark .nav-item.theme-toggle {
+    color: #e5e7eb;
+}
+
+/* ========================================================= */
+/* ===================== DARK MOBILE X ===================== */
+/* ========================================================= */
+
+body.dark .sidebar-close-btn {
+    background: #2a2a2a;
+
+    color: #f5f5f5;
+}
+
+body.dark .sidebar-close-btn:hover {
+    background: #333333;
+}
+
+@media (max-width: 600px) {
+  .sidebar-header h2 {
+    display: none !important;
+  }
 }

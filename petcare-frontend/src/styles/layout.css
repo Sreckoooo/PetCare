@@ -1,16 +1,64 @@
 html,
 body,
 #root {
+  width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 .main-app {
   display: flex;
   min-height: 100vh;
+  width: 100%;
 }
 
 .page-content {
-  flex: 1;
-  margin-left: 260px;
-  box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+    margin-left: 260px;
+    box-sizing: border-box;
+}
+
+/* TELEFON */
+@media (max-width: 600px) {
+    .main-app {
+        display: block;
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    .page-content {
+        width: 100%;
+        min-width: 0;
+        margin-left: 0;
+        padding-top: 82px;
+        box-sizing: border-box;
+    }
+}
+
+/* ========================================================= */
+/* ===================== TELEFON ============================ */
+/* ========================================================= */
+
+@media (max-width: 600px) {
+
+  .main-app {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .page-content {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    padding-top: 80px;
+    box-sizing: border-box;
+  }
 }

@@ -16,7 +16,6 @@ import {
 import "../../styles/layout.css";
 import "./Reminders.css";
 
-
 const getDoneMap = () =>
   JSON.parse(localStorage.getItem("doneReminders") || "{}");
 
@@ -32,30 +31,45 @@ const saveHiddenReminders = (list) =>
 /* =========================
    HELPERS
 ========================= */
+
 const formatTime = (time) => {
   if (!time) return "";
+
   const [h, m] = time.split(":");
   const hour = parseInt(h, 10);
+
   const suffix = hour >= 12 ? "PM" : "AM";
   const formattedHour = ((hour + 11) % 12 + 1);
+
   return `${formattedHour}:${m} ${suffix}`;
 };
 
 const toDate = (datum, ura = "00:00") => {
   if (!datum) return null;
+
   const d = new Date(datum);
+
   if (isNaN(d)) return null;
 
   if (ura) {
     const [h, m] = ura.split(":");
-    d.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0);
+
+    d.setHours(
+      parseInt(h, 10),
+      parseInt(m, 10),
+      0,
+      0
+    );
   }
+
   return d;
 };
 
 const formatDateLabel = (dateString) => {
   if (!dateString) return "";
+
   const d = new Date(dateString);
+
   if (isNaN(d)) return dateString;
 
   return d.toLocaleDateString("sl-SI", {
@@ -68,15 +82,19 @@ const formatDateLabel = (dateString) => {
 
 const isPastDate = (dateStr) => {
   if (!dateStr) return false;
+
   const selected = new Date(dateStr);
   const today = new Date();
+
   today.setHours(0, 0, 0, 0);
+
   return selected < today;
 };
 
 /* =========================
    COMPONENT
 ========================= */
+
 const Reminders = () => {
   const token = localStorage.getItem("token");
 
@@ -86,6 +104,7 @@ const Reminders = () => {
   const [items, setItems] = useState([]);
 
   const [showForm, setShowForm] = useState(false);
+
   const [formData, setFormData] = useState({
     naziv: "",
     tip: "splošni",
@@ -101,9 +120,13 @@ const Reminders = () => {
   const [view, setView] = useState("vse");
   const [hideDone, setHideDone] = useState(false);
 
+  // Filter meni
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
   /* =========================
      LOAD PETS
   ========================= */
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -111,29 +134,40 @@ const Reminders = () => {
           getPets(token),
           getZdravila(token),
         ]);
+
         setPets(petsData);
         setZdravila(zdravilaData);
       } catch (err) {
         console.error(err);
       }
     };
+
     load();
   }, [token]);
 
   /* =========================
      LOAD ALL ITEMS BY PET
   ========================= */
+
   useEffect(() => {
     if (!selectedPet) {
       setItems([]);
+      setFiltersOpen(false);
       return;
     }
+
     const startOfToday = new Date();
+
     startOfToday.setHours(0, 0, 0, 0);
 
     const loadAll = async () => {
       try {
-        const [opomniki, zdravljenja, obroki, aktivnosti] = await Promise.all([
+        const [
+          opomniki,
+          zdravljenja,
+          obroki,
+          aktivnosti,
+        ] = await Promise.all([
           getOpomnikiByPet(selectedPet, token),
           getPetZdravilaByPet(selectedPet, token),
           getObrokiByPet(selectedPet, token),
@@ -142,8 +176,8 @@ const Reminders = () => {
 
         const mergedRaw = [
           ...opomniki
-            .filter(o => o.tip === "splošni")
-            .map(o => ({
+            .filter((o) => o.tip === "splošni")
+            .map((o) => ({
               id: o._id,
               opomnikId: o._id,
               sourceId: o._id,
@@ -155,10 +189,12 @@ const Reminders = () => {
               rawDate: toDate(o.datum, o.ura),
             })),
 
-          ...zdravljenja.flatMap(z => {
+          ...zdravljenja.flatMap((z) => {
             const result = [];
 
-            if (!z.datum_zacetka || !z.datum_konca) return result;
+            if (!z.datum_zacetka || !z.datum_konca) {
+              return result;
+            }
 
             const current = new Date(z.datum_zacetka);
             const end = new Date(z.datum_konca);
@@ -198,7 +234,7 @@ const Reminders = () => {
           }),
 
           ...obroki
-            .map(o => ({
+            .map((o) => ({
               id: o._id,
               opomnikId: o.opomnik?._id || null,
               sourceId: o._id,
@@ -209,10 +245,12 @@ const Reminders = () => {
               status: o.opomnik?.status || "pending",
               rawDate: toDate(o.datum, o.ura),
             }))
-            .filter(i => i.rawDate && i.rawDate >= startOfToday),
+            .filter(
+              (i) => i.rawDate && i.rawDate >= startOfToday
+            ),
 
           ...aktivnosti
-            .map(a => ({
+            .map((a) => ({
               id: a._id,
               opomnikId: a.opomnik?._id || null,
               sourceId: a._id,
@@ -224,14 +262,17 @@ const Reminders = () => {
               status: a.opomnik?.status || "pending",
               rawDate: toDate(a.datum, a.ura),
             }))
-            .filter(i => i.rawDate && i.rawDate >= startOfToday),
-        ].filter(i => i.rawDate);
+            .filter(
+              (i) => i.rawDate && i.rawDate >= startOfToday
+            ),
+        ].filter((i) => i.rawDate);
 
         const doneMap = getDoneMap();
 
-        mergedRaw.forEach(i => {
+        mergedRaw.forEach((i) => {
           if (!i.opomnikId) {
             const key = `${i.tip}-${i.sourceId}`;
+
             if (doneMap[key]) {
               i.status = doneMap[key];
             }
@@ -240,22 +281,35 @@ const Reminders = () => {
 
         const uniqueMap = new Map();
 
-        mergedRaw.forEach(item => {
+        mergedRaw.forEach((item) => {
           const key = `${item.tip}-${item.sourceId}-${item.datum}-${item.ura}`;
+
           if (!uniqueMap.has(key)) {
             uniqueMap.set(key, item);
           }
         });
 
         const merged = Array.from(uniqueMap.values());
+
         const hidden = getHiddenReminders();
+
         const filtered = merged.filter(
-          i => !hidden.includes(`${i.tip}-${i.sourceId}`)
+          (i) =>
+            !hidden.includes(
+              `${i.tip}-${i.sourceId}`
+            )
         );
 
-        setItems(filtered.sort((a, b) => a.rawDate - b.rawDate));
+        setItems(
+          filtered.sort(
+            (a, b) => a.rawDate - b.rawDate
+          )
+        );
       } catch (err) {
-        console.error("Napaka pri nalaganju opomnikov", err);
+        console.error(
+          "Napaka pri nalaganju opomnikov",
+          err
+        );
       }
     };
 
@@ -265,15 +319,28 @@ const Reminders = () => {
   /* =========================
      ADD REMINDER
   ========================= */
+
   const submitReminder = async (e) => {
     e.preventDefault();
+
     if (formData.tip === "zdravilo") {
-      if (!formData.datum || !formData.datum_konca) {
-        alert("Za zdravljenje moraš vnesti datum začetka in datum konca.");
+      if (
+        !formData.datum ||
+        !formData.datum_konca
+      ) {
+        alert(
+          "Za zdravljenje moraš vnesti datum začetka in datum konca."
+        );
         return;
       }
-      if (new Date(formData.datum_konca) < new Date(formData.datum)) {
-        alert("Datum konca ne sme biti pred datumom začetka.");
+
+      if (
+        new Date(formData.datum_konca) <
+        new Date(formData.datum)
+      ) {
+        alert(
+          "Datum konca ne sme biti pred datumom začetka."
+        );
         return;
       }
     }
@@ -289,7 +356,6 @@ const Reminders = () => {
     }
 
     try {
-
       if (formData.tip === "splošni") {
         await createOpomnik(
           {
@@ -303,7 +369,6 @@ const Reminders = () => {
         );
       }
 
-
       if (formData.tip === "obrok") {
         await createObrok(
           {
@@ -315,7 +380,6 @@ const Reminders = () => {
           token
         );
       }
-
 
       if (formData.tip === "aktivnost") {
         await createAktivnost(
@@ -329,7 +393,6 @@ const Reminders = () => {
           token
         );
       }
-
 
       if (formData.tip === "zdravilo") {
         await createPetZdravilo(
@@ -346,8 +409,8 @@ const Reminders = () => {
         );
       }
 
-
       setShowForm(false);
+
       setFormData({
         naziv: "",
         tip: "splošni",
@@ -359,25 +422,42 @@ const Reminders = () => {
         odmerek: "",
         pogostost: "",
       });
+
       setSelectedPet(selectedPet);
     } catch (err) {
-      console.error("Napaka pri dodajanju opomnika", err);
+      console.error(
+        "Napaka pri dodajanju opomnika",
+        err
+      );
     }
   };
 
   /* =========================
      DELETE
   ========================= */
+
   const removeReminder = async (item) => {
     if (item.opomnikId) {
       try {
-        await deleteOpomnik(item.opomnikId, token);
-        setItems(prev =>
-          prev.filter(i => i.opomnikId !== item.opomnikId)
+        await deleteOpomnik(
+          item.opomnikId,
+          token
+        );
+
+        setItems((prev) =>
+          prev.filter(
+            (i) =>
+              i.opomnikId !==
+              item.opomnikId
+          )
         );
       } catch (err) {
-        console.error("Napaka pri brisanju opomnika", err);
+        console.error(
+          "Napaka pri brisanju opomnika",
+          err
+        );
       }
+
       return;
     }
 
@@ -385,97 +465,160 @@ const Reminders = () => {
     const key = `${item.tip}-${item.sourceId}`;
 
     if (!hidden.includes(key)) {
-      saveHiddenReminders([...hidden, key]);
+      saveHiddenReminders([
+        ...hidden,
+        key,
+      ]);
     }
 
-    setItems(prev => prev.filter(i => i.id !== item.id));
+    setItems((prev) =>
+      prev.filter(
+        (i) => i.id !== item.id
+      )
+    );
   };
 
   /* =========================
      TOGGLE STATUS
   ========================= */
+
   const toggleStatus = async (item) => {
     if (item.opomnikId) {
       try {
-        const newStatus = item.status === "done" ? "pending" : "done";
+        const newStatus =
+          item.status === "done"
+            ? "pending"
+            : "done";
 
         const res = await fetch(
           `http://localhost:5001/api/opomniki/${item.opomnikId}`,
           {
             method: "PUT",
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type":
+                "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ status: newStatus }),
+            body: JSON.stringify({
+              status: newStatus,
+            }),
           }
         );
 
-        if (!res.ok) throw new Error();
+        if (!res.ok) {
+          throw new Error();
+        }
 
-        setItems(prev =>
-          prev.map(i =>
-            i.opomnikId === item.opomnikId
-              ? { ...i, status: newStatus }
+        setItems((prev) =>
+          prev.map((i) =>
+            i.opomnikId ===
+            item.opomnikId
+              ? {
+                  ...i,
+                  status: newStatus,
+                }
               : i
           )
         );
       } catch (err) {
-        console.error("Napaka pri posodobitvi statusa", err);
+        console.error(
+          "Napaka pri posodobitvi statusa",
+          err
+        );
       }
+
       return;
     }
 
     const doneMap = getDoneMap();
     const key = `${item.tip}-${item.sourceId}`;
 
-    const newStatus = item.status === "done" ? "pending" : "done";
+    const newStatus =
+      item.status === "done"
+        ? "pending"
+        : "done";
+
     doneMap[key] = newStatus;
 
     saveDoneMap(doneMap);
 
-    setItems(prev =>
-      prev.map(i =>
-        i.id === item.id ? { ...i, status: newStatus } : i
+    setItems((prev) =>
+      prev.map((i) =>
+        i.id === item.id
+          ? {
+              ...i,
+              status: newStatus,
+            }
+          : i
       )
     );
   };
 
+  /* =========================
+     DATUMI
+  ========================= */
 
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
-  const startOfTomorrow = new Date(startOfToday);
-  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+  const startOfTomorrow = new Date(
+    startOfToday
+  );
 
-  const startOfDayAfterTomorrow = new Date(startOfTomorrow);
-  startOfDayAfterTomorrow.setDate(startOfDayAfterTomorrow.getDate() + 1);
+  startOfTomorrow.setDate(
+    startOfTomorrow.getDate() + 1
+  );
 
-  const endOfYesterday = new Date(startOfToday);
-  endOfYesterday.setMilliseconds(-1);
+  const startOfDayAfterTomorrow =
+    new Date(startOfTomorrow);
 
-  const filteredByView = items.filter(i => {
+  startOfDayAfterTomorrow.setDate(
+    startOfDayAfterTomorrow.getDate() + 1
+  );
+
+  /* =========================
+     FILTER
+  ========================= */
+
+  const filteredByView = items.filter((i) => {
     if (!i.rawDate) return false;
 
+    if (
+      hideDone &&
+      i.status === "done"
+    ) {
+      return false;
+    }
 
-    if (hideDone && i.status === "done") return false;
-
-    if (view === "vse") return true;
+    if (view === "vse") {
+      return true;
+    }
 
     if (view === "danes") {
-      return i.rawDate >= startOfToday && i.rawDate < startOfTomorrow;
+      return (
+        i.rawDate >= startOfToday &&
+        i.rawDate < startOfTomorrow
+      );
     }
 
     if (view === "jutri") {
-      return i.rawDate >= startOfTomorrow && i.rawDate < startOfDayAfterTomorrow;
+      return (
+        i.rawDate >= startOfTomorrow &&
+        i.rawDate < startOfDayAfterTomorrow
+      );
     }
 
     if (view === "prihodnje") {
-      return i.rawDate >= startOfDayAfterTomorrow;
+      return (
+        i.rawDate >=
+        startOfDayAfterTomorrow
+      );
     }
 
     if (view === "pretekle") {
-      return i.rawDate < startOfToday;
+      return (
+        i.rawDate < startOfToday
+      );
     }
 
     return true;
@@ -484,177 +627,401 @@ const Reminders = () => {
   /* =========================
      GROUP BY DAY
   ========================= */
+
   const grouped = {};
-  filteredByView.forEach(i => {
+
+  filteredByView.forEach((i) => {
     if (!i.rawDate) return;
 
     const y = i.rawDate.getFullYear();
-    const m = String(i.rawDate.getMonth() + 1).padStart(2, "0");
-    const d = String(i.rawDate.getDate()).padStart(2, "0");
+
+    const m = String(
+      i.rawDate.getMonth() + 1
+    ).padStart(2, "0");
+
+    const d = String(
+      i.rawDate.getDate()
+    ).padStart(2, "0");
 
     const key = `${y}-${m}-${d}`;
 
-    if (!grouped[key]) grouped[key] = [];
+    if (!grouped[key]) {
+      grouped[key] = [];
+    }
+
     grouped[key].push(i);
   });
+
+  /* =========================
+     FILTER MENU
+  ========================= */
+
+  const selectFilter = (newView) => {
+    setView(newView);
+    setFiltersOpen(false);
+  };
+
+  const toggleHideDone = () => {
+    setHideDone((prev) => !prev);
+    setFiltersOpen(false);
+  };
 
   return (
     <div className="app-layout">
       <Sidebar active="reminders" />
 
       <div className="page-content reminders-page">
+
         <h1>Opomniki</h1>
 
+        {/* =========================
+            ZGORNJE AKCIJE
+        ========================= */}
+
         <div className="reminders-actions">
+
           <select
             value={selectedPet}
-            onChange={(e) => setSelectedPet(e.target.value)}
+            onChange={(e) => {
+              setSelectedPet(e.target.value);
+              setView("vse");
+              setHideDone(false);
+              setFiltersOpen(false);
+            }}
           >
-            <option value="">Izberi ljubljenčka</option>
+            <option value="">
+              Izberi ljubljenčka
+            </option>
+
             {pets.map((p) => (
-              <option key={p._id} value={p._id}>
+              <option
+                key={p._id}
+                value={p._id}
+              >
                 {p.ime}
               </option>
             ))}
           </select>
 
           {selectedPet && (
-            <button className="add-btn" onClick={() => setShowForm(true)}>
+            <button
+              className="add-btn"
+              onClick={() =>
+                setShowForm(true)
+              }
+            >
               + Dodaj opomnik
             </button>
           )}
+
         </div>
 
-        {/* TABS */}
-        <div className="reminder-tabs">
-          <button
-            className={view === "vse" ? "active" : ""}
-            onClick={() => setView("vse")}
-          >
-            Vse
-          </button>
-          <button
-            className={view === "danes" ? "active" : ""}
-            onClick={() => setView("danes")}
-          >
-            Danes
-          </button>
-          <button
-            className={view === "jutri" ? "active" : ""}
-            onClick={() => setView("jutri")}
-          >
-            Jutri
-          </button>
-          <button
-            className={view === "prihodnje" ? "active" : ""}
-            onClick={() => setView("prihodnje")}
-          >
-            Prihodnje
-          </button>
-          <button
-            className={view === "pretekle" ? "active" : ""}
-            onClick={() => setView("pretekle")}
-          >
-            Pretekle
-          </button>
-          <button
-            className={hideDone ? "active" : ""}
-            onClick={() => setHideDone(!hideDone)}
-          >
-            {hideDone ? "Prikaži opravljene" : "Skrij opravljene"}
-          </button>
-        </div>
+        {/* =========================
+            FILTER
+            PRIKAŽE SE SAMO, ČE JE
+            IZBRAN LJUBLJENČEK
+        ========================= */}
 
-        {/* FORM */}
+        {selectedPet && (
+          <div className="reminder-filters">
+
+            <button
+              type="button"
+              className="reminder-filter-toggle"
+              onClick={() =>
+                setFiltersOpen(
+                  (prev) => !prev
+                )
+              }
+            >
+              <span className="filter-hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+
+              <span>Filtri</span>
+
+              <span className="filter-arrow">
+                {filtersOpen
+                  ? "▴"
+                  : "▾"}
+              </span>
+            </button>
+
+            {filtersOpen && (
+              <div className="reminder-filter-menu">
+
+                <button
+                  type="button"
+                  className={
+                    view === "vse"
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    selectFilter("vse")
+                  }
+                >
+                  Vse
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    view === "danes"
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    selectFilter("danes")
+                  }
+                >
+                  Danes
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    view === "jutri"
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    selectFilter("jutri")
+                  }
+                >
+                  Jutri
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    view === "prihodnje"
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    selectFilter(
+                      "prihodnje"
+                    )
+                  }
+                >
+                  Prihodnje
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    view === "pretekle"
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    selectFilter(
+                      "pretekle"
+                    )
+                  }
+                >
+                  Pretekle
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    hideDone
+                      ? "active"
+                      : ""
+                  }
+                  onClick={
+                    toggleHideDone
+                  }
+                >
+                  {hideDone
+                    ? "Prikaži opravljene"
+                    : "Skrij opravljene"}
+                </button>
+
+              </div>
+            )}
+
+          </div>
+        )}
+
+        {/* =========================
+            FORM
+        ========================= */}
+
         {showForm && (
           <div className="add-pet-form-overlay">
-            <form className="add-pet-form" onSubmit={submitReminder}>
-              <h3>Dodaj opomnik</h3>
+
+            <form
+              className="add-pet-form"
+              onSubmit={
+                submitReminder
+              }
+            >
+              <h3>
+                Dodaj opomnik
+              </h3>
 
               <input
                 type="text"
                 placeholder="Naziv"
-                value={formData.naziv}
+                value={
+                  formData.naziv
+                }
                 onChange={(e) =>
-                  setFormData({ ...formData, naziv: e.target.value })
+                  setFormData({
+                    ...formData,
+                    naziv:
+                      e.target.value,
+                  })
                 }
                 required
               />
 
               <select
-                value={formData.tip}
+                value={
+                  formData.tip
+                }
                 onChange={(e) =>
-                  setFormData({ ...formData, tip: e.target.value })
+                  setFormData({
+                    ...formData,
+                    tip:
+                      e.target.value,
+                  })
                 }
               >
-                <option value="splošni">Splošni</option>
-                <option value="zdravilo">Zdravilo</option>
-                <option value="aktivnost">Aktivnost</option>
-                <option value="obrok">Obrok</option>
+                <option value="splošni">
+                  Splošni
+                </option>
+
+                <option value="zdravilo">
+                  Zdravilo
+                </option>
+
+                <option value="aktivnost">
+                  Aktivnost
+                </option>
+
+                <option value="obrok">
+                  Obrok
+                </option>
               </select>
 
               <input
                 type="date"
-                value={formData.datum}
+                value={
+                  formData.datum
+                }
                 onChange={(e) =>
-                  setFormData({ ...formData, datum: e.target.value })
+                  setFormData({
+                    ...formData,
+                    datum:
+                      e.target.value,
+                  })
                 }
                 required
               />
 
               <input
                 type="time"
-                value={formData.ura}
+                value={
+                  formData.ura
+                }
                 onChange={(e) =>
-                  setFormData({ ...formData, ura: e.target.value })
+                  setFormData({
+                    ...formData,
+                    ura:
+                      e.target.value,
+                  })
                 }
                 required
               />
 
-              {formData.tip === "aktivnost" && (
+              {formData.tip ===
+                "aktivnost" && (
                 <input
                   type="number"
                   placeholder="Trajanje (v minutah)"
-                  value={formData.trajanje}
+                  value={
+                    formData.trajanje
+                  }
                   onChange={(e) =>
-                    setFormData({ ...formData, trajanje: e.target.value })
+                    setFormData({
+                      ...formData,
+                      trajanje:
+                        e.target.value,
+                    })
                   }
                   required
                 />
               )}
 
-              {formData.tip === "zdravilo" && (
+              {formData.tip ===
+                "zdravilo" && (
                 <>
                   <input
                     type="date"
-                    value={formData.datum_konca}
+                    value={
+                      formData.datum_konca
+                    }
                     onChange={(e) =>
-                      setFormData({ ...formData, datum_konca: e.target.value })
+                      setFormData({
+                        ...formData,
+                        datum_konca:
+                          e.target.value,
+                      })
                     }
                     required
                   />
 
                   <select
-                    value={formData.zdraviloId}
+                    value={
+                      formData.zdraviloId
+                    }
                     onChange={(e) =>
-                      setFormData({ ...formData, zdraviloId: e.target.value })
+                      setFormData({
+                        ...formData,
+                        zdraviloId:
+                          e.target.value,
+                      })
                     }
                     required
                   >
-                    <option value="">Izberi zdravilo</option>
-                    {zdravila.map((z) => (
-                      <option key={z._id} value={z._id}>
-                        {z.ime} ({z.vrsta_odmerka})
-                      </option>
-                    ))}
+                    <option value="">
+                      Izberi zdravilo
+                    </option>
+
+                    {zdravila.map(
+                      (z) => (
+                        <option
+                          key={z._id}
+                          value={z._id}
+                        >
+                          {z.ime} (
+                          {
+                            z.vrsta_odmerka
+                          }
+                          )
+                        </option>
+                      )
+                    )}
                   </select>
 
                   <input
                     type="text"
                     placeholder="Odmerek"
-                    value={formData.odmerek}
+                    value={
+                      formData.odmerek
+                    }
                     onChange={(e) =>
-                      setFormData({ ...formData, odmerek: e.target.value })
+                      setFormData({
+                        ...formData,
+                        odmerek:
+                          e.target.value,
+                      })
                     }
                     required
                   />
@@ -662,9 +1029,15 @@ const Reminders = () => {
                   <input
                     type="text"
                     placeholder="Pogostost"
-                    value={formData.pogostost}
+                    value={
+                      formData.pogostost
+                    }
                     onChange={(e) =>
-                      setFormData({ ...formData, pogostost: e.target.value })
+                      setFormData({
+                        ...formData,
+                        pogostost:
+                          e.target.value,
+                      })
                     }
                     required
                   />
@@ -672,90 +1045,179 @@ const Reminders = () => {
               )}
 
               <div className="form-buttons">
-                <button type="submit">Shrani</button>
-                <button type="button" onClick={() => setShowForm(false)}>
+
+                <button type="submit">
+                  Shrani
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowForm(false)
+                  }
+                >
                   Prekliči
                 </button>
+
               </div>
+
             </form>
+
           </div>
         )}
 
-        {/* LISTA */}
-        {Object.entries(grouped).map(([day, list]) => (
-          <div key={day}>
-            <h2>{formatDateLabel(day)}</h2>
+        {/* =========================
+            LISTA OPOMNIKOV
+        ========================= */}
 
-            {list.map((i) => (
-              <div
-                key={i.id}
-                className={`card reminder-${i.tip} ${i.status === "done" ? "done" : ""
+        {Object.entries(grouped).map(
+          ([day, list]) => (
+            <div key={day}>
+
+              <h2>
+                {formatDateLabel(day)}
+              </h2>
+
+              {list.map((i) => (
+                <div
+                  key={i.id}
+                  className={`card reminder-${i.tip} ${
+                    i.status === "done"
+                      ? "done"
+                      : ""
                   }`}
-              >
-                {/* LEVI DEL – VSEBINA */}
-                <div className="reminder-main">
-                  <div className="reminder-header">
-                    <h3>
-                      {i.naziv}
-                      <span className={`reminder-type tag-${i.tip}`}>
-                        {i.tip === "splošni" && "Splošni"}
-                        {i.tip === "zdravilo" && "Zdravilo"}
-                        {i.tip === "aktivnost" && "Aktivnost"}
-                        {i.tip === "obrok" && "Obrok"}
-                      </span>
-                    </h3>
-                  </div>
-
-                  <div className="reminder-details">
-                    {/* DATUM + URA */}
-                    <div>
-                      Datum:{" "}
-                      {new Date(i.datum).toLocaleDateString("sl-SI")}
-                      {i.ura && ` ob ${formatTime(i.ura)}`}
-                    </div>
-
-                    {/* ZDRAVLJENJE */}
-                    {i.tip === "zdravilo" && (
-                      <>
-                        {i.odmerek && <div>Odmerek: {i.odmerek}</div>}
-                        {i.pogostost && <div>Pogostost: {i.pogostost}</div>}
-                      </>
-                    )}
-
-                    {/* AKTIVNOST */}
-                    {i.tip === "aktivnost" && i.trajanje && (
-                      <div>Trajanje: {i.trajanje} min</div>
-                    )}
-                  </div>
-
-                  {i.rawDate >= startOfToday && (
-                    <div className="reminder-actions">
-                      <label className="reminder-checkbox">
-                        <input
-                          type="checkbox"
-                          checked={i.status === "done"}
-                          onChange={() => toggleStatus(i)}
-                        />
-                        <span>Opravljeno</span>
-                      </label>
-                    </div>
-                  )}
-                </div>
-
-                {/* DESNI DEL – DELETE */}
-                <button
-                  className="reminder-delete"
-                  onClick={() => removeReminder(i)}
-                  title="Izbriši opomnik"
                 >
-                  🗑️
-                </button>
-              </div>
 
+                  <div className="reminder-main">
 
-            ))}
-          </div>
-        ))}
+                    <div className="reminder-header">
+
+                      <h3>
+                        {i.naziv}
+
+                        <span
+                          className={`reminder-type tag-${i.tip}`}
+                        >
+                          {i.tip ===
+                            "splošni" &&
+                            "Splošni"}
+
+                          {i.tip ===
+                            "zdravilo" &&
+                            "Zdravilo"}
+
+                          {i.tip ===
+                            "aktivnost" &&
+                            "Aktivnost"}
+
+                          {i.tip ===
+                            "obrok" &&
+                            "Obrok"}
+                        </span>
+                      </h3>
+
+                    </div>
+
+                    <div className="reminder-details">
+
+                      <div>
+                        Datum:{" "}
+                        {new Date(
+                          i.datum
+                        ).toLocaleDateString(
+                          "sl-SI"
+                        )}
+
+                        {i.ura &&
+                          ` ob ${formatTime(
+                            i.ura
+                          )}`}
+                      </div>
+
+                      {i.tip ===
+                        "zdravilo" && (
+                        <>
+                          {i.odmerek && (
+                            <div>
+                              Odmerek:{" "}
+                              {
+                                i.odmerek
+                              }
+                            </div>
+                          )}
+
+                          {i.pogostost && (
+                            <div>
+                              Pogostost:{" "}
+                              {
+                                i.pogostost
+                              }
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {i.tip ===
+                        "aktivnost" &&
+                        i.trajanje && (
+                          <div>
+                            Trajanje:{" "}
+                            {
+                              i.trajanje
+                            }{" "}
+                            min
+                          </div>
+                        )}
+
+                    </div>
+
+                    {i.rawDate >=
+                      startOfToday && (
+                      <div className="reminder-actions">
+
+                        <label className="reminder-checkbox">
+
+                          <input
+                            type="checkbox"
+                            checked={
+                              i.status ===
+                              "done"
+                            }
+                            onChange={() =>
+                              toggleStatus(
+                                i
+                              )
+                            }
+                          />
+
+                          <span>
+                            Opravljeno
+                          </span>
+
+                        </label>
+
+                      </div>
+                    )}
+
+                  </div>
+
+                  <button
+                    className="reminder-delete"
+                    onClick={() =>
+                      removeReminder(i)
+                    }
+                    title="Izbriši opomnik"
+                  >
+                    🗑️
+                  </button>
+
+                </div>
+              ))}
+
+            </div>
+          )
+        )}
+
       </div>
     </div>
   );

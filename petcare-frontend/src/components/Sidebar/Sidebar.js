@@ -5,42 +5,27 @@ import "./Sidebar.css";
 
 /**
  * Stranska navigacija aplikacije
- * Vsebuje glavno navigacijo, podmeni za zdravje,
- * preklop temnega načina in prikaz vremena
  */
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  /**
-   * Stanje za odpiranje / zapiranje podmenija Zdravje
-   */
   const [healthOpen, setHealthOpen] = useState(
     location.pathname.startsWith("/medications") ||
       location.pathname.startsWith("/treatments") ||
       location.pathname.startsWith("/exams")
   );
 
-  /**
-   * Stanje za temni / svetli način
-   */
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
   );
 
-  /**
-   * Stanje za mobilni sidebar
-   */
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  /**
-   * Preveri, ali je pot trenutno aktivna
-   */
   const isActive = (path) => location.pathname.startsWith(path);
 
-  /**
-   * Uporabi temo na body element in shrani izbiro v localStorage
-   */
+  /* ================= TEMA ================= */
+
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark");
@@ -51,19 +36,42 @@ const Sidebar = () => {
     }
   }, [darkMode]);
 
+  /* ================= ZAKLENI STRAN ================= */
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.classList.add("mobile-sidebar-open");
+    } else {
+      document.body.classList.remove("mobile-sidebar-open");
+    }
+
+    return () => {
+      document.body.classList.remove("mobile-sidebar-open");
+    };
+  }, [mobileOpen]);
+
+  /* ================= ZAPRI SIDEBAR OB NAVIGACIJI ================= */
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   return (
     <>
-      {/* ================= HAMBURGER NA TELEFONU ================= */}
+      {/* ================= MOBILE HAMBURGER ================= */}
 
       <button
-        className="mobile-menu-btn"
-        onClick={() => setMobileOpen(!mobileOpen)}
-        aria-label="Odpri meni"
+        type="button"
+        className={`mobile-menu-btn ${
+          mobileOpen ? "mobile-menu-btn-open" : ""
+        }`}
+        onClick={() => setMobileOpen((prev) => !prev)}
+        aria-label={mobileOpen ? "Zapri meni" : "Odpri meni"}
       >
         {mobileOpen ? "✕" : "☰"}
       </button>
 
-      {/* ================= OZADJE ZA ZAPRTJE MENIJA ================= */}
+      {/* ================= OVERLAY ================= */}
 
       {mobileOpen && (
         <div
@@ -74,14 +82,29 @@ const Sidebar = () => {
 
       {/* ================= SIDEBAR ================= */}
 
-      <div className={`sidebar ${mobileOpen ? "mobile-open" : ""}`}>
-        {/* Glava stranske navigacije */}
+      <aside className={`sidebar ${mobileOpen ? "mobile-open" : ""}`}>
+
+        {/* ================= GLAVA ================= */}
+
         <div className="sidebar-header">
+
+          {/* MOBILE X */}
+          <button
+            type="button"
+            className="sidebar-close-btn"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Zapri meni"
+          >
+            ✕
+          </button>
+
           <h2>🐾 PetCare</h2>
         </div>
 
-        {/* Glavna navigacija */}
+        {/* ================= NAVIGACIJA ================= */}
+
         <nav className="sidebar-nav">
+
           <div
             className={`nav-item ${isActive("/main") ? "active" : ""}`}
             onClick={() => {
@@ -115,7 +138,8 @@ const Sidebar = () => {
             <span>Moji ljubljenčki</span>
           </div>
 
-          {/* Zdravje – podmeni */}
+          {/* ================= ZDRAVJE ================= */}
+
           <div
             className={`nav-item ${
               location.pathname.startsWith("/medications") ||
@@ -124,10 +148,11 @@ const Sidebar = () => {
                 ? "active"
                 : ""
             }`}
-            onClick={() => setHealthOpen(!healthOpen)}
+            onClick={() => setHealthOpen((prev) => !prev)}
           >
             <span className="nav-icon">❤️</span>
             <span>Zdravje</span>
+
             <span className="submenu-arrow">
               {healthOpen ? "▾" : "▸"}
             </span>
@@ -135,6 +160,7 @@ const Sidebar = () => {
 
           {healthOpen && (
             <div className="submenu">
+
               <div
                 className={`submenu-item ${
                   isActive("/medications") ? "active" : ""
@@ -170,6 +196,7 @@ const Sidebar = () => {
               >
                 🧾 Pregledi
               </div>
+
             </div>
           )}
 
@@ -205,25 +232,30 @@ const Sidebar = () => {
             <span className="nav-icon">🔔</span>
             <span>Opomniki</span>
           </div>
+
         </nav>
 
-        {/* Preklop teme */}
+        {/* ================= TEMA ================= */}
+
         <div
           className="nav-item theme-toggle"
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={() => setDarkMode((prev) => !prev)}
         >
           <span className="nav-icon">
             {darkMode ? "☀️" : "🌙"}
           </span>
+
           <span>
             {darkMode ? "Svetli način" : "Temni način"}
           </span>
         </div>
 
-        {/* Vreme */}
+        {/* ================= VREME ================= */}
+
         <Weather />
 
-        {/* Odjava */}
+        {/* ================= ODJAVA ================= */}
+
         <div className="sidebar-footer">
           <div
             className="nav-item"
@@ -237,7 +269,8 @@ const Sidebar = () => {
             <span>Odjava</span>
           </div>
         </div>
-      </div>
+
+      </aside>
     </>
   );
 };

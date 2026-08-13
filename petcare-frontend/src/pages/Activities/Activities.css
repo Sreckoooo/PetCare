@@ -200,3 +200,40 @@ body.dark .activity-actions .icon-btn {
   background: #2a2a2a;
   color: #d1d5db;
 }
+
+/* ===================== MOBILE POPRAVKI ===================== */
+
+@media (max-width: 600px) {
+
+  .activities-page {
+    height: auto;
+    min-height: calc(100vh - 80px);
+    padding-bottom: 40px;
+    overflow: visible;
+  }
+
+  .activities-list {
+    padding-bottom: 20px;
+  }
+
+  .activity-card {
+    box-sizing: border-box;
+  }
+
+  .activity-left {
+    min-width: 0;
+  }
+
+  .activity-meta span {
+    line-height: 1.25;
+  }
+
+  .activity-meta strong {
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .activity-actions {
+    flex-shrink: 0;
+  }
+}

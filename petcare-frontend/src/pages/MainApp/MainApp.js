@@ -12,9 +12,6 @@ import {
 
 /* ================= POMOŽNE FUNKCIJE ================= */
 
-/**
- * Oblikuje datum v slovenski zapis
- */
 const formatDateSI = (date) =>
   date.toLocaleDateString("sl-SI", {
     weekday: "long",
@@ -23,9 +20,6 @@ const formatDateSI = (date) =>
     year: "numeric",
   });
 
-/**
- * Pretvori uro v AM/PM zapis
- */
 const formatTimeAMPM = (time) => {
   if (!time) return "";
 
@@ -33,24 +27,16 @@ const formatTimeAMPM = (time) => {
   let hour = Number(h);
 
   const ampm = hour >= 12 ? "PM" : "AM";
-
   hour = hour % 12 || 12;
 
   return `${hour}:${m} ${ampm}`;
 };
 
-/**
- * Preveri ali sta datuma isti dan
- */
 const isSameDay = (a, b) =>
   a.getFullYear() === b.getFullYear() &&
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
 
-/**
- * Normalizira datum
- * Nastavi uro na 00:00
- */
 const normalizeDate = (date) => {
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);
@@ -60,17 +46,13 @@ const normalizeDate = (date) => {
 /* ================= KOMPONENTA ================= */
 
 const MainApp = () => {
-  // JWT žeton
   const token = localStorage.getItem("token");
 
-  // Dnevi za koledar
   const [calendarDays, setCalendarDays] = useState([]);
-
-  // Trenutno izbran dan v koledarju
-  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
-
-  // Izbran tip kartice
   const [selectedType, setSelectedType] = useState(null);
+
+  // Trenutni dan za mobilni koledar
+  const [mobileDayIndex, setMobileDayIndex] = useState(0);
 
   /* ================= NALAGANJE PODATKOV ================= */
 
@@ -104,7 +86,6 @@ const MainApp = () => {
         /* ===== KOLEDAR ===== */
 
         const now = new Date();
-
         const year = now.getFullYear();
         const month = now.getMonth();
 
@@ -127,7 +108,6 @@ const MainApp = () => {
           /* ===== OPOMNIKI ===== */
 
           opomniki.forEach((o) => {
-            // Izloči opomnike vezane na druge module
             if (
               o.tip === "obrok" ||
               o.tip === "aktivnost" ||
@@ -208,14 +188,14 @@ const MainApp = () => {
 
         setCalendarDays(calendar);
 
-        /* ===== IZBERI DANAŠNJI DAN ===== */
+        /* ===== NASTAVI MOBILNI KOLEDAR NA DANES ===== */
 
         const todayIndex = calendar.findIndex((day) =>
           isSameDay(day.date, new Date())
         );
 
         if (todayIndex !== -1) {
-          setSelectedDayIndex(todayIndex);
+          setMobileDayIndex(todayIndex);
         }
       } catch (err) {
         console.error(
@@ -254,23 +234,60 @@ const MainApp = () => {
     ),
   };
 
-  /* ================= TRENUTNI DAN KOLEDARJA ================= */
+  /* ================= MOBILNI KOLEDAR ================= */
 
-  const selectedDay = calendarDays[selectedDayIndex];
-
-  /* ================= PUŠČICE KOLEDARJA ================= */
+  const mobileDay = calendarDays[mobileDayIndex];
 
   const previousDay = () => {
-    setSelectedDayIndex((current) =>
-      current > 0 ? current - 1 : current
-    );
+    if (mobileDayIndex > 0) {
+      setMobileDayIndex((index) => index - 1);
+    }
   };
 
   const nextDay = () => {
-    setSelectedDayIndex((current) =>
-      current < calendarDays.length - 1
-        ? current + 1
-        : current
+    if (mobileDayIndex < calendarDays.length - 1) {
+      setMobileDayIndex((index) => index + 1);
+    }
+  };
+
+  /* ================= PRIKAZ ENEGA DNEVA ================= */
+
+  const renderCalendarDay = (day) => {
+    if (!day) return null;
+
+    return (
+      <div className="calendar-day">
+        <h3>{formatDateSI(day.date)}</h3>
+
+        {day.events.length === 0 && (
+          <p className="calendar-empty">
+            Ni dogodkov
+          </p>
+        )}
+
+        {day.events.map((e) => (
+          <div
+            key={`${e.type}-${e.id}`}
+            className={`calendar-event ${e.type}`}
+          >
+            <span className="event-title">
+              {e.title}
+            </span>
+
+            {e.time && (
+              <span className="event-time">
+                {formatTimeAMPM(e.time)}
+              </span>
+            )}
+
+            {e.pet && (
+              <span className="event-pet">
+                🐾 {e.pet}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
     );
   };
 
@@ -278,12 +295,11 @@ const MainApp = () => {
 
   return (
     <div className="app-layout">
-
       <Sidebar active="home" />
 
       <div className="page-content main-app-page">
 
-        {/* ================= NASLOV ================= */}
+        {/* ===== NASLOV ===== */}
 
         <h1>Nadzorna plošča</h1>
 
@@ -291,7 +307,7 @@ const MainApp = () => {
           Pregled za danes
         </p>
 
-        {/* ================= KARTICE ================= */}
+        {/* ===== KARTICE ===== */}
 
         <div className="dashboard-cards">
 
@@ -301,7 +317,6 @@ const MainApp = () => {
             "zdravljenje",
             "opomnik",
           ].map((type) => (
-
             <div
               key={type}
               className={`card ${type} ${
@@ -331,30 +346,22 @@ const MainApp = () => {
               :{" "}
               {todayByType[type].length}
 
-              {/* ===== VSEBINA KARTICE ===== */}
-
               {selectedType === type && (
-
                 <div className="card-content">
 
                   {todayByType[type].length === 0 && (
-
                     <div className="card-item">
-
                       <span className="item-main">
                         Danes ni dogodkov
                       </span>
-
                     </div>
                   )}
 
                   {todayByType[type].map((e) => (
-
                     <div
                       key={e.id}
                       className="card-item"
                     >
-
                       <span className="item-main">
                         {e.title}
                       </span>
@@ -376,7 +383,6 @@ const MainApp = () => {
                         )}
 
                       </span>
-
                     </div>
                   ))}
 
@@ -388,64 +394,40 @@ const MainApp = () => {
 
         </div>
 
-        {/* ================= KOLEDAR ================= */}
+        {/* ================================================= */}
+        {/* DESKTOP KOLEDAR */}
+        {/* ================================================= */}
 
-        <div className="calendar-container">
-
-          {/* LEVA PUŠČICA */}
-
-          <button
-            className="calendar-arrow calendar-arrow-left"
-            onClick={previousDay}
-            disabled={
-              selectedDayIndex === 0 ||
-              calendarDays.length === 0
-            }
-            aria-label="Prejšnji dan"
-          >
-            ←
-          </button>
-
-          {/* DAN */}
-
+        <div className="calendar-desktop">
           <div className="calendar-grid">
 
-            {selectedDay && (
-
+            {calendarDays.map((day) => (
               <div
-                key={selectedDay.date.toISOString()}
+                key={day.date.toISOString()}
                 className="calendar-day"
               >
-
                 <h3>
-                  {formatDateSI(
-                    selectedDay.date
-                  )}
+                  {formatDateSI(day.date)}
                 </h3>
 
-                {selectedDay.events.length === 0 && (
-
+                {day.events.length === 0 && (
                   <p className="calendar-empty">
                     Ni dogodkov
                   </p>
                 )}
 
-                {selectedDay.events.map((e) => (
-
+                {day.events.map((e) => (
                   <div
                     key={`${e.type}-${e.id}`}
                     className={`calendar-event ${e.type}`}
                   >
-
                     <span className="event-title">
                       {e.title}
                     </span>
 
                     {e.time && (
                       <span className="event-time">
-                        {formatTimeAMPM(
-                          e.time
-                        )}
+                        {formatTimeAMPM(e.time)}
                       </span>
                     )}
 
@@ -454,24 +436,40 @@ const MainApp = () => {
                         🐾 {e.pet}
                       </span>
                     )}
-
                   </div>
                 ))}
 
               </div>
-            )}
+            ))}
 
           </div>
+        </div>
 
-          {/* DESNA PUŠČICA */}
+        {/* ================================================= */}
+        {/* MOBILNI KOLEDAR */}
+        {/* ================================================= */}
+
+        <div className="calendar-mobile">
 
           <button
-            className="calendar-arrow calendar-arrow-right"
+            className="calendar-arrow"
+            onClick={previousDay}
+            disabled={mobileDayIndex === 0}
+            aria-label="Prejšnji dan"
+          >
+            ←
+          </button>
+
+          <div className="calendar-mobile-day">
+            {renderCalendarDay(mobileDay)}
+          </div>
+
+          <button
+            className="calendar-arrow"
             onClick={nextDay}
             disabled={
-              selectedDayIndex ===
-                calendarDays.length - 1 ||
-              calendarDays.length === 0
+              mobileDayIndex ===
+              calendarDays.length - 1
             }
             aria-label="Naslednji dan"
           >

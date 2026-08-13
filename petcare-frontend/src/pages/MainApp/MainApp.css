@@ -4,7 +4,7 @@
   padding: 24px;
 }
 
-/* ===================== NASLOV STRANI ===================== */
+/* ===================== NASLOV ===================== */
 
 .main-app-page h1 {
   margin-bottom: 6px;
@@ -13,57 +13,73 @@
   font-weight: 700;
 }
 
-/* ===================== PODNASLOV ===================== */
-
 .dashboard-subtitle {
   margin-bottom: 36px;
   text-align: center;
   font-size: 16px;
   font-weight: 500;
   color: #555;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   gap: 8px;
 }
 
-/* ===================== POVZETEK ZA DANES ===================== */
+/* ===================== KARTICE ===================== */
 
 .dashboard-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
   gap: 16px;
+
   margin-bottom: 32px;
+
   align-items: start;
 }
 
 .card {
   padding: 18px;
+
   flex-direction: column;
+
   border-radius: 14px;
+
   font-size: 18px;
   font-weight: 600;
+
   color: #fff;
+
   cursor: pointer;
+
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
   overflow: hidden;
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
-}
 
-/* aktivna kartica */
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.12);
+}
 
 .card.active {
   padding-bottom: 24px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.18);
+
   transform: translateY(-1px);
 }
 
-/* ===================== BARVNE TEME KARTIC ===================== */
+/* ===================== BARVE ===================== */
 
 .card.obrok {
   background: #ffb703;
@@ -85,19 +101,25 @@
 
 .card-content {
   margin-top: 14px;
+
   font-size: 14px;
   line-height: 1.4;
 }
 
 .card-item {
   padding: 8px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.35);
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.35);
+
   font-size: 14px;
+
   display: flex;
+
   justify-content: space-between;
   align-items: center;
+
   gap: 8px;
-  transition: background 0.15s ease, padding 0.15s ease;
 }
 
 .card-item:first-child {
@@ -106,7 +128,9 @@
 
 .card-item:hover {
   background: rgba(255, 255, 255, 0.12);
+
   border-radius: 8px;
+
   padding-left: 6px;
   padding-right: 6px;
 }
@@ -117,18 +141,27 @@
 
 .card-item .item-meta {
   display: flex;
+
   gap: 6px;
+
   font-size: 12px;
+
   opacity: 0.9;
+
   align-items: center;
 }
 
 .card-item .item-time {
   background: rgba(255, 255, 255, 0.28);
+
   padding: 3px 7px;
+
   border-radius: 999px;
+
   font-size: 11px;
+
   white-space: nowrap;
+
   font-weight: 500;
 }
 
@@ -136,121 +169,72 @@
 /* ===================== KOLEDAR ============================ */
 /* ========================================================= */
 
-/*
-   Koledar je sedaj prikazan kot en dan.
-   Puščica levo -> prejšnji dan
-   Puščica desno -> naslednji dan
-*/
-
-.calendar-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  width: 100%;
-  margin-top: 10px;
+/* Desktop koledar je privzeto prikazan */
+.calendar-desktop {
+  display: block;
 }
 
-/* ===================== PUŠČICE ===================== */
-
-.calendar-arrow {
-  width: 46px;
-  height: 46px;
-
-  flex-shrink: 0;
-
-  border: none;
-  border-radius: 50%;
-
-  background: #ffffff;
-  color: #2d3142;
-
-  font-size: 25px;
-  font-weight: 500;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+/* Mobilni koledar je privzeto skrit */
+.calendar-mobile {
+  display: none;
 }
-
-.calendar-arrow:hover:not(:disabled) {
-  transform: scale(1.06);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  background: #f8f8f8;
-}
-
-.calendar-arrow:active:not(:disabled) {
-  transform: scale(0.96);
-}
-
-.calendar-arrow:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
-
-/* ===================== DAN ===================== */
 
 .calendar-grid {
-  display: block;
-  width: 100%;
-  max-width: 900px;
+  display: grid;
+
+  grid-template-columns: repeat(7, 1fr);
+
+  gap: 12px;
 }
 
 .calendar-day {
   background: #f9f9f9;
-  border-radius: 14px;
-  padding: 18px;
 
-  width: 100%;
+  border-radius: 10px;
+
+  padding: 10px;
+
   min-height: 160px;
 
   display: flex;
-  flex-direction: column;
 
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+  flex-direction: column;
 }
 
 .calendar-day h3 {
-  font-size: 18px;
-  margin-bottom: 14px;
+  font-size: 13px;
+
+  margin-bottom: 8px;
+
   color: #333;
-  text-transform: none;
 }
 
-/* ===================== PRAZEN DAN ===================== */
-
 .calendar-empty {
-  font-size: 13px;
+  font-size: 12px;
+
   color: #999;
+
   margin-top: 8px;
 }
 
-/* ===================== DOGODKI V KOLEDARJU ===================== */
+/* ===================== DOGODKI ===================== */
 
 .calendar-event {
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  margin-bottom: 8px;
+  padding: 6px 8px;
+
+  border-radius: 6px;
+
+  font-size: 12px;
+
+  margin-bottom: 6px;
 
   display: flex;
+
   flex-direction: column;
-  gap: 3px;
+
+  gap: 2px;
 
   color: #fff;
-}
-
-.calendar-event:last-child {
-  margin-bottom: 0;
 }
 
 .event-title {
@@ -258,12 +242,14 @@
 }
 
 .event-time {
-  font-size: 12px;
+  font-size: 11px;
+
   opacity: 0.9;
 }
 
 .event-pet {
-  font-size: 12px;
+  font-size: 11px;
+
   opacity: 0.85;
 }
 
@@ -289,29 +275,36 @@
 /* ===================== TABLICA ============================ */
 /* ========================================================= */
 
-@media (max-width: 968px) {
+@media (max-width: 968px) and (min-width: 601px) {
 
   .main-app-page {
     margin-left: 70px !important;
+
     width: calc(100% - 70px) !important;
+
     max-width: calc(100% - 70px) !important;
+
     min-width: 0 !important;
 
     padding: 20px;
-
-    box-sizing: border-box;
   }
 
   .dashboard-cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .calendar-container {
-    gap: 12px;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
   }
 
   .calendar-grid {
-    max-width: 700px;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .calendar-desktop {
+    display: block;
+  }
+
+  .calendar-mobile {
+    display: none;
   }
 }
 
@@ -321,10 +314,27 @@
 
 @media (max-width: 600px) {
 
+  /* ================= STRAN ================= */
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+
+    overflow-x: hidden;
+  }
+
   .app-layout {
     width: 100%;
     max-width: 100%;
+
     min-width: 0;
+
+    position: relative;
+
     overflow-x: hidden;
   }
 
@@ -333,58 +343,154 @@
 
     width: 100% !important;
     max-width: 100% !important;
+
     min-width: 0 !important;
 
-    padding: 20px 16px;
+    min-height: 100dvh;
+
+    /*
+      Več prostora ob levi in desni strani,
+      da kartice niso čisto ob robu.
+    */
+    padding: 18px 26px 20px;
 
     box-sizing: border-box;
 
     overflow-x: hidden;
   }
 
-  /* ===================== NASLOV ===================== */
+  /* ================= NASLOV ================= */
+
+  .main-app-page {
+    position: relative;
+  }
 
   .main-app-page h1 {
-    font-size: 32px;
+    width: 100%;
+
+    font-size: 27px;
+
     line-height: 1.15;
-    margin-bottom: 8px;
+
+    margin-top: 0;
+    margin-bottom: 4px;
+
+    /*
+      Odstranimo padding-left, ki je prej
+      premikal naslov proti desni.
+    */
+    padding: 18px 0 0;
+
+    box-sizing: border-box;
+
+    text-align: center;
+
+    white-space: nowrap;
   }
 
   .dashboard-subtitle {
-    font-size: 15px;
-    margin-bottom: 24px;
+    width: 100%;
+
+    font-size: 14px;
+
+    margin-bottom: 28px;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    text-align: center;
+
+    white-space: nowrap;
   }
 
-  /* ===================== KARTICE ===================== */
+
+    /* ================= KARTICE ================= */
 
   .dashboard-cards {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    width: 100%;
+    display: grid !important;
+
+    grid-template-columns: 1fr !important;
+
+    /*
+      Kartice bolj noter od robov
+    */
+    width: 92% !important;
+
+    margin: 0 auto 24px !important;
+
+    /*
+      Manjši razmak med karticami
+    */
+    gap: 12px !important;
+
+    row-gap: 12px !important;
+
+    box-sizing: border-box;
+  }
+
+  .dashboard-cards > * {
+    margin: 0 !important;
   }
 
   .card {
-    width: 100%;
+    width: 100% !important;
+
     min-width: 0;
-    padding: 16px;
-    font-size: 17px;
+
+    min-height: 0;
+
+    padding: 18px 18px !important;
+
+    border-radius: 16px;
+
+    font-size: 18px;
+
+    box-sizing: border-box;
+
+    margin: 0 !important;
+
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .card:hover {
+    transform: none;
   }
 
   .card.active {
-    padding-bottom: 20px;
+    padding-bottom: 18px !important;
+
+    transform: none;
   }
 
   .card-content {
     width: 100%;
+
     min-width: 0;
+
+    margin-top: 10px;
+
+    font-size: 13px;
+
+    box-sizing: border-box;
   }
 
   .card-item {
+    width: 100%;
+
     min-width: 0;
+
+    padding: 6px 0;
+
+    font-size: 13px;
+
+    box-sizing: border-box;
   }
 
   .card-item .item-main {
     min-width: 0;
+
     overflow-wrap: anywhere;
   }
 
@@ -392,60 +498,171 @@
     flex-shrink: 0;
   }
 
-  /* ===================== MOBILNI KOLEDAR ===================== */
 
-  .calendar-container {
-    width: 100%;
-    gap: 8px;
-    margin-top: 8px;
+  /* ======================================================= */
+  /* ================= MOBILNI KOLEDAR ===================== */
+  /* ======================================================= */
+
+  .calendar-desktop {
+    display: none !important;
   }
 
-  .calendar-grid {
-    width: 100%;
-    max-width: none;
+  .calendar-mobile {
+    display: flex !important;
+
+    /*
+      Koledar ni več čisto do robov
+    */
+    width: 94% !important;
+
     min-width: 0;
+
+    margin: 10px auto 0 !important;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    box-sizing: border-box;
   }
 
-  .calendar-day {
-    width: 100%;
+
+  /* ================= DAN ================= */
+
+  .calendar-mobile-day {
+    flex: 1;
+
     min-width: 0;
-    min-height: auto;
+
+    max-width: 100%;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+  }
+
+  .calendar-mobile-day .calendar-day {
+    width: 100%;
+
+    min-width: 0;
+
+    min-height: 0;
+
     padding: 16px;
 
-    border-radius: 14px;
+    border-radius: 16px;
+
+    box-sizing: border-box;
   }
 
-  .calendar-day h3 {
-    font-size: 16px;
-    margin-bottom: 12px;
+  .calendar-mobile-day .calendar-day h3 {
+    width: 100%;
+
+    font-size: 17px;
+
+    line-height: 1.2;
+
+    margin-bottom: 10px;
+
+    color: #333;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
   }
+
+
+  /* ================= PUŠČICI ================= */
+
+  .calendar-arrow {
+    flex: 0 0 44px;
+
+    width: 44px !important;
+    height: 44px !important;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: #2d3142;
+
+    font-size: 30px;
+
+    line-height: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.10);
+
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .calendar-arrow:hover:not(:disabled) {
+    transform: translateY(-1px);
+
+    box-shadow:
+      0 6px 14px rgba(0, 0, 0, 0.14);
+  }
+
+  .calendar-arrow:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+
+  .calendar-arrow:disabled {
+    opacity: 0.35;
+
+    cursor: default;
+  }
+
+
+  /* ================= DOGODKI ================= */
 
   .calendar-event {
     width: 100%;
+
+    min-width: 0;
+
+    padding: 8px 9px;
+
+    font-size: 13px;
+
+    margin-bottom: 5px;
+
     box-sizing: border-box;
-    padding: 10px 12px;
   }
 
-  /* ===================== MOBILNE PUŠČICE ===================== */
+  .event-title {
+    min-width: 0;
 
-  .calendar-arrow {
-    width: 42px;
-    height: 42px;
-
-    font-size: 23px;
-
-    flex-shrink: 0;
+    overflow-wrap: anywhere;
   }
-}
 
-/* ========================================================= */
-/* ================= PREPREČI HORIZONTALNI SKROL ============ */
-/* ========================================================= */
+  .event-time,
+  .event-pet {
+    font-size: 11px;
+  }
 
-html,
-body {
-  max-width: 100%;
-  overflow-x: hidden;
+
+  /* ================= STARI HAMBURGER ================= */
+
+  .mobile-menu-btn {
+    display: none !important;
+  }
 }
 
 /* ========================================================= */
@@ -472,8 +689,6 @@ body.dark .card.opomnik {
   color: #fff;
 }
 
-/* vsebina v karticah ostane svetla */
-
 body.dark .card .card-content,
 body.dark .card .card-item,
 body.dark .card .item-main,
@@ -481,25 +696,42 @@ body.dark .card .item-meta {
   color: #fff;
 }
 
-/* ===================== DARK MODE – KOLEDAR ===================== */
+/* ===================== PREPREČI HORIZONTALNI SCROLL ===================== */
 
-body.dark .calendar-day {
-  background: #242424;
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-body.dark .calendar-day h3 {
-  color: #f5f5f5;
+@media (max-width: 600px) {
+  .mobile-menu-btn {
+    display: none !important;
+  }
 }
 
-body.dark .calendar-empty {
-  color: #aaa;
-}
+@media (max-width: 600px) {
 
-body.dark .calendar-arrow {
-  background: #2a2a2a;
-  color: #f5f5f5;
-}
+  .main-app-page {
+    padding: 10px 14px 20px !important;
+  }
 
-body.dark .calendar-arrow:hover:not(:disabled) {
-  background: #333;
+  .main-app-page h1 {
+    margin-top: 0 !important;
+    padding-top: 10px !important;
+    padding-left: 0 !important;
+
+    font-size: 27px !important;
+    line-height: 1.15;
+
+    text-align: center;
+
+    width: 100%;
+  }
+
+  .dashboard-subtitle {
+    margin-top: 4px !important;
+    margin-bottom: 24px !important;
+  }
+
 }
