@@ -1,2 +1,10 @@
+# Backend
 petcare-backend/.env
+petcare-backend/node_modules/
+
+# Frontend
 petcare-frontend/.env
+petcare-frontend/node_modules/
+
+# macOS
+.DS_Store
